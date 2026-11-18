@@ -39,7 +39,7 @@ Every component has its own detailed doc: job and boundaries, inputs, step-by-st
 | 17 | YouTube Shorts Connector | [Open](components/17-youtube-connector.md) |
 | 18 | Meta Connectors (Instagram, Facebook, Threads) | [Open](components/18-meta-connectors.md) |
 | 19 | TikTok Connector | [Open](components/19-tiktok-connector.md) |
-| 20 | Snapchat & Bluesky Connectors | [Open](components/20-snapchat-bluesky.md) |
+| 20 | Snapchat Connector | [Open](components/20-snapchat.md) |
 | 21 | Storage Lifecycle & File Manager | [Open](components/21-storage-lifecycle.md) |
 | 22 | Analytics & Feedback Loop | [Open](components/22-analytics-feedback-loop.md) |
 | 23 | Dashboard & Kill Switch | [Open](components/23-dashboard-kill-switch.md) |
@@ -68,7 +68,7 @@ Six things researched on November 18, 2026 that the build has to account for. Th
 - [ ] Account setup logistics: an email and phone number per account, devices, warm-up period for new accounts.
 - [ ] Compute: transcription and render speed on your MacBook model; when a cloud worker becomes necessary.
 - [ ] GTA 6 platform IDs: Twitch game ID and Kick category once launched (November 19, 2026).
-- [ ] Brand names and handle availability on all seven platforms, per language.
+- [ ] Brand names and handle availability on all six platforms, per language.
 - [ ] Hosting picks: recorder server, database, storage bucket, dashboard host.
 
 ## Architecture
@@ -117,7 +117,7 @@ Most stages already have a solid open-source starting point, so the build is mos
 | Music removal | [ELUATE](https://pypi.org/project/eluate/), [husher](https://pypi.org/project/husher/), [python-audio-separator](https://github.com/nomadkaraoke/python-audio-separator), [Demucs](https://github.com/facebookresearch/demucs) | Removes background music while keeping dialogue and sound effects, which is exactly the GTA radio problem | ELUATE and husher are video-in, video-out |
 | Scene cuts | [PySceneDetect](https://github.com/Breakthrough/PySceneDetect) | Cut detection for scoring and for the style study |  |
 | Full clippers to study | autoclip, clipper, ClipsAI, Clipify (see reference catalog) | Whole pipelines: transcription, LLM scoring, face tracking, captions |  |
-| Posting connectors to study | [Postiz](https://github.com/gitroomhq/postiz-app) | Open-source scheduler with working integrations for Instagram, YouTube, TikTok, Facebook, Threads, Bluesky and more | AGPL-3.0: changing it and running it as a service means publishing our changes. Use as reference for our own connectors |
+| Posting connectors to study | [Postiz](https://github.com/gitroomhq/postiz-app) | Open-source scheduler with working integrations for Instagram, YouTube, TikTok, Facebook, Threads and more | AGPL-3.0: changing it and running it as a service means publishing our changes. Use as reference for our own connectors |
 
 ## Editing playbook
 
@@ -246,7 +246,6 @@ Six more platforms can take fully automatic video posts, which brings the total 
 | [Threads](https://developers.facebook.com/docs/threads/overview) | 250 posts per 24h per profile | Uses the same Meta app as Instagram. Connected through Instagram login |
 | [Facebook Reels](https://developers.facebook.com/documentation/video-api/guides/reels-publishing) | 30 Reels per 24h per Page | Pages only, no personal profiles. Clips 3–90 seconds |
 | [X](https://www.socialync.io/blog/x-api-pricing-and-posting-2026) | 100 posts per 15 min per user | Deferred until there's revenue. Paid per post: $0.015, or $0.20 with a link |
-| [Bluesky](https://www.ayrshare.com/use-cases/video-content-platforms/) | Open API, posts cost action points | Video up to 3 minutes. Free, with a small audience |
 | [Snapchat Spotlight](https://www.ayrshare.com/snapchat-api.md) | Varies | Built direct on Snap's Public Profile API: apply for the allowlist, set up a Snap Business account and an Ads Manager organization, and encrypt media (AES-256-CBC) before upload. Spotlight takes 9:16 video up to 60 s. Fallback while waiting: a posting service that already has access |
 
 With all nine connected, every clip can go to every platform, each with its own caption.

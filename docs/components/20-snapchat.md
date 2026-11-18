@@ -1,8 +1,8 @@
-# Clipper Component 20 — Snapchat & Bluesky Connectors
+# Clipper Component 20 — Snapchat Connector
 
 Nov 18, 2026
 
-Two smaller connectors round out the seven platforms. Snapchat has the most gated access and Bluesky is fully open; X is deferred until there's revenue. Pinterest was dropped because it isn't a short-video scroll feed.
+Snapchat Spotlight rounds out the six platforms and has the most gated access. X is deferred until there's revenue. Pinterest and Bluesky were dropped.
 
 ## Snapchat Spotlight
 
@@ -19,26 +19,12 @@ Two smaller connectors round out the seven platforms. Snapchat has the most gate
 
 **Plan:** apply for the allowlist in Phase 0. Until approved, either skip Snapchat or use a posting service that already has access. Because API deletes aren't supported, the takedown handler (15) adds Snapchat removals to a manual list in the dashboard.
 
-## Bluesky
-
-| Item | Detail | Source |
-| --- | --- | --- |
-| API | AT Protocol, open; authenticate with handle + app password (or OAuth) | [getlate](https://cdn.jsdelivr.net/gh/getlate-dev/social-media-api-best-practices@main/SKILL.md) |
-| Video | Standard video up to 3 minutes | [Ayrshare](https://www.ayrshare.com/use-cases/video-content-platforms/) |
-| Limits | Daily action-point budget (posts cost points) | [Orshot](https://orshot.com/docs/publish/social-posting-guidelines) |
-| Text | 300 characters | |
-
-**Flow:** create session → upload video blob through Bluesky's video service (processing job; poll until done) → create post record with the video embed, text, language tag and alt text.
-
-Small audience today, but free and fully automatable; low priority in scheduling until analytics shows traction.
-
 ## X (deferred)
 
 Pay-per-use: about $0.015 per post, $0.20 with a link ([Socialync](https://www.socialync.io/blog/x-api-pricing-and-posting-2026)). The adapter slot exists; turn it on once revenue covers it.
 
 ## Done when
 
-- [ ] Bluesky posts automatically with video.
 - [ ] Snapchat allowlist requested; adapter built against the documented flow and tested once approved.
 
 ## Open questions

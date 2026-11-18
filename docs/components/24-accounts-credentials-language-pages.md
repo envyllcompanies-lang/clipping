@@ -16,8 +16,8 @@ This component covers every account the system posts from and every credential i
 
 | Need | Practice |
 | --- | --- |
-| Unique identity per account | Each account gets its own email and phone number; platforms don't allow reusing them across accounts ([Recurpost](https://recurpost.com/?p=108090)) |
-| Account types | Instagram Professional; Facebook Page; TikTok standard creator account; Snapchat Public Profile (Professional); YouTube channel under a Google account; Bluesky handle (custom domain optional) |
+| One email per language | Each language channel has one email, used for its account on every platform (one `es@` for Spanish TikTok, YouTube, Instagram, etc.). Never reuse that email for a second account on the same platform ([Recurpost](https://recurpost.com/?p=108090)) |
+| Account types | Instagram Professional; Facebook Page; TikTok standard creator account; Snapchat Public Profile (Professional); YouTube channel under a Google account |
 | Warm-up | New accounts post lightly at first; ramp volume up over the first weeks |
 | Device/IP linking | Platforms can link accounts that share a device or IP ([Pixelscan](https://pixelscan.net/blog/can-you-have-multiple-tiktok-accounts/)); posting via official APIs avoids app switching, and staggering post times keeps accounts from looking coordinated |
 | Distinct content | Different clips or distinct edits per account; never the same video across same-language brands on one platform |
@@ -30,7 +30,7 @@ Automates everything around signups except the signup itself. Social account sig
 
 **What it automates:**
 
-1. **Emails on our own domain.** One domain (e.g. `<brand>.com`) on Cloudflare. For every channel in `config/channels/*.yaml` and every platform it uses, the tool creates an address `<lang>-<platform>@<domain>` (e.g. `en-tiktok@`, `es-youtube@`, `pt-instagram@`) through the Cloudflare Email Routing API, and each address forwards to one owner inbox. Adding a new language channel to config creates its addresses on the next run. Each platform account gets its own email.
+1. **Emails on our own domain.** One domain (e.g. `<brand>.com`) on Cloudflare. For every channel in `config/channels/*.yaml`, the tool creates one address `<lang>@<domain>` (e.g. `en@`, `es@`, `pt@`) through the Cloudflare Email Routing API, forwarding to one owner inbox. That one address is used to sign up the channel on every platform. Adding a new language channel to config creates its address on the next run.
    - If an address must send mail as well as receive it (rare: some recovery flows), switch that domain to Google Workspace or Zoho Mail and create real mailboxes through their admin APIs instead; config chooses the provider.
 2. **Passwords.** Generates a unique strong password per account and stores it in the encrypted account register (never in the repo or logs).
 3. **Handle check.** For each channel's planned handle, checks availability on each platform where a public profile URL can be queried, and suggests variants (`gta6clips.es`, `gta6_es`, `gta6clipsES`) when taken.
@@ -39,13 +39,13 @@ Automates everything around signups except the signup itself. Social account sig
 
 **What the owner does by hand per account:** sign up in the platform's app or site with the generated email/handle/password, verify the phone number, turn on 2FA, then press "connect" in the dashboard.
 
-**Phone numbers:** each account needs its own number that the platform accepts; many platforms reject VoIP numbers, so plan on real SIM or eSIM lines (one per account or a small pool rotated per platform where allowed). This is a cost line to budget, not something the tool can generate.
+**Phone numbers:** one number per language channel, used across its platforms like the email (never twice on the same platform). Many platforms reject VoIP numbers, so plan on a real SIM or eSIM line per language. This is a cost line to budget, not something the tool can generate.
 
 **Global launch rollout:** the tool reads which languages to launch from config (chosen by the radar's per-language data), so the full set of addresses, handles and worksheets for every language can be created in one run before signups start.
 
 ## Developer apps (one each, shared by all channels)
 
-Google Cloud project (YouTube Data + Analytics APIs, OAuth consent screen, compliance audit), Meta app (Instagram, Pages, Threads), TikTok developer app (Content Posting API, audit), Snap Business + Ads Manager org (Public Profile API allowlist), Twitch developer app (Helix, EventSub), Kick developer app (OAuth 2.1), Bluesky app passwords.
+Google Cloud project (YouTube Data + Analytics APIs, OAuth consent screen, compliance audit), Meta app (Instagram, Pages, Threads), TikTok developer app (Content Posting API, audit), Snap Business + Ads Manager org (Public Profile API allowlist), Twitch developer app (Helix, EventSub), Kick developer app (OAuth 2.1).
 
 ## Credential storage
 
@@ -62,11 +62,11 @@ Monetization payouts require tax and payment details on each platform. Decide wh
 ## Done when
 
 - [ ] Every channel defined in config, with each platform account connected and tokens healthy on the dashboard.
-- [ ] No two accounts share an email or phone number.
-- [ ] One run of the provisioning tool creates every channel's email addresses, passwords and signup worksheets from config.
+- [ ] Each language channel uses exactly one email across all its platforms; no email is used twice on the same platform.
+- [ ] One run of the provisioning tool creates every channel's email address, passwords and signup worksheets from config.
 - [ ] Secrets never appear in the repo or logs.
 
 ## Open questions
 
-- [ ] Brand names and handle availability per language on all seven platforms.
+- [ ] Brand names and handle availability per language on all six platforms.
 - [ ] LLC registration timing relative to monetization.
