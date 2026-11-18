@@ -8,7 +8,22 @@ This component covers every account the system posts from and every credential i
 
 - A **channel** = one brand in one language, e.g. `gta6-<lang>`. Each channel has one account per platform it uses.
 - Each channel sources only from creators streaming in its language (radar runs per language) and writes all text natively. No translated or dubbed clips.
-- **Which languages:** decided by data: GTA 6 viewer share by stream language on Twitch/Kick and how crowded existing clip pages in that language are. Start with the main language plus the one or two the data ranks highest; add more as each proves out.
+- **Launch languages (10):** the top ten GTA streaming languages across Twitch, Kick and YouTube, all launched together:
+
+  | Key | Language | Main source platforms | Notes |
+  | --- | --- | --- | --- |
+  | `en` | English | Twitch, YouTube, Kick | Largest audience, highest pay per view |
+  | `es` | Spanish | Twitch, Kick | Huge GTA RP scene (Spain + Latin America) |
+  | `pt` | Portuguese (Brazil) | YouTube, Kick, Twitch | Top-tier GTA creators |
+  | `ar` | Arabic | Kick | Massive GTA RP, few clip pages |
+  | `fr` | French | Twitch | Steady GTA audience |
+  | `ru` | Russian | Twitch | Big reach; payouts limited for Russian audiences |
+  | `de` | German | Twitch | Twitch's third-largest language |
+  | `ja` | Japanese | Twitch, YouTube | Large GTA RP events |
+  | `tr` | Turkish | Kick | Strong on Kick |
+  | `vi` | Vietnamese | YouTube | One of the strongest GTA RP bases |
+
+- **Re-ranking:** once GTA 6 is live, the radar (01) measures GTA 6 hours watched per language across all three platforms weekly. If a language outside the ten overtakes one inside it for 4 straight weeks (candidates: Polish, Chinese (Traditional, Taiwan/HK), Thai, Hindi, Indonesian, Italian, Korean), the dashboard flags the swap; analytics (22) shifts posting volume toward languages that perform.
 - Channel config file (`config/channels/<key>.yaml`): language, time zone, style profile, voice notes, hashtags core set, account handles per platform, posting slots, score floor.
 - YouTube focus: one main YouTube channel per language until it's monetized, since spreading views across channels delays each one's 10M-views-in-90-days threshold.
 
