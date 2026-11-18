@@ -22,7 +22,7 @@ The Creator Radar decides whose streams the clipper records, using a published f
 | HasRoot | Public pages per RP server | Who streams on which RP server, stream history | Daily, for RP creators |
 | Our own analytics (Component 22) | Database | Avg watch time, views, shares of clips made from each creator | Daily |
 
-GTA 6 IDs (Twitch `game_id`, Kick category) are filled in at launch (November 19, 2026) and stored in `config/games/gta6.yaml`.
+The GTA VI categories already exist on Twitch and Kick (early-access streams are live before the November 19, 2026 release). At startup the radar resolves the IDs by name (Twitch Helix Get Games / Search Categories for "Grand Theft Auto VI"; Kick category search), caches them in `config/games/gta6.yaml`, and re-resolves if a lookup ever returns nothing. Early-access streams are recorded and clipped like any other; there's no wait for release day.
 
 ## Signals and formula
 

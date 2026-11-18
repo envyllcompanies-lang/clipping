@@ -59,7 +59,7 @@ Weekly, the scheduler (16) gets a target share of daily posts per language propo
 
 - **Mislabelled stream language:** use transcript language detection (06) on recorded windows to correct a creator's language after 3 agreeing detections.
 - **Regional variants:** `pt` covers Brazil and Portugal, `es` covers Spain and Latin America; split (e.g. `es-mx`) only if both halves alone would rank in the top 10.
-- **Launch week:** GTA 6 data is thin in week 1; swaps are disabled for the first 4 weeks after launch.
+- **Early access and launch:** early-access streams (before November 19) come from a few invited creators, so language data is skewed; swaps are disabled until 4 weeks after the public release.
 - **YouTube quota:** if the live search quota is exhausted, YouTube audience carries forward last week's value with a flag.
 
 ## Done when

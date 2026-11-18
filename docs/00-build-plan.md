@@ -71,7 +71,7 @@ Six things researched on November 18, 2026 that the build has to account for. Th
 - [ ] Payouts and taxes: platforms need tax info for payouts; decide whether to register Envy as a formal LLC first.
 - [x] Account setup logistics: one email per language, phone only where required, provisioning tool, warm-up. Covered in doc 24 and doc 26.
 - [ ] Compute: transcription and render speed on your MacBook model; when a cloud worker becomes necessary.
-- [ ] GTA 6 platform IDs: Twitch game ID and Kick category once launched (November 19, 2026).
+- [x] GTA 6 platform IDs: the Twitch and Kick GTA VI categories already exist and big streamers are playing early. The radar looks the IDs up by name at startup (doc 01).
 - [ ] Brand names and handle availability on all six platforms, per language.
 - [ ] Hosting picks: recorder server, database, storage bucket, dashboard host.
 
