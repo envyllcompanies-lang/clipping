@@ -45,6 +45,7 @@ The M1 being off only delays rendering; recording, scheduling and posting of alr
 | `transcript` | window_id, words JSON (index, word, start, end, conf, speaker) | 06 |
 | `game_event` | stream_id, t_s, type, confidence, details | 08 |
 | `moment_analysis` | window_id, type, type_confidence, gameplay_score, reaction_score, payoff/beat frames, story_beat_id, suggested bounds, signals JSON | 31 |
+| `creator_profile` / `creator_segment` / `creator_collab` | per-creator baselines, reaction style, catchphrases, dialect; stream segment labels; collab pairs | 32 |
 | `clip` / `clip_version` | moment_id, channel_id, edit_plan, crop_plan, version type, path, hash, fingerprint, pending_posts, status | 09–12 |
 | `gate_result` | clip_version_id, check, passed, reason | 15 |
 | `post` | clip_version_id, account_id, platform_post_id, status, scheduled_at, posted_at, error (unique on clip_version+account) | 16 |
@@ -69,7 +70,7 @@ The M1 being off only delays rendering; recording, scheduling and posting of alr
 
 ## Codebase layout (for Claude Code)
 
-One Python monorepo in `envyllcompanies-lang/clipping`: a package per component (`radar`, `recorder`, `chat`, `ingest`, `heatmap`, `transcribe`, `audio`, `events`, `moments`, `builder`, `reframe`, `captions`, `render`, `style`, `packaging`, `gate`, `publish/*`, `storage`, `analytics`, `accounts`, `languages`, `eval`), a `dashboard/` web app (also serving the public policy pages, doc 29), `config/` for games, channels, styles and token lists, `tests/` with fixture clips, and `eval/` with datasets, thresholds, reports and the changelog.
+One Python monorepo in `envyllcompanies-lang/clipping`: a package per component (`radar`, `recorder`, `chat`, `ingest`, `heatmap`, `transcribe`, `audio`, `events`, `moments`, `creators`, `builder`, `reframe`, `captions`, `render`, `style`, `packaging`, `gate`, `publish/*`, `storage`, `analytics`, `accounts`, `languages`, `eval`), a `dashboard/` web app (also serving the public policy pages, doc 29), `config/` for games, channels, styles and token lists, `tests/` with fixture clips, and `eval/` with datasets, thresholds, reports and the changelog.
 
 ## Done when
 

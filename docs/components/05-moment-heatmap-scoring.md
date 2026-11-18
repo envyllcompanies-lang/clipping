@@ -17,6 +17,7 @@ The heatmap turns a long stream into a ranked list of candidate moments by fusin
 | Chat reaction mix | Component 03 | Weighted sum of laugh, hype, caps and copypasta shares | Free |
 | Viewer clip density | Component 04 | Kernel density of clip start positions, each clip weighted by log(views+1), Gaussian kernel of 10 s width | Free |
 | Audio energy | Recording audio (decoded at 8 kHz mono) | RMS in 50 ms windows → dB; spike = jump of 10+ dB over the previous 1 s median | Very low |
+| Creator reaction (normalized) | Component 32 | Reaction z-score vs this creator's own baseline (voice, laughter, face, catchphrases); replaces raw voice excitement once the profile exists | Low |
 | Voice excitement | Same audio | Pitch variance and speech rate in voice frequency band, z-scored against the streamer's baseline | Low |
 | Scene/visual change | Recording video at 2 fps, 240 px wide | Histogram distance between frames (cuts, explosions, screen flashes) | Low |
 | Game events | Component 08 | Detected HUD events (death screen, wanted level change, mission banner) as point events | Medium, run only around candidate peaks |
