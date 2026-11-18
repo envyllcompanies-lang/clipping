@@ -2,7 +2,7 @@
 
 Fully automated AI clipping and multi-platform posting system for GTA 6 short-form clips.
 
-Start with `docs/00-build-plan.md`, then the component doc for whatever you're building in `docs/components/` (01–30). The docs are the spec; follow them. Doc 26 lists what the owner does by hand; `docs/references.md` holds reference channels and repos.
+Start with `docs/00-build-plan.md`, then the component doc for whatever you're building in `docs/components/` (01–31). The docs are the spec; follow them. Doc 26 lists what the owner does by hand; `docs/references.md` holds reference channels and repos.
 
 ## Decisions (don't revisit without the owner)
 

@@ -16,6 +16,9 @@ The payoff is the second the moment lands: the crash, the death banner, the punc
 
 ## Step 2 — Candidate boundaries (rules)
 
+When Component 31 has typed the moment, start from its type-specific boundaries and hook style (cutscene beat, chase escalation, crash buildup, etc.); the rules below refine them to word edges and length targets.
+
+
 - **Start candidates:** sentence starts (from transcript punctuation), silence gaps over 0.3 s, and scene cuts, between 8 and 50 s before the payoff.
 - **End candidates:** 0.5–2 s after the payoff (hold longer after explosions so they land), at a sentence end or silence. No trailing chatter: end within one sentence after the payoff.
 - **Standalone test:** reject starts that begin with a back-reference ("like I said", "that guy again") unless the setup sentence is included.
