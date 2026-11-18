@@ -25,3 +25,7 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 08 (Game Event Detection): precision_death 1.000, recall_death 1.000, precision_arrest 1.000, recall_arrest 1.000, precision_wanted 1.000, recall_wanted 1.000, precision_mission 1.000, recall_mission 1.000, precision_crash 1.000, recall_crash 1.000, precision_loading 1.000, recall_loading 1.000, precision_menu 1.000, recall_menu 1.000, precision_min_core 1.000, seconds_per_window 2.928
 
 - 2026-11-18 stage 13 (Style Study): cut_rate_rel_err 0.024, caption_y_err 0.003, caps_detected 1.000, fill_color_err 0.016, layout_detected 1.000, split_err 0.009, zoom_rate_abs_err 0.695
+
+- 2026-11-18 stage 09 (Clip Builder): boundary_iou 0.797, payoff_included 0.983, plans_valid 1.000, both_versions 1.000, standalone_openings 1.000
+
+- 2026-11-18 stage 10 (Reframe & Layout): facecam_found 1.000, facecam_false 0.000, subject_in_crop 0.963, caption_clear 1.000, face_in_top_panel 1.000, max_pan_speed_ratio 1.000
