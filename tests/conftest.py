@@ -24,7 +24,12 @@ def conn(_schema):
     from clipping.core import db
 
     c = db.connect()
-    tables = [r["tablename"] for r in c.execute("SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename<>'schema_version'")]
+    tables = [
+        r["tablename"]
+        for r in c.execute(
+            "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename<>'schema_version'"
+        )
+    ]
     c.execute("TRUNCATE " + ",".join(f'"{t}"' for t in tables) + " RESTART IDENTITY CASCADE")
     yield c
     c.close()

@@ -1,0 +1,66 @@
+{
+  "stage": "03",
+  "name": "Chat Capture",
+  "passed": true,
+  "seconds": 13.36,
+  "dataset_version": "simstream@v1",
+  "code_version": "2b8a5c7",
+  "metrics": [
+    {
+      "metric": "align_within_2s",
+      "value": 0.8333333333333334,
+      "baseline": 0.8333333333333334,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "align_median_s",
+      "value": 0.9710070843236736,
+      "baseline": 0.9710070843236736,
+      "bar": 2.0,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "excess_missing_share",
+      "value": 0.0,
+      "baseline": 0.0,
+      "bar": 0.01,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [
+    {
+      "example_id": "seed302@6640",
+      "metric": "align_err",
+      "value": 3.1575945851172946,
+      "notes": "lag=4.6"
+    },
+    {
+      "example_id": "seed305@5695",
+      "metric": "align_err",
+      "value": 2.514344630348205,
+      "notes": "lag=3.0"
+    },
+    {
+      "example_id": "seed301@5502",
+      "metric": "align_err",
+      "value": 2.4052166031287925,
+      "notes": "lag=3.6"
+    },
+    {
+      "example_id": "seed301@4804",
+      "metric": "align_err",
+      "value": 2.3209582992558353,
+      "notes": "lag=3.6"
+    }
+  ],
+  "info": {
+    "n": 24
+  }
+}

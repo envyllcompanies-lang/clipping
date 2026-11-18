@@ -25,7 +25,9 @@ def duration(path: str | Path) -> float:
     return float(probe(path)["format"]["duration"])
 
 
-def decode_audio(path: str | Path, sr: int = 8000, start: float | None = None, dur: float | None = None) -> np.ndarray:
+def decode_audio(
+    path: str | Path, sr: int = 8000, start: float | None = None, dur: float | None = None
+) -> np.ndarray:
     cmd = ["ffmpeg", "-v", "error"]
     if start is not None:
         cmd += ["-ss", f"{start:.3f}"]
@@ -39,8 +41,14 @@ def decode_audio(path: str | Path, sr: int = 8000, start: float | None = None, d
     return np.frombuffer(p.stdout, dtype=np.float32).copy()
 
 
-def decode_frames(path: str | Path, fps: float = 2, width: int = 240, start: float | None = None,
-                  dur: float | None = None, gray: bool = False) -> np.ndarray:
+def decode_frames(
+    path: str | Path,
+    fps: float = 2,
+    width: int = 240,
+    start: float | None = None,
+    dur: float | None = None,
+    gray: bool = False,
+) -> np.ndarray:
     info = [s for s in probe(path)["streams"] if s["codec_type"] == "video"][0]
     w0, h0 = int(info["width"]), int(info["height"])
     height = int(round(h0 * width / w0 / 2) * 2)
@@ -63,11 +71,26 @@ def decode_frames(path: str | Path, fps: float = 2, width: int = 240, start: flo
 
 
 def loudness(path: str | Path) -> dict:
-    p = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", str(path), "-af", "ebur128=peak=true", "-f", "null", "-"],
-                       capture_output=True, text=True, timeout=600)
+    p = subprocess.run(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-nostats",
+            "-i",
+            str(path),
+            "-af",
+            "ebur128=peak=true",
+            "-f",
+            "null",
+            "-",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=600,
+    )
     txt = p.stderr
     out: dict = {}
-    summary = txt[txt.rfind("Summary:"):]
+    summary = txt[txt.rfind("Summary:") :]
     for line in summary.splitlines():
         line = line.strip()
         if line.startswith("I:"):

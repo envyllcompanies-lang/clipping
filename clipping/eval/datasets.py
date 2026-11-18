@@ -16,7 +16,11 @@ def write(name: str, version: str, files: dict[str, object], meta: dict) -> Path
     sums = {}
     for fname, obj in files.items():
         p = d / fname
-        data = obj if isinstance(obj, bytes) else json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode()
+        data = (
+            obj
+            if isinstance(obj, bytes)
+            else json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode()
+        )
         p.write_bytes(data)
         sums[fname] = hashlib.sha256(data).hexdigest()
     manifest = dict(meta, name=name, version=version, built_at=dt.date.today().isoformat(), files=sums)

@@ -20,8 +20,12 @@ from clipping.storage import files
 def _s3():
     import boto3  # optional dependency, only when a real bucket is configured
 
-    return boto3.client("s3", endpoint_url=settings.env("BUCKET_ENDPOINT"),
-                        aws_access_key_id=settings.env("BUCKET_ACCESS_KEY"), aws_secret_access_key=settings.env("BUCKET_SECRET_KEY"))
+    return boto3.client(
+        "s3",
+        endpoint_url=settings.env("BUCKET_ENDPOINT"),
+        aws_access_key_id=settings.env("BUCKET_ACCESS_KEY"),
+        aws_secret_access_key=settings.env("BUCKET_SECRET_KEY"),
+    )
 
 
 def use_s3() -> bool:
@@ -37,10 +41,15 @@ def put_public(c: psycopg.Connection, src: str | Path, clip_version_id: int, ttl
     exp = dt.datetime.now(dt.UTC) + dt.timedelta(hours=ttl_h)
     if use_s3():
         _s3().upload_file(str(src), settings.env("BUCKET_NAME"), name, ExtraArgs={"ContentType": "video/mp4"})
-        url = _s3().generate_presigned_url("get_object", Params={"Bucket": settings.env("BUCKET_NAME"), "Key": name},
-                                           ExpiresIn=int(ttl_h * 3600))
-        c.execute("""INSERT INTO file(path,kind,size,owner_type,owner_id,expires_at) VALUES (%s,'public',%s,'clip_version',%s,%s)""",
-                  (f"s3://{name}", Path(src).stat().st_size, clip_version_id, exp))
+        url = _s3().generate_presigned_url(
+            "get_object",
+            Params={"Bucket": settings.env("BUCKET_NAME"), "Key": name},
+            ExpiresIn=int(ttl_h * 3600),
+        )
+        c.execute(
+            """INSERT INTO file(path,kind,size,owner_type,owner_id,expires_at) VALUES (%s,'public',%s,'clip_version',%s,%s)""",
+            (f"s3://{name}", Path(src).stat().st_size, clip_version_id, exp),
+        )
         return url
     dst = files.managed("public") / name
     shutil.copyfile(src, dst)
@@ -49,8 +58,11 @@ def put_public(c: psycopg.Connection, src: str | Path, clip_version_id: int, ttl
 
 
 def delete_for(c: psycopg.Connection, clip_version_id: int) -> int:
-    rows = db.all_(c, "SELECT path FROM file WHERE kind='public' AND owner_type='clip_version' AND owner_id=%s AND deleted_at IS NULL",
-                   clip_version_id)
+    rows = db.all_(
+        c,
+        "SELECT path FROM file WHERE kind='public' AND owner_type='clip_version' AND owner_id=%s AND deleted_at IS NULL",
+        clip_version_id,
+    )
     for r in rows:
         delete_public(c, r["path"])
     return len(rows)
@@ -66,5 +78,7 @@ def delete_public(c: psycopg.Connection, path: str) -> None:
 
 def delete_by_url(c: psycopg.Connection, url: str) -> None:
     name = url.split("?")[0].rsplit("/", 1)[-1]
-    for r in db.all_(c, "SELECT path FROM file WHERE kind='public' AND deleted_at IS NULL AND path LIKE %s", f"%{name}"):
+    for r in db.all_(
+        c, "SELECT path FROM file WHERE kind='public' AND deleted_at IS NULL AND path LIKE %s", f"%{name}"
+    ):
         delete_public(c, r["path"])

@@ -46,8 +46,16 @@ class _OAuthApp:
 
     def token(self) -> str:
         if not self._token or time.time() > self._exp - 300:
-            r = request(self.http, "POST", self.token_url, data={
-                "client_id": self.client_id, "client_secret": self.client_secret, "grant_type": "client_credentials"})
+            r = request(
+                self.http,
+                "POST",
+                self.token_url,
+                data={
+                    "client_id": self.client_id,
+                    "client_secret": self.client_secret,
+                    "grant_type": "client_credentials",
+                },
+            )
             d = r.json()
             self._token, self._exp = d["access_token"], time.time() + int(d.get("expires_in", 3600))
         return self._token
@@ -65,8 +73,13 @@ class TwitchHelix(_OAuthApp):
         return cls(settings.env("TWITCH_CLIENT_ID"), settings.env("TWITCH_CLIENT_SECRET"))
 
     def get(self, path: str, params: Any) -> dict:
-        r = request(self.http, "GET", f"{self.base}/{path}", params=params,
-                    headers={"Client-ID": self.client_id, "Authorization": f"Bearer {self.token()}"})
+        r = request(
+            self.http,
+            "GET",
+            f"{self.base}/{path}",
+            params=params,
+            headers={"Client-ID": self.client_id, "Authorization": f"Bearer {self.token()}"},
+        )
         return r.json()
 
     def paginate(self, path: str, params: dict, max_items: int = 10_000) -> list[dict]:
@@ -94,12 +107,30 @@ class TwitchHelix(_OAuthApp):
         return None
 
     def live_streams(self, game_id: str) -> list[LiveStream]:
-        return [LiveStream("twitch", s["user_id"], s["user_login"], int(s["viewer_count"]), s.get("language") or "",
-                           s["started_at"], s.get("title", ""), s["game_id"], s["id"])
-                for s in self.paginate("streams", {"game_id": game_id})]
+        return [
+            LiveStream(
+                "twitch",
+                s["user_id"],
+                s["user_login"],
+                int(s["viewer_count"]),
+                s.get("language") or "",
+                s["started_at"],
+                s.get("title", ""),
+                s["game_id"],
+                s["id"],
+            )
+            for s in self.paginate("streams", {"game_id": game_id})
+        ]
 
-    def clips(self, *, game_id: str | None = None, broadcaster_id: str | None = None, started_at: str | None = None,
-              ended_at: str | None = None, max_items: int = 1000) -> list[dict]:
+    def clips(
+        self,
+        *,
+        game_id: str | None = None,
+        broadcaster_id: str | None = None,
+        started_at: str | None = None,
+        ended_at: str | None = None,
+        max_items: int = 1000,
+    ) -> list[dict]:
         p: dict = {}
         if game_id:
             p["game_id"] = game_id
@@ -114,7 +145,7 @@ class TwitchHelix(_OAuthApp):
     def videos(self, ids: list[str]) -> list[dict]:
         out = []
         for i in range(0, len(ids), 100):
-            out += self.get("videos", [("id", x) for x in ids[i:i + 100]]).get("data", [])
+            out += self.get("videos", [("id", x) for x in ids[i : i + 100]]).get("data", [])
         return out
 
     def followers(self, broadcaster_id: str) -> int:
@@ -133,8 +164,13 @@ class KickAPI(_OAuthApp):
         return cls(settings.env("KICK_CLIENT_ID"), settings.env("KICK_CLIENT_SECRET"))
 
     def get(self, path: str, params: Any) -> dict:
-        return request(self.http, "GET", f"{self.base}/{path}", params=params,
-                       headers={"Authorization": f"Bearer {self.token()}"}).json()
+        return request(
+            self.http,
+            "GET",
+            f"{self.base}/{path}",
+            params=params,
+            headers={"Authorization": f"Bearer {self.token()}"},
+        ).json()
 
     def resolve_game(self, names: list[str]) -> str | None:
         for n in names:
@@ -148,9 +184,19 @@ class KickAPI(_OAuthApp):
         while True:
             d = self.get("livestreams", {"category_id": game_id, "limit": 100, "page": page}).get("data", [])
             for s in d:
-                out.append(LiveStream("kick", str(s["broadcaster_user_id"]), s.get("slug") or str(s["broadcaster_user_id"]),
-                                      int(s.get("viewer_count", 0)), (s.get("language") or "")[:2], s.get("started_at", ""),
-                                      s.get("stream_title", ""), str(game_id), str(s.get("channel_id", s["broadcaster_user_id"]))))
+                out.append(
+                    LiveStream(
+                        "kick",
+                        str(s["broadcaster_user_id"]),
+                        s.get("slug") or str(s["broadcaster_user_id"]),
+                        int(s.get("viewer_count", 0)),
+                        (s.get("language") or "")[:2],
+                        s.get("started_at", ""),
+                        s.get("stream_title", ""),
+                        str(game_id),
+                        str(s.get("channel_id", s["broadcaster_user_id"])),
+                    )
+                )
             if len(d) < 100 or page >= 50:
                 return out
             page += 1
@@ -173,11 +219,24 @@ class YouTubeData:
         self.units_used += cost
         return request(self.http, "GET", f"{self.base}/{path}", params=dict(params, key=self.key)).json()
 
-    def search_uploads(self, query: str, published_after: str, language: str | None = None, max_pages: int = 1,
-                       event_type: str | None = None, duration: str | None = None) -> list[dict]:
+    def search_uploads(
+        self,
+        query: str,
+        published_after: str,
+        language: str | None = None,
+        max_pages: int = 1,
+        event_type: str | None = None,
+        duration: str | None = None,
+    ) -> list[dict]:
         out, token = [], None
         for _ in range(max_pages):
-            p = {"part": "snippet", "q": query, "type": "video", "maxResults": 50, "publishedAfter": published_after}
+            p = {
+                "part": "snippet",
+                "q": query,
+                "type": "video",
+                "maxResults": 50,
+                "publishedAfter": published_after,
+            }
             if language:
                 p["relevanceLanguage"] = language
             if event_type:
@@ -196,7 +255,11 @@ class YouTubeData:
     def video_stats(self, ids: list[str]) -> list[dict]:
         out = []
         for i in range(0, len(ids), 50):
-            out += self.get("videos", {"part": "statistics,snippet,liveStreamingDetails", "id": ",".join(ids[i:i + 50])}, 1).get("items", [])
+            out += self.get(
+                "videos",
+                {"part": "statistics,snippet,liveStreamingDetails", "id": ",".join(ids[i : i + 50])},
+                1,
+            ).get("items", [])
         return out
 
 

@@ -32,8 +32,15 @@ def is_managed(path: Path) -> bool:
     return bool(rel.parts) and rel.parts[0] in MANAGED
 
 
-def register(c: psycopg.Connection, path: str | Path, kind: str, owner_type: str | None = None, owner_id: int | None = None,
-             expires_at: dt.datetime | None = None, max_age_h: float | None = None) -> None:
+def register(
+    c: psycopg.Connection,
+    path: str | Path,
+    kind: str,
+    owner_type: str | None = None,
+    owner_id: int | None = None,
+    expires_at: dt.datetime | None = None,
+    max_age_h: float | None = None,
+) -> None:
     path = Path(path)
     if not is_managed(path):
         raise ValueError(f"refusing to register file outside managed folders: {path}")
@@ -41,10 +48,12 @@ def register(c: psycopg.Connection, path: str | Path, kind: str, owner_type: str
         age = max_age_h if max_age_h is not None else config.settings()["storage"]["max_age_h"].get(kind, 24)
         expires_at = dt.datetime.now(UTC) + dt.timedelta(hours=age)
     size = path.stat().st_size if path.exists() else 0
-    c.execute("""INSERT INTO file(path,kind,size,owner_type,owner_id,expires_at) VALUES (%s,%s,%s,%s,%s,%s)
+    c.execute(
+        """INSERT INTO file(path,kind,size,owner_type,owner_id,expires_at) VALUES (%s,%s,%s,%s,%s,%s)
                  ON CONFLICT (path) DO UPDATE SET size=EXCLUDED.size, expires_at=EXCLUDED.expires_at, deleted_at=NULL,
                    missing=false, owner_type=EXCLUDED.owner_type, owner_id=EXCLUDED.owner_id""",
-              (str(path), kind, size, owner_type, owner_id, expires_at))
+        (str(path), kind, size, owner_type, owner_id, expires_at),
+    )
 
 
 def _unlink(path: Path) -> None:
@@ -86,7 +95,9 @@ def sweep(c: psycopg.Connection, now: dt.datetime | None = None) -> int:
     now = now or dt.datetime.now(UTC)
     n = 0
     for r in db.all_(c, "SELECT * FROM file WHERE deleted_at IS NULL"):
-        if (r["expires_at"] and r["expires_at"] <= now) or not _owner_alive(c, r["owner_type"], r["owner_id"]):
+        if (r["expires_at"] and r["expires_at"] <= now) or not _owner_alive(
+            c, r["owner_type"], r["owner_id"]
+        ):
             delete_path(c, r["path"])
             if r["kind"] == "segment":
                 c.execute("UPDATE segment SET deleted=true WHERE path=%s", (r["path"],))
@@ -119,4 +130,7 @@ def reconcile(c: psycopg.Connection) -> dict:
 
 
 def usage_by_kind(c: psycopg.Connection) -> list[dict]:
-    return db.all_(c, "SELECT kind, count(*) n, coalesce(sum(size),0) bytes FROM file WHERE deleted_at IS NULL GROUP BY kind ORDER BY kind")
+    return db.all_(
+        c,
+        "SELECT kind, count(*) n, coalesce(sum(size),0) bytes FROM file WHERE deleted_at IS NULL GROUP BY kind ORDER BY kind",
+    )

@@ -44,7 +44,9 @@ def check(c: psycopg.Connection, role: str, st: dict | None = None, path: Path |
     else:
         files.sweep(c)
         if lv in ("pause", "purge"):
-            db.alert(c, "disk_guard", f"{role} disk low: {st['free_gb']:.1f} GB free ({lv})", role, "critical")
+            db.alert(
+                c, "disk_guard", f"{role} disk low: {st['free_gb']:.1f} GB free ({lv})", role, "critical"
+            )
         if lv == "purge":
             purge(c)
     return lv
@@ -52,13 +54,21 @@ def check(c: psycopg.Connection, role: str, st: dict | None = None, path: Path |
 
 def purge(c: psycopg.Connection, n: int = 20) -> int:
     """Delete oldest unbuilt windows and lowest-score queued renders first."""
-    rows = db.all_(c, """SELECT w.id, w.path FROM "window" w WHERE w.status IN ('extracted','requested') AND w.path IS NOT NULL
-                         ORDER BY w.created_at LIMIT %s""", n)
+    rows = db.all_(
+        c,
+        """SELECT w.id, w.path FROM "window" w WHERE w.status IN ('extracted','requested') AND w.path IS NOT NULL
+                         ORDER BY w.created_at LIMIT %s""",
+        n,
+    )
     for r in rows:
         files.delete_path(c, r["path"])
         c.execute("""UPDATE "window" SET status='expired' WHERE id=%s""", (r["id"],))
-    rend = db.all_(c, """SELECT cv.id, cv.path FROM clip_version cv JOIN clip cl ON cl.id=cv.clip_id JOIN moment m ON m.id=cl.moment_id
-                         WHERE cv.status IN ('rendered','gated') AND cv.path IS NOT NULL ORDER BY m.score LIMIT %s""", n)
+    rend = db.all_(
+        c,
+        """SELECT cv.id, cv.path FROM clip_version cv JOIN clip cl ON cl.id=cv.clip_id JOIN moment m ON m.id=cl.moment_id
+                         WHERE cv.status IN ('rendered','gated') AND cv.path IS NOT NULL ORDER BY m.score LIMIT %s""",
+        n,
+    )
     for r in rend:
         files.delete_path(c, r["path"])
         c.execute("UPDATE clip_version SET status='media_deleted' WHERE id=%s", (r["id"],))

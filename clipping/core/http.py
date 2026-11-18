@@ -17,8 +17,16 @@ class HttpError(Exception):
         self.body = body
 
 
-def request(client: httpx.Client, method: str, url: str, *, retries: int = 4, base_delay: float = 1.0,
-            sleep=time.sleep, **kw: Any) -> httpx.Response:
+def request(
+    client: httpx.Client,
+    method: str,
+    url: str,
+    *,
+    retries: int = 4,
+    base_delay: float = 1.0,
+    sleep=time.sleep,
+    **kw: Any,
+) -> httpx.Response:
     last: Exception | None = None
     for attempt in range(retries + 1):
         try:

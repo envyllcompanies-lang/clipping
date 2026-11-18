@@ -19,14 +19,27 @@ class PermanentError(Exception):
     """Error that must not be retried."""
 
 
-def enqueue(c: psycopg.Connection, type_: str, payload: dict | None = None, *, dedupe_key: str | None = None,
-            priority: int = 0, delay_s: float = 0, max_attempts: int = 4) -> int | None:
+def enqueue(
+    c: psycopg.Connection,
+    type_: str,
+    payload: dict | None = None,
+    *,
+    dedupe_key: str | None = None,
+    priority: int = 0,
+    delay_s: float = 0,
+    max_attempts: int = 4,
+) -> int | None:
     r = db.one(
         c,
         """INSERT INTO job(type,payload,dedupe_key,priority,run_after,max_attempts)
            VALUES (%s,%s,%s,%s, now() + make_interval(secs => %s), %s)
            ON CONFLICT (type, dedupe_key) WHERE dedupe_key IS NOT NULL DO NOTHING RETURNING id""",
-        type_, db.j(payload or {}), dedupe_key, priority, delay_s, max_attempts,
+        type_,
+        db.j(payload or {}),
+        dedupe_key,
+        priority,
+        delay_s,
+        max_attempts,
     )
     return r["id"] if r else None
 
@@ -53,13 +66,18 @@ def claim(c: psycopg.Connection, types: list[str], worker: str, lease_s: int = 6
 
 
 def complete(c: psycopg.Connection, job_id: int, result: Any = None) -> None:
-    c.execute("UPDATE job SET status='done', result=%s, locked_by=NULL, locked_until=NULL, updated_at=now() WHERE id=%s",
-              (db.j(result), job_id))
+    c.execute(
+        "UPDATE job SET status='done', result=%s, locked_by=NULL, locked_until=NULL, updated_at=now() WHERE id=%s",
+        (db.j(result), job_id),
+    )
 
 
 def fail(c: psycopg.Connection, job: dict, error: str, permanent: bool = False) -> str:
     if permanent or job["attempts"] >= job["max_attempts"]:
-        c.execute("UPDATE job SET status='dead', last_error=%s, locked_by=NULL, updated_at=now() WHERE id=%s", (error, job["id"]))
+        c.execute(
+            "UPDATE job SET status='dead', last_error=%s, locked_by=NULL, updated_at=now() WHERE id=%s",
+            (error, job["id"]),
+        )
         return "dead"
     delay = BACKOFF_MIN[min(job["attempts"] - 1, len(BACKOFF_MIN) - 1)] * 60
     c.execute(
@@ -78,7 +96,9 @@ def heartbeat(c: psycopg.Connection, worker: str, role: str, info: dict | None =
     )
 
 
-def run_one(c: psycopg.Connection, handlers: dict[str, Callable[[psycopg.Connection, dict], Any]], worker: str) -> bool:
+def run_one(
+    c: psycopg.Connection, handlers: dict[str, Callable[[psycopg.Connection, dict], Any]], worker: str
+) -> bool:
     job = claim(c, list(handlers), worker)
     if not job:
         return False

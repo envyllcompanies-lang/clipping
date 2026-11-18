@@ -11,7 +11,11 @@ UTC = dt.UTC
 
 
 def _creator(conn, handle="streamer"):
-    return db.one(conn, "INSERT INTO creator(platform,platform_id,handle,language) VALUES ('twitch','1',%s,'en') RETURNING *", handle)
+    return db.one(
+        conn,
+        "INSERT INTO creator(platform,platform_id,handle,language) VALUES ('twitch','1',%s,'en') RETURNING *",
+        handle,
+    )
 
 
 def _stream_with_segments(conn, minutes=6, base=None):
@@ -52,7 +56,11 @@ def test_one_worker_per_creator(conn, tmp_data):
 
 def test_extract_window_exact_copy_fast(conn, tmp_data):
     cr, sid, base = _stream_with_segments(conn, 6)
-    mid = db.scalar(conn, "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,130,200,180,0.9) RETURNING id", sid)
+    mid = db.scalar(
+        conn,
+        "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,130,200,180,0.9) RETURNING id",
+        sid,
+    )
     wid = db.scalar(conn, """INSERT INTO "window"(moment_id) VALUES (%s) RETURNING id""", mid)
     t0 = time.time()
     res = recorder.extract_window(conn, wid)
@@ -67,10 +75,16 @@ def test_extract_window_exact_copy_fast(conn, tmp_data):
 
 def test_prune_keeps_requested_windows_and_bounds_disk(conn, tmp_data):
     cr, sid, base = _stream_with_segments(conn, 6, base=int(time.time()) - 5 * 3600)
-    mid = db.scalar(conn, "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,130,150,140,0.9) RETURNING id", sid)
+    mid = db.scalar(
+        conn,
+        "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,130,150,140,0.9) RETURNING id",
+        sid,
+    )
     conn.execute("""INSERT INTO "window"(moment_id) VALUES (%s)""", (mid,))
     removed = recorder.prune(conn)
-    kept = db.all_(conn, "SELECT start_utc FROM segment WHERE stream_id=%s AND NOT deleted ORDER BY start_utc", sid)
+    kept = db.all_(
+        conn, "SELECT start_utc FROM segment WHERE stream_id=%s AND NOT deleted ORDER BY start_utc", sid
+    )
     assert removed == 4 and len(kept) == 2  # 60-120 and 120-180 cover [100,180]
     assert all(os.path.exists(r["path"]) for r in db.all_(conn, "SELECT path FROM segment WHERE NOT deleted"))
     assert not any(os.path.exists(r["path"]) for r in db.all_(conn, "SELECT path FROM segment WHERE deleted"))
@@ -106,11 +120,18 @@ def test_sweeper_and_reconcile(conn, tmp_data):
 def test_refcount_deletes_media_at_zero(conn, tmp_data):
     cr = _creator(conn)
     sid = recorder.start_stream(conn, cr["id"], "x")
-    mid = db.scalar(conn, "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,0,1,0,1) RETURNING id", sid)
+    mid = db.scalar(
+        conn, "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,0,1,0,1) RETURNING id", sid
+    )
     clip = db.scalar(conn, "INSERT INTO clip(moment_id) VALUES (%s) RETURNING id", mid)
     f = files.managed("renders") / "c.mp4"
     f.write_bytes(b"v")
-    cv = db.scalar(conn, "INSERT INTO clip_version(clip_id,version_type,path,status) VALUES (%s,'short',%s,'queued') RETURNING id", clip, str(f))
+    cv = db.scalar(
+        conn,
+        "INSERT INTO clip_version(clip_id,version_type,path,status) VALUES (%s,'short',%s,'queued') RETURNING id",
+        clip,
+        str(f),
+    )
     files.register(conn, f, "render", "clip_version", cv)
     from clipping.storage import bucket
 

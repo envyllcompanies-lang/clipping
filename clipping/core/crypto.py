@@ -41,8 +41,12 @@ def password(length: int = 24, symbols: str = "!@#$%^&*-_") -> str:
     alphabet = string.ascii_letters + string.digits + symbols
     while True:
         pw = "".join(secrets.choice(alphabet) for _ in range(length))
-        if (any(c.islower() for c in pw) and any(c.isupper() for c in pw) and any(c.isdigit() for c in pw)
-                and (not symbols or any(c in symbols for c in pw))):
+        if (
+            any(c.islower() for c in pw)
+            and any(c.isupper() for c in pw)
+            and any(c.isdigit() for c in pw)
+            and (not symbols or any(c in symbols for c in pw))
+        ):
             return pw
 
 

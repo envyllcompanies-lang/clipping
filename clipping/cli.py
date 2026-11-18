@@ -22,12 +22,20 @@ def cmd_eval(a):
         print("built:", ", ".join(synthetic.build_all(a.names or None)))
         return
     if a.action == "run":
-        reps = harness.run_all(do_accept=a.accept) if a.all else [harness.run_stage(s, do_accept=a.accept) for s in a.stage]
+        reps = (
+            harness.run_all(do_accept=a.accept)
+            if a.all
+            else [harness.run_stage(s, do_accept=a.accept) for s in a.stage]
+        )
         ok = True
         for r in reps:
             ok &= r.passed
-            print(f"[{'PASS' if r.passed else 'FAIL'}] {r.stage} {harness.STAGE_NAMES.get(r.stage)}: " + ", ".join(
-                f"{c.metric}={c.value:.4f}" + ("" if c.passed else f" ({c.reason})") for c in r.checks))
+            print(
+                f"[{'PASS' if r.passed else 'FAIL'}] {r.stage} {harness.STAGE_NAMES.get(r.stage)}: "
+                + ", ".join(
+                    f"{c.metric}={c.value:.4f}" + ("" if c.passed else f" ({c.reason})") for c in r.checks
+                )
+            )
         sys.exit(0 if ok else 1)
 
 

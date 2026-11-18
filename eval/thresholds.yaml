@@ -10,3 +10,11 @@
   deleted_promptly: {bar: 1.0, direction: higher}
   disk_growth_ratio: {bar: 1.5, direction: lower}
   orphans_left: {bar: 0.0, direction: lower}
+"03":
+  align_within_2s: {bar: 0.8, direction: higher}
+  align_median_s: {bar: 2.0, direction: lower}
+  excess_missing_share: {bar: 0.01, direction: lower}
+"04":
+  mapped_correct: {bar: 1.0, direction: higher}
+  mapped_within_1h: {bar: 1.0, direction: higher}
+  null_offset_trend_only: {bar: 1.0, direction: higher}

@@ -1,0 +1,11 @@
+{
+  "stage": "03",
+  "accepted_at": "2026-11-18T16:59:34+00:00",
+  "dataset_version": "simstream@v1",
+  "code_version": "2b8a5c7",
+  "metrics": {
+    "align_within_2s": 0.8333333333333334,
+    "align_median_s": 0.9710070843236736,
+    "excess_missing_share": 0.0
+  }
+}

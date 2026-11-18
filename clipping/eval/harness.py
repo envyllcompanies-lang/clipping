@@ -101,7 +101,9 @@ def _worse(value: float, ref: float, direction: str, tol: float) -> bool:
     return value < ref - slack if direction == "higher" else value > ref + slack
 
 
-def evaluate(code: str, result: StageResult, baseline: dict | None, tol: float = TOLERANCE) -> list[MetricCheck]:
+def evaluate(
+    code: str, result: StageResult, baseline: dict | None, tol: float = TOLERANCE
+) -> list[MetricCheck]:
     spec = thresholds().get(code, {})
     checks = []
     for metric, value in result.metrics.items():
@@ -119,13 +121,19 @@ def evaluate(code: str, result: StageResult, baseline: dict | None, tol: float =
         checks.append(MetricCheck(metric, value, base, bar, direction, ok, "; ".join(reasons)))
     for metric in spec:
         if metric not in result.metrics and spec[metric].get("required", True):
-            checks.append(MetricCheck(metric, float("nan"), None, spec[metric].get("bar"), "higher", False, "metric missing"))
+            checks.append(
+                MetricCheck(
+                    metric, float("nan"), None, spec[metric].get("bar"), "higher", False, "metric missing"
+                )
+            )
     return checks
 
 
 def code_version() -> str:
     try:
-        return subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=ROOT).stdout.strip()
+        return subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=ROOT
+        ).stdout.strip()
     except OSError:
         return "unknown"
 
@@ -135,18 +143,30 @@ def write_report(rep: RunReport) -> Path:
     day = dt.date.today().isoformat()
     base = REPORTS / f"{day}-{rep.stage}"
     data = {
-        "stage": rep.stage, "name": STAGE_NAMES.get(rep.stage), "passed": rep.passed, "seconds": round(rep.seconds, 2),
-        "dataset_version": rep.result.dataset_version, "code_version": code_version(),
+        "stage": rep.stage,
+        "name": STAGE_NAMES.get(rep.stage),
+        "passed": rep.passed,
+        "seconds": round(rep.seconds, 2),
+        "dataset_version": rep.result.dataset_version,
+        "code_version": code_version(),
         "metrics": [c.__dict__ for c in rep.checks],
-        "worst_examples": [e.__dict__ for e in rep.result.examples[:25]], "info": rep.result.info,
+        "worst_examples": [e.__dict__ for e in rep.result.examples[:25]],
+        "info": rep.result.info,
     }
     base.with_suffix(".json").write_text(json.dumps(data, indent=2, default=str))
-    lines = [f"# Backtest {rep.stage} — {STAGE_NAMES.get(rep.stage)} ({'PASS' if rep.passed else 'FAIL'})", "",
-             f"Dataset `{rep.result.dataset_version}`, code `{data['code_version']}`, {rep.seconds:.1f}s", "",
-             "| Metric | Value | Bar | Baseline | Result |", "| --- | --- | --- | --- | --- |"]
+    lines = [
+        f"# Backtest {rep.stage} — {STAGE_NAMES.get(rep.stage)} ({'PASS' if rep.passed else 'FAIL'})",
+        "",
+        f"Dataset `{rep.result.dataset_version}`, code `{data['code_version']}`, {rep.seconds:.1f}s",
+        "",
+        "| Metric | Value | Bar | Baseline | Result |",
+        "| --- | --- | --- | --- | --- |",
+    ]
     for c in rep.checks:
         bl = "—" if c.baseline is None else f"{c.baseline:.4f}"
-        lines.append(f"| {c.metric} | {c.value:.4f} | {c.bar if c.bar is not None else '—'} | {bl} | {'ok' if c.passed else c.reason} |")
+        lines.append(
+            f"| {c.metric} | {c.value:.4f} | {c.bar if c.bar is not None else '—'} | {bl} | {'ok' if c.passed else c.reason} |"
+        )
     if rep.result.examples:
         lines += ["", "## Worst examples", ""]
         lines += [f"- `{e.example_id}` {e.metric}={e.value:.3f} {e.notes}" for e in rep.result.examples[:10]]
@@ -160,15 +180,33 @@ def record_db(rep: RunReport, kind: str = "stage") -> None:
 
         with db.conn() as c:
             run_id = db.scalar(
-                c, """INSERT INTO eval_run(kind,stage,dataset_version,code_version,config_hash,finished_at,passed)
+                c,
+                """INSERT INTO eval_run(kind,stage,dataset_version,code_version,config_hash,finished_at,passed)
                       VALUES (%s,%s,%s,%s,%s,now(),%s) RETURNING id""",
-                kind, rep.stage, rep.result.dataset_version, code_version(), config.config_hash(), rep.passed)
+                kind,
+                rep.stage,
+                rep.result.dataset_version,
+                code_version(),
+                config.config_hash(),
+                rep.passed,
+            )
             for ch in rep.checks:
-                c.execute("INSERT INTO eval_metric VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
-                          (run_id, ch.metric, None if ch.value != ch.value else ch.value, ch.baseline, ch.bar, ch.passed))
+                c.execute(
+                    "INSERT INTO eval_metric VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
+                    (
+                        run_id,
+                        ch.metric,
+                        None if ch.value != ch.value else ch.value,
+                        ch.baseline,
+                        ch.bar,
+                        ch.passed,
+                    ),
+                )
             for e in rep.result.examples[:25]:
-                c.execute("INSERT INTO eval_example(run_id,example_id,metric,value,notes) VALUES (%s,%s,%s,%s,%s)",
-                          (run_id, e.example_id, e.metric, e.value, e.notes))
+                c.execute(
+                    "INSERT INTO eval_example(run_id,example_id,metric,value,notes) VALUES (%s,%s,%s,%s,%s)",
+                    (run_id, e.example_id, e.metric, e.value, e.notes),
+                )
     except Exception:  # noqa: BLE001 - harness must work offline without a database
         pass
 
@@ -179,17 +217,30 @@ def accept(rep: RunReport, note: str = "") -> None:
         raise ValueError("refusing to accept a failing run as baseline")
     BASELINES.mkdir(parents=True, exist_ok=True)
     old = load_baseline(rep.stage)
-    (BASELINES / f"{rep.stage}.json").write_text(json.dumps(
-        {"stage": rep.stage, "accepted_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
-         "dataset_version": rep.result.dataset_version, "code_version": code_version(), "metrics": rep.result.metrics},
-        indent=2))
+    (BASELINES / f"{rep.stage}.json").write_text(
+        json.dumps(
+            {
+                "stage": rep.stage,
+                "accepted_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
+                "dataset_version": rep.result.dataset_version,
+                "code_version": code_version(),
+                "metrics": rep.result.metrics,
+            },
+            indent=2,
+        )
+    )
     cl = EVAL / "CHANGELOG.md"
     if not cl.exists():
         cl.write_text("# Eval changelog\n\nAccepted baselines with before/after metrics.\n")
     before = (old or {}).get("metrics", {})
-    parts = [f"{k} {before.get(k, float('nan')):.3f}→{v:.3f}" if k in before else f"{k} {v:.3f}" for k, v in rep.result.metrics.items()]
+    parts = [
+        f"{k} {before.get(k, float('nan')):.3f}→{v:.3f}" if k in before else f"{k} {v:.3f}"
+        for k, v in rep.result.metrics.items()
+    ]
     with cl.open("a") as f:
-        f.write(f"\n- {dt.date.today()} stage {rep.stage} ({STAGE_NAMES.get(rep.stage)}): {', '.join(parts)}{' — ' + note if note else ''}\n")
+        f.write(
+            f"\n- {dt.date.today()} stage {rep.stage} ({STAGE_NAMES.get(rep.stage)}): {', '.join(parts)}{' — ' + note if note else ''}\n"
+        )
 
 
 def run_stage(code: str, *, do_accept: bool = False, record: bool = True, note: str = "") -> RunReport:

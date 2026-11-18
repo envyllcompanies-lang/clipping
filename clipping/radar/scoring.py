@@ -7,15 +7,23 @@ import statistics
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-SIGNALS = ["live_audience", "footage_volume", "clip_rate", "clip_reach", "offplatform_reach", "growth", "our_performance"]
+SIGNALS = [
+    "live_audience",
+    "footage_volume",
+    "clip_rate",
+    "clip_reach",
+    "offplatform_reach",
+    "growth",
+    "our_performance",
+]
 
 
 @dataclass
 class CreatorInput:
     creator_id: int
     language: str
-    samples: list[tuple[float, bool, int | None]]          # (t_hours_ago, live_in_game, viewers)
-    clips: list[tuple[float, int]] = field(default_factory=list)   # (t_hours_ago, views)
+    samples: list[tuple[float, bool, int | None]]  # (t_hours_ago, live_in_game, viewers)
+    clips: list[tuple[float, int]] = field(default_factory=list)  # (t_hours_ago, views)
     has_clip_data: bool = True
     offplatform_median: float | None = None
     our_performance: float | None = None
@@ -38,13 +46,19 @@ class Scored:
     below_cutoff_days: int = 0
 
 
-def _week_stats(c: CreatorInput, lo: float, hi: float, interval_min: float) -> tuple[float | None, float, float | None, float | None]:
+def _week_stats(
+    c: CreatorInput, lo: float, hi: float, interval_min: float
+) -> tuple[float | None, float, float | None, float | None]:
     live = [v for t, ok, v in c.samples if lo <= t < hi and ok and v is not None]
     hours = len(live) * interval_min / 60.0
     audience = statistics.fmean(live) if live else None
     clips = [views for t, views in c.clips if lo <= t < hi]
     rate = (len(clips) / hours) if (c.has_clip_data and hours > 0) else None
-    reach = float(statistics.median(clips)) if (c.has_clip_data and clips) else (0.0 if c.has_clip_data and hours > 0 else None)
+    reach = (
+        float(statistics.median(clips))
+        if (c.has_clip_data and clips)
+        else (0.0 if c.has_clip_data and hours > 0 else None)
+    )
     return audience, hours, rate, reach
 
 
@@ -88,8 +102,12 @@ def percentile_ranks(values: dict[int, float]) -> dict[int, float]:
     return out
 
 
-def score_language(inputs: list[CreatorInput], weights: dict[str, float], interval_min: float = 10,
-                   viewbot_ratio: float = 0.2) -> list[Scored]:
+def score_language(
+    inputs: list[CreatorInput],
+    weights: dict[str, float],
+    interval_min: float = 10,
+    viewbot_ratio: float = 0.2,
+) -> list[Scored]:
     sig = {c.creator_id: compute_signals(c, interval_min) for c in inputs}
     by_id = {c.creator_id: c for c in inputs}
     # Viewbot flag: chats per viewer far below language median -> down-weight live audience.
@@ -101,7 +119,11 @@ def score_language(inputs: list[CreatorInput], weights: dict[str, float], interv
             flags[c.creator_id]["viewbot_suspect"] = True
     pct: dict[int, dict[str, float]] = defaultdict(dict)
     for s in SIGNALS:
-        vals = {cid: v[s] for cid, v in sig.items() if v[s] is not None and not (isinstance(v[s], float) and math.isnan(v[s]))}
+        vals = {
+            cid: v[s]
+            for cid, v in sig.items()
+            if v[s] is not None and not (isinstance(v[s], float) and math.isnan(v[s]))
+        }
         for cid, p in percentile_ranks(vals).items():
             pct[cid][s] = p
     out = []
@@ -118,8 +140,16 @@ def score_language(inputs: list[CreatorInput], weights: dict[str, float], interv
     return out
 
 
-def select(scored: list[Scored], slots: int, *, exploit_share: float = 0.8, previous: dict[int, dict] | None = None,
-           hysteresis_days: int = 2, blocked: set[int] | frozenset = frozenset(), pinned: set[int] | frozenset = frozenset()) -> list[Scored]:
+def select(
+    scored: list[Scored],
+    slots: int,
+    *,
+    exploit_share: float = 0.8,
+    previous: dict[int, dict] | None = None,
+    hysteresis_days: int = 2,
+    blocked: set[int] | frozenset = frozenset(),
+    pinned: set[int] | frozenset = frozenset(),
+) -> list[Scored]:
     """Pick recorder slots: pinned first, 80% top-ranked, 20% highest growth outside the top group, with hysteresis."""
     previous = previous or {}
     eligible = [s for s in scored if s.creator_id not in blocked]
@@ -146,8 +176,14 @@ def select(scored: list[Scored], slots: int, *, exploit_share: float = 0.8, prev
                 take(s, f"kept by hysteresis (day {s.below_cutoff_days} below cutoff)")
     for s in eligible[:n_exploit]:
         take(s, f"top-ranked #{s.rank} in {s.language} (score {s.score:.3f})")
-    rising = sorted((s for s in eligible if s.creator_id not in top_ids and not s.selected and s.signals.get("growth") is not None),
-                    key=lambda s: (-(s.signals["growth"] or 0), s.creator_id))
+    rising = sorted(
+        (
+            s
+            for s in eligible
+            if s.creator_id not in top_ids and not s.selected and s.signals.get("growth") is not None
+        ),
+        key=lambda s: (-(s.signals["growth"] or 0), s.creator_id),
+    )
     for s in rising:
         take(s, f"explore: rising (growth {s.signals['growth']:+.0%})")
     for s in eligible:  # fill any remaining capacity by rank

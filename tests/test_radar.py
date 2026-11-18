@@ -6,7 +6,9 @@ from clipping.radar.sources import FakeLiveSource, LiveStream
 
 
 def _stream(uid, viewers, lang="en", game="g1", sid=None, title="gta 6 chaos"):
-    return LiveStream("twitch", uid, f"user{uid}", viewers, lang, "2026-11-18T10:00:00Z", title, game, sid or f"s{uid}")
+    return LiveStream(
+        "twitch", uid, f"user{uid}", viewers, lang, "2026-11-18T10:00:00Z", title, game, sid or f"s{uid}"
+    )
 
 
 def test_percentile_ranks_ties_and_single():
@@ -36,8 +38,10 @@ def test_viewbot_flag_downweights():
 
 
 def test_select_exploit_explore_hysteresis_blocklist():
-    sc = [scoring.Scored(i, "en", {"growth": g}, {}, 1 - i / 10, rank=i) for i, g in
-          [(1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.1), (6, 2.0), (7, 0.5)]]
+    sc = [
+        scoring.Scored(i, "en", {"growth": g}, {}, 1 - i / 10, rank=i)
+        for i, g in [(1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.1), (6, 2.0), (7, 0.5)]
+    ]
     chosen = scoring.select(sc, 5, blocked={2})
     ids = [s.creator_id for s in chosen]
     assert 2 not in ids and len(ids) == 5
@@ -57,8 +61,17 @@ def test_allocate_slots():
 
 
 def test_poll_lists_every_live_creator_and_language_samples(conn):
-    src = FakeLiveSource("twitch", streams=[_stream("1", 5000), _stream("2", 300, "es"), _stream("3", 10, "", title="jugando en directo")])
-    kick = FakeLiveSource("kick", game_id="k1", streams=[LiveStream("kick", "9", "kicker", 800, "tr", "", "x", "k1", "ks9")])
+    src = FakeLiveSource(
+        "twitch",
+        streams=[
+            _stream("1", 5000),
+            _stream("2", 300, "es"),
+            _stream("3", 10, "", title="jugando en directo"),
+        ],
+    )
+    kick = FakeLiveSource(
+        "kick", game_id="k1", streams=[LiveStream("kick", "9", "kicker", 800, "tr", "", "x", "k1", "ks9")]
+    )
     seen = service.poll_live(conn, [src, kick], {"twitch": "g1", "kick": "k1"})
     assert len(seen) == 4
     langs = {r["handle"]: r["language"] for r in db.all_(conn, "SELECT handle, language FROM creator")}

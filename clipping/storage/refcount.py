@@ -16,15 +16,24 @@ def set_pending(c: psycopg.Connection, clip_version_id: int, n: int) -> None:
 
 def post_finished(c: psycopg.Connection, clip_version_id: int) -> int:
     """Atomically decrement; at zero delete the file + bucket copies and mark media_deleted. Returns remaining."""
-    left = db.scalar(c, """UPDATE clip_version SET pending_posts=GREATEST(pending_posts-1,0) WHERE id=%s
-                           RETURNING pending_posts""", clip_version_id)
+    left = db.scalar(
+        c,
+        """UPDATE clip_version SET pending_posts=GREATEST(pending_posts-1,0) WHERE id=%s
+                           RETURNING pending_posts""",
+        clip_version_id,
+    )
     if left == 0:
         release_media(c, clip_version_id)
     return left
 
 
 def recount(c: psycopg.Connection, clip_version_id: int) -> int:
-    left = db.scalar(c, "SELECT count(*) FROM post WHERE clip_version_id=%s AND status <> ALL(%s)", clip_version_id, list(FINAL))
+    left = db.scalar(
+        c,
+        "SELECT count(*) FROM post WHERE clip_version_id=%s AND status <> ALL(%s)",
+        clip_version_id,
+        list(FINAL),
+    )
     c.execute("UPDATE clip_version SET pending_posts=%s WHERE id=%s", (left, clip_version_id))
     if left == 0 and db.scalar(c, "SELECT count(*) FROM post WHERE clip_version_id=%s", clip_version_id):
         release_media(c, clip_version_id)

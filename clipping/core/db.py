@@ -89,16 +89,31 @@ def set_flag(c: psycopg.Connection, key: str, value: Any) -> None:
     )
 
 
-def audit(c: psycopg.Connection, action: str, subject: str = "", details: dict | None = None, actor: str = "system") -> None:
-    c.execute("INSERT INTO audit_log(actor,action,subject,details) VALUES (%s,%s,%s,%s)", (actor, action, subject, j(details or {})))
+def audit(
+    c: psycopg.Connection, action: str, subject: str = "", details: dict | None = None, actor: str = "system"
+) -> None:
+    c.execute(
+        "INSERT INTO audit_log(actor,action,subject,details) VALUES (%s,%s,%s,%s)",
+        (actor, action, subject, j(details or {})),
+    )
 
 
-def alert(c: psycopg.Connection, kind: str, message: str, subject: str = "", severity: str = "warning") -> None:
+def alert(
+    c: psycopg.Connection, kind: str, message: str, subject: str = "", severity: str = "warning"
+) -> None:
     """Raise an alert once per open (kind, subject)."""
-    exists = one(c, "SELECT id FROM alert WHERE kind=%s AND subject=%s AND resolved_at IS NULL", kind, subject)
+    exists = one(
+        c, "SELECT id FROM alert WHERE kind=%s AND subject=%s AND resolved_at IS NULL", kind, subject
+    )
     if not exists:
-        c.execute("INSERT INTO alert(kind,severity,message,subject) VALUES (%s,%s,%s,%s)", (kind, severity, message, subject))
+        c.execute(
+            "INSERT INTO alert(kind,severity,message,subject) VALUES (%s,%s,%s,%s)",
+            (kind, severity, message, subject),
+        )
 
 
 def resolve_alert(c: psycopg.Connection, kind: str, subject: str = "") -> None:
-    c.execute("UPDATE alert SET resolved_at=now() WHERE kind=%s AND subject=%s AND resolved_at IS NULL", (kind, subject))
+    c.execute(
+        "UPDATE alert SET resolved_at=now() WHERE kind=%s AND subject=%s AND resolved_at IS NULL",
+        (kind, subject),
+    )

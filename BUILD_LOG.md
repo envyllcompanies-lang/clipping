@@ -6,8 +6,8 @@ Live status of the build. Newest first in "Progress". Spec: `docs/`. Run `make t
 
 | Phase | Status |
 | --- | --- |
-| 1 Foundation and sources | in progress |
-| 2 Finding moments | not started |
+| 1 Foundation and sources | done |
+| 2 Finding moments | in progress |
 | 3 Making clips | not started |
 | 4 Dashboard and public site | not started |
 | 5 Publishing | not started |
@@ -23,6 +23,8 @@ Live status of the build. Newest first in "Progress". Spec: `docs/`. Run `make t
 | 01 | Creator radar | pass | Spearman 0.853 (≥ 0.6) |
 | 02 | Stream recorder | pass | extract exact 100%, p95 0.4 s (≤ 10 s), disk 1.05× buffer (≤ 1.1) |
 | 21 | Storage lifecycle | pass | deleted promptly 100%, disk growth 0.86× (≤ 1.5) |
+| 03 | Chat capture | pass | spikes aligned ≤ 2 s: 83% (≥ 80%), median 0.97 s; no false missing time |
+| 04 | Platform clips & VOD ingest | pass | 100% mapped to the right UTC instant within 1 h |
 
 ## Needs B
 
