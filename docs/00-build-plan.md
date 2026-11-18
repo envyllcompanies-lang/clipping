@@ -49,6 +49,7 @@ Every component has its own detailed doc: job and boundaries, inputs, step-by-st
 | 27 | Account Provisioning Tool | [Open](components/27-account-provisioning-tool.md) |
 | 28 | Language Market Ranking | [Open](components/28-language-market-ranking.md) |
 | 29 | Public Site & Policy Pages | [Open](components/29-public-site-policy-pages.md) |
+| 30 | Backtesting & Evaluation Harness | [Open](components/30-backtesting-evaluation.md) |
 
 ## Findings that change the design
 
@@ -277,11 +278,11 @@ These mechanisms keep the channels alive at full volume. None of them stops a cl
 
 ## Build phases
 
-Eight phases, in order. Every component doc (01–29) belongs to exactly one phase. Phase 0 is owner work that runs in the background (reviews take weeks). Each phase ends with a test you can actually run; don't start the next phase until it passes.
+Eight phases, in order. Every component doc (01–30) belongs to exactly one phase. The backtesting harness (30) is built in Phase 1 and every later component adds its own dataset and stage backtest to it. Phase 0 is owner work that runs in the background (reviews take weeks). Each phase ends with a test you can actually run; don't start the next phase until it passes.
 
 0. **Phase 0 — Owner setup (in parallel, doc 26).** Twitch and Kick developer apps first (needed for Phase 1). Then Google Cloud project, Meta app, TikTok developer app, Snap Business + allowlist request, and the YouTube, Meta and TikTok reviews once Phase 4 has something to show.
    - Done when: Twitch/Kick keys are in `.env`; reviews are submitted.
-1. **Phase 1 — Foundation and sources.** Repo skeleton, config files, local Postgres (Docker), job tables and data model (25); creator radar (01), stream recorder (02), chat capture (03), platform clips & VOD ingest (04), storage lifecycle (21).
+1. **Phase 1 — Foundation and sources.** Repo skeleton, config files, local Postgres (Docker), job tables and data model (25), backtesting harness skeleton and first viewer-clip dataset (30); creator radar (01), stream recorder (02), chat capture (03), platform clips & VOD ingest (04), storage lifecycle (21).
    - Done when: the radar ranks live GTA creators per language, the recorder keeps a rolling buffer for the top N, chat and platform clips are stored, and disk usage stays flat.
 2. **Phase 2 — Finding moments.** Moment heatmap & scoring (05), audio cleanup & music removal (07), transcription (06), game event detection (08).
    - Done when: on 3 real recorded streams, the top-ranked windows line up with the moments viewers clipped (doc 05 checks pass).

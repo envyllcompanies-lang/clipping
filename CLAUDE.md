@@ -2,7 +2,7 @@
 
 Fully automated AI clipping and multi-platform posting system for GTA 6 short-form clips.
 
-Start with `docs/00-build-plan.md`, then the component doc for whatever you're building in `docs/components/` (01–29). The docs are the spec; follow them. Doc 26 lists what the owner does by hand; `docs/references.md` holds reference channels and repos.
+Start with `docs/00-build-plan.md`, then the component doc for whatever you're building in `docs/components/` (01–30). The docs are the spec; follow them. Doc 26 lists what the owner does by hand; `docs/references.md` holds reference channels and repos.
 
 ## Decisions (don't revisit without the owner)
 
@@ -25,3 +25,5 @@ Start with `docs/00-build-plan.md`, then the component doc for whatever you're b
 - Work moves through Postgres job tables (`FOR UPDATE SKIP LOCKED`); workers are idempotent and restartable.
 - Secrets live in `.env` locally and the host's secret manager in production. Never commit secrets or tokens.
 - Each component doc ends with a "Done when" checklist; a component is done when those pass.
+- Every component gets a stage backtest in the harness (doc 30). No change to code, config, weights or style profiles is accepted if it makes a backtest metric worse than the baseline.
+- Work autonomously: when a test or backtest fails, find the cause and fix it, then re-run; don't stop to ask unless a decision in this file would have to change.
