@@ -40,7 +40,8 @@ def landmarks(x: np.ndarray, sr: int, fan: int = 5) -> set[tuple[int, int, int, 
 
 
 def match_score(reference: np.ndarray, query: np.ndarray, sr: int) -> float:
-    """Share of query hashes that agree with the reference at one consistent time offset (0 = no match)."""
+    """Number of query hashes that agree with the reference at one consistent time offset. Unrelated audio
+    scores <= 3 on 12 s windows; real matches score 5+."""
     ref = landmarks(reference, sr)
     q = landmarks(query, sr)
     if not ref or not q:
@@ -53,8 +54,8 @@ def match_score(reference: np.ndarray, query: np.ndarray, sr: int) -> float:
         for tr in idx.get((f1, f2, dt), ()):
             offsets[tr - t] = offsets.get(tr - t, 0) + 1
     best = max(offsets.values()) if offsets else 0
-    return best / len(q)
+    return float(best)
 
 
-def matches(reference: np.ndarray, query: np.ndarray, sr: int, threshold: float = 0.05) -> bool:
+def matches(reference: np.ndarray, query: np.ndarray, sr: int, threshold: float = 5) -> bool:
     return match_score(reference, query, sr) >= threshold

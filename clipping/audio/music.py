@@ -61,7 +61,7 @@ def features(audio: np.ndarray, sr: int) -> np.ndarray:
         lo, hi = max(0, a - 2 * fpsec), min(len(flux), b + 2 * fpsec)  # 5 s context for rhythm
         f = flux[lo:hi] - flux[lo:hi].mean()
         if len(f) > fpsec:
-            ac = np.correlate(f, f, "full")[len(f) - 1:]
+            ac = np.correlate(f, f, "full")[len(f) - 1 :]
             ac = ac / (ac[0] + 1e-9)
             l0, l1 = int(0.3 * fps), min(len(ac) - 1, int(1.0 * fps))
             out[s, 2] = ac[l0:l1].max() if l1 > l0 else 0
@@ -88,8 +88,20 @@ def _panns():
     at = AudioTagging(checkpoint_path=None, device="mps" if _has_mps() else "cpu")
     from panns_inference import labels
 
-    return at, [i for i, lab in enumerate(labels) if lab in ("Music", "Musical instrument", "Song", "Pop music", "Rock music",
-                                                               "Hip hop music", "Electronic music")]
+    return at, [
+        i
+        for i, lab in enumerate(labels)
+        if lab
+        in (
+            "Music",
+            "Musical instrument",
+            "Song",
+            "Pop music",
+            "Rock music",
+            "Hip hop music",
+            "Electronic music",
+        )
+    ]
 
 
 def _has_mps() -> bool:
@@ -107,10 +119,17 @@ def panns_prob(audio: np.ndarray, sr: int) -> np.ndarray:
     at, idx = _panns()
     x = resample_poly(audio, 32000 // np.gcd(sr, 32000), sr // np.gcd(sr, 32000)).astype(np.float32)
     T = max(1, len(x) // 32000)
-    chunks = np.stack([np.pad(x[max(0, (s - 0) * 32000 - 16000): s * 32000 + 48000], (0, 0))[:64000].copy()
-                       if len(x[max(0, s * 32000 - 16000): s * 32000 + 48000]) >= 64000
-                       else np.pad(x[max(0, s * 32000 - 16000): s * 32000 + 48000], (0, 64000 - len(x[max(0, s * 32000 - 16000): s * 32000 + 48000])))
-                       for s in range(T)])
+    chunks = np.stack(
+        [
+            np.pad(x[max(0, (s - 0) * 32000 - 16000) : s * 32000 + 48000], (0, 0))[:64000].copy()
+            if len(x[max(0, s * 32000 - 16000) : s * 32000 + 48000]) >= 64000
+            else np.pad(
+                x[max(0, s * 32000 - 16000) : s * 32000 + 48000],
+                (0, 64000 - len(x[max(0, s * 32000 - 16000) : s * 32000 + 48000])),
+            )
+            for s in range(T)
+        ]
+    )
     clip, _ = at.inference(chunks)
     return clip[:, idx].max(axis=1)
 
@@ -122,7 +141,9 @@ def backend() -> str:
     try:
         import panns_inference  # noqa: F401
 
-        return "panns" if os.path.exists(os.path.expanduser("~/panns_data/Cnn14_mAP=0.431.pth")) else "heuristic"
+        return (
+            "panns" if os.path.exists(os.path.expanduser("~/panns_data/Cnn14_mAP=0.431.pth")) else "heuristic"
+        )
     except ImportError:
         return "heuristic"
 

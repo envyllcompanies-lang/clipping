@@ -2,14 +2,23 @@
   "stage": "05",
   "name": "Moment Heatmap",
   "passed": true,
-  "seconds": 23.51,
+  "seconds": 32.78,
   "dataset_version": "simstream@v1",
-  "code_version": "fa25716",
+  "code_version": "f5a8719",
   "metrics": [
+    {
+      "metric": "score_s_per_hour",
+      "value": 43.27114391326904,
+      "baseline": null,
+      "bar": 120,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
     {
       "metric": "recall_at_20",
       "value": 0.9833333333333334,
-      "baseline": null,
+      "baseline": 0.9833333333333334,
       "bar": 0.7,
       "direction": "higher",
       "passed": true,
@@ -18,7 +27,7 @@
     {
       "metric": "precision_at_20",
       "value": 0.975,
-      "baseline": null,
+      "baseline": 0.975,
       "bar": 0.5,
       "direction": "higher",
       "passed": true,
@@ -27,7 +36,7 @@
     {
       "metric": "recall_at_20_live",
       "value": 0.9333333333333332,
-      "baseline": null,
+      "baseline": 0.9333333333333332,
       "bar": 0.7,
       "direction": "higher",
       "passed": true,
@@ -36,7 +45,7 @@
     {
       "metric": "precision_at_20_live",
       "value": 0.9249999999999999,
-      "baseline": null,
+      "baseline": 0.9249999999999999,
       "bar": 0.5,
       "direction": "higher",
       "passed": true,
@@ -44,8 +53,8 @@
     },
     {
       "metric": "fuse_s_per_hour",
-      "value": 0.008157958587010702,
-      "baseline": null,
+      "value": 0.00496673583984375,
+      "baseline": 0.005193273226420085,
       "bar": 120,
       "direction": "lower",
       "passed": true,

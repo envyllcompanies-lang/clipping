@@ -1,0 +1,14 @@
+{
+  "stage": "05",
+  "accepted_at": "2026-11-18T17:18:36+00:00",
+  "dataset_version": "simstream@v1",
+  "code_version": "f5a8719",
+  "metrics": {
+    "score_s_per_hour": 43.27114391326904,
+    "recall_at_20": 0.9833333333333334,
+    "precision_at_20": 0.975,
+    "recall_at_20_live": 0.9333333333333332,
+    "precision_at_20_live": 0.9249999999999999,
+    "fuse_s_per_hour": 0.00496673583984375
+  }
+}

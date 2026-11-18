@@ -6,8 +6,16 @@ import math
 
 import numpy as np
 
-SIGNALS = ["chat_velocity", "viewer_clips", "audio_energy", "voice_excitement", "chat_reaction", "game_events", "visual_change",
-           "viewer_jump"]
+SIGNALS = [
+    "chat_velocity",
+    "viewer_clips",
+    "audio_energy",
+    "voice_excitement",
+    "chat_reaction",
+    "game_events",
+    "visual_change",
+    "viewer_jump",
+]
 
 
 def _shift(a: np.ndarray, lag_s: float) -> np.ndarray:
@@ -20,7 +28,9 @@ def _shift(a: np.ndarray, lag_s: float) -> np.ndarray:
     return out
 
 
-def from_buckets(buckets: list[dict], T: int, bucket_s: int = 10, lag_s: float = 4.5) -> tuple[np.ndarray, np.ndarray]:
+def from_buckets(
+    buckets: list[dict], T: int, bucket_s: int = 10, lag_s: float = 4.5
+) -> tuple[np.ndarray, np.ndarray]:
     """Chat velocity (robust z) and reaction mix interpolated to 1 s, shifted back by the reaction lag."""
     vel = np.full(T, np.nan)
     mix = np.full(T, np.nan)
@@ -32,7 +42,14 @@ def from_buckets(buckets: list[dict], T: int, bucket_s: int = 10, lag_s: float =
         m = bool(b.get("missing"))
         miss.append(m)
         vz.append(np.nan if m or b.get("velocity_z") is None else b["velocity_z"])
-        rm.append(np.nan if m else 0.4 * b["laugh_share"] + 0.4 * b["hype_share"] + 0.1 * b["caps_share"] + 0.1 * b["copypasta_score"])
+        rm.append(
+            np.nan
+            if m
+            else 0.4 * b["laugh_share"]
+            + 0.4 * b["hype_share"]
+            + 0.1 * b["caps_share"]
+            + 0.1 * b["copypasta_score"]
+        )
     centers = np.array(centers)
     t = np.arange(T)
     for src, dst in ((np.array(vz), vel), (np.array(rm), mix)):
@@ -71,7 +88,9 @@ def rms_db(audio: np.ndarray, sr: int, hop_s: float = 0.05) -> np.ndarray:
     return 20 * np.log10(np.sqrt((frames**2).mean(axis=1)) + 1e-6)
 
 
-def audio_spikes(db: np.ndarray, hop_s: float, T: int, jump_db: float = 10.0, music: np.ndarray | None = None) -> np.ndarray:
+def audio_spikes(
+    db: np.ndarray, hop_s: float, T: int, jump_db: float = 10.0, music: np.ndarray | None = None
+) -> np.ndarray:
     """dB jump over the previous 1 s median, per second max; jumps under `jump_db` count partially. Music-heavy
     seconds are down-weighted (radio makes energy noisy)."""
     per = int(round(1 / hop_s))
@@ -79,7 +98,7 @@ def audio_spikes(db: np.ndarray, hop_s: float, T: int, jump_db: float = 10.0, mu
         return np.zeros(T)
     from numpy.lib.stride_tricks import sliding_window_view
 
-    med = np.median(sliding_window_view(db, per), axis=1)            # med[i] = median(db[i:i+per])
+    med = np.median(sliding_window_view(db, per), axis=1)  # med[i] = median(db[i:i+per])
     jump = np.zeros_like(db)
     jump[per:] = db[per:] - med[: len(db) - per]
     jump = np.clip(jump, 0, None)
@@ -144,7 +163,9 @@ def events_curve(events: list[dict], T: int, weights: dict[str, float], width_s:
         if w <= 0:
             continue
         lo, hi = int(max(0, e["t"] - 4 * width_s)), int(min(T, e["t"] + 4 * width_s))
-        out[lo:hi] = np.maximum(out[lo:hi], w * e.get("confidence", 1.0) * np.exp(-0.5 * ((t[lo:hi] - e["t"]) / width_s) ** 2))
+        out[lo:hi] = np.maximum(
+            out[lo:hi], w * e.get("confidence", 1.0) * np.exp(-0.5 * ((t[lo:hi] - e["t"]) / width_s) ** 2)
+        )
     return out
 
 
@@ -153,5 +174,5 @@ def viewer_jumps(samples: list[tuple[int, int]], T: int) -> np.ndarray:
     out = np.full(T, np.nan) if len(samples) < 2 else np.zeros(T)
     for (t0, v0), (t1, v1) in zip(samples, samples[1:], strict=False):
         if v0 > 0 and t1 > t0:
-            out[max(0, t0):min(T, t1)] = max(0.0, (v1 - v0) / v0)
+            out[max(0, t0) : min(T, t1)] = max(0.0, (v1 - v0) / v0)
     return out

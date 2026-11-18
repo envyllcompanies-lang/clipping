@@ -13,3 +13,9 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 03 (Chat Capture): align_within_2s 0.833, align_median_s 0.971, excess_missing_share 0.000
 
 - 2026-11-18 stage 04 (Platform Clips & VOD Ingest): mapped_correct 1.000, mapped_within_1h 1.000, null_offset_trend_only 1.000
+
+- 2026-11-18 stage 05 (Moment Heatmap): recall_at_20 0.983, precision_at_20 0.975, recall_at_20_live 0.933, precision_at_20_live 0.925, fuse_s_per_hour 0.005
+
+- 2026-11-18 stage 07 (Audio Cleanup & Music Removal): detector_accuracy 1.000, skip_when_no_music 1.000, radio_no_longer_matches 1.000, voice_snr_gain_db 12.381
+
+- 2026-11-18 stage 05 (Moment Heatmap): score_s_per_hour 43.271, recall_at_20 0.983→0.983, precision_at_20 0.975→0.975, recall_at_20_live 0.933→0.933, precision_at_20_live 0.925→0.925, fuse_s_per_hour 0.005→0.005

@@ -27,7 +27,8 @@ def stream_signals(s: SimStream, cfg: dict, buckets: list[dict] | None = None) -
         buckets = features.bucketize(s.msgs, T, config.chat_tokens(s.language), gaps=s.gaps)
     vel, mix = signals.from_buckets(buckets, T, lag_s=cfg["reaction_lag_s"])
     return {
-        "chat_velocity": vel, "chat_reaction": mix,
+        "chat_velocity": vel,
+        "chat_reaction": mix,
         "viewer_clips": signals.clip_density(s.clips, T, cfg["clip_kernel_s"]),
         "audio_energy": signals.audio_spikes(s.audio_db, 0.1, T, music=s.music),
         "voice_excitement": s.voice_exc.astype(float),
@@ -47,9 +48,15 @@ def top_moments(s: SimStream, k: int = TOP_K) -> list[tuple[float, float]]:
 
 def evaluate_stream(sig: dict, s: SimStream, cfg: dict, weights: dict) -> tuple[float, float, list]:
     score = fusion.fuse(sig, weights, cfg["smooth_s"])
-    wins = fusion.pick_windows(score, separation_s=cfg["peak_separation_s"], pct=cfg["peak_percentile"], floor=cfg["abs_floor"],
-                               before_s=cfg["window_before_s"], after_s=cfg["window_after_s"],
-                               max_per_hour=cfg["max_per_hour"])
+    wins = fusion.pick_windows(
+        score,
+        separation_s=cfg["peak_separation_s"],
+        pct=cfg["peak_percentile"],
+        floor=cfg["abs_floor"],
+        before_s=cfg["window_before_s"],
+        after_s=cfg["window_after_s"],
+        max_per_hour=cfg["max_per_hour"],
+    )
     top20 = wins[: int(20 * s.duration_s / 14400)]
     truth = top_moments(s)
     hit = [any(w.start_s <= t <= w.end_s for w in top20) for t, _ in truth]
@@ -75,9 +82,83 @@ def run(weights: dict | None = None) -> StageResult:
         rec.append(r), prec.append(p), rec_live.append(rl), prec_live.append(pl)
         for t, v in miss_l:
             at = int(t)
-            notes = " ".join(f"{k}={np.nan_to_num(sig[k][at:at + 8]).max():.2f}" for k in sig)
+            notes = " ".join(f"{k}={np.nan_to_num(sig[k][at : at + 8]).max():.2f}" for k in sig)
             ex.append(Example(f"seed{seed}@{t:.0f}s", "missed_live", float(v), notes))
     ex.sort(key=lambda e: -e.value)
-    return StageResult({"recall_at_20": float(np.mean(rec)), "precision_at_20": float(np.mean(prec)),
-                        "recall_at_20_live": float(np.mean(rec_live)), "precision_at_20_live": float(np.mean(prec_live)),
-                        "fuse_s_per_hour": float(np.mean(fuse_t))}, ex, "simstream@v1")
+    feat_h = feature_cost_per_hour()
+    return StageResult(
+        {
+            "score_s_per_hour": feat_h + float(np.mean(fuse_t)),
+            "recall_at_20": float(np.mean(rec)),
+            "precision_at_20": float(np.mean(prec)),
+            "recall_at_20_live": float(np.mean(rec_live)),
+            "precision_at_20_live": float(np.mean(prec_live)),
+            "fuse_s_per_hour": float(np.mean(fuse_t)),
+        },
+        ex,
+        "simstream@v1",
+    )
+
+
+def feature_cost_per_hour() -> float:
+    """Seconds of compute to extract audio/visual/music features for one hour of 1080p60 recording."""
+    import datetime as dt
+    import subprocess
+    import tempfile
+    from pathlib import Path
+
+    from clipping.heatmap import service
+
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "seg.ts"
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-v",
+                "error",
+                "-y",
+                "-f",
+                "lavfi",
+                "-i",
+                "testsrc2=size=1920x1080:rate=60",
+                "-f",
+                "lavfi",
+                "-i",
+                "sine",
+                "-t",
+                "60",
+                "-c:v",
+                "libx264",
+                "-preset",
+                "ultrafast",
+                "-g",
+                "120",
+                "-b:v",
+                "6M",
+                "-c:a",
+                "aac",
+                "-f",
+                "mpegts",
+                str(p),
+            ],
+            check=True,
+        )
+
+        class _NoDB:
+            def execute(self, *a):
+                return None
+
+        seg = {
+            "id": -1,
+            "path": str(p),
+            "start_utc": dt.datetime(2026, 1, 1, tzinfo=dt.UTC),
+            "end_utc": dt.datetime(2026, 1, 1, 0, 1, tzinfo=dt.UTC),
+        }
+        orig = service.db.one
+        service.db.one = lambda *a, **k: None
+        try:
+            t0 = time.time()
+            service.segment_features(_NoDB(), seg)
+            return (time.time() - t0) * 60
+        finally:
+            service.db.one = orig

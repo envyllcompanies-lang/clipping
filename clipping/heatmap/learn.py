@@ -16,11 +16,13 @@ def labels_from_clips(clips: list[dict], T: int, within_s: float = 15, anchor: f
     y = np.zeros(T)
     for c in clips:
         p = int(c["t_start"] + anchor * c.get("duration", 30))
-        y[max(0, p - int(within_s)): min(T, p + int(within_s))] = 1
+        y[max(0, p - int(within_s)) : min(T, p + int(within_s))] = 1
     return y
 
 
-def fit_logistic(X: np.ndarray, y: np.ndarray, l2: float = 1.0, iters: int = 400, lr: float = 0.5) -> np.ndarray:
+def fit_logistic(
+    X: np.ndarray, y: np.ndarray, l2: float = 1.0, iters: int = 400, lr: float = 0.5
+) -> np.ndarray:
     n, d = X.shape
     Xb = np.hstack([X, np.ones((n, 1))])
     w = np.zeros(d + 1)

@@ -1,26 +1,78 @@
 # Starting bars (doc 30). Ratchet up after 4 weeks consistently above; never down without the owner.
 # direction: higher = bigger is better.
-"01":
-  spearman: {bar: 0.6, direction: higher}
-"02":
-  extract_exact: {bar: 1.0, direction: higher}
-  extract_p95_s: {bar: 10.0, direction: lower}
-  disk_ratio: {bar: 1.1, direction: lower}
-"21":
-  deleted_promptly: {bar: 1.0, direction: higher}
-  disk_growth_ratio: {bar: 1.5, direction: lower}
-  orphans_left: {bar: 0.0, direction: lower}
-"03":
-  align_within_2s: {bar: 0.8, direction: higher}
-  align_median_s: {bar: 2.0, direction: lower}
-  excess_missing_share: {bar: 0.01, direction: lower}
-"04":
-  mapped_correct: {bar: 1.0, direction: higher}
-  mapped_within_1h: {bar: 1.0, direction: higher}
-  null_offset_trend_only: {bar: 1.0, direction: higher}
-"05":
-  recall_at_20: {bar: 0.7, direction: higher}
-  recall_at_20_live: {bar: 0.7, direction: higher}
-  precision_at_20: {bar: 0.5, direction: higher}
-  precision_at_20_live: {bar: 0.5, direction: higher}
-  fuse_s_per_hour: {bar: 120, direction: lower}
+'01':
+  spearman:
+    bar: 0.6
+    direction: higher
+'02':
+  extract_exact:
+    bar: 1.0
+    direction: higher
+  extract_p95_s:
+    bar: 10.0
+    direction: lower
+  disk_ratio:
+    bar: 1.1
+    direction: lower
+'21':
+  deleted_promptly:
+    bar: 1.0
+    direction: higher
+  disk_growth_ratio:
+    bar: 1.5
+    direction: lower
+  orphans_left:
+    bar: 0.0
+    direction: lower
+'03':
+  align_within_2s:
+    bar: 0.8
+    direction: higher
+  align_median_s:
+    bar: 2.0
+    direction: lower
+  excess_missing_share:
+    bar: 0.01
+    direction: lower
+'04':
+  mapped_correct:
+    bar: 1.0
+    direction: higher
+  mapped_within_1h:
+    bar: 1.0
+    direction: higher
+  null_offset_trend_only:
+    bar: 1.0
+    direction: higher
+'05':
+  recall_at_20:
+    bar: 0.7
+    direction: higher
+  recall_at_20_live:
+    bar: 0.7
+    direction: higher
+  precision_at_20:
+    bar: 0.5
+    direction: higher
+  precision_at_20_live:
+    bar: 0.5
+    direction: higher
+  fuse_s_per_hour:
+    bar: 120
+    direction: lower
+  score_s_per_hour:
+    bar: 120
+    direction: lower
+'07':
+  detector_accuracy:
+    bar: 0.85
+    direction: higher
+  skip_when_no_music:
+    bar: 0.9
+    direction: higher
+  radio_no_longer_matches:
+    bar: 0.95
+    direction: higher
+  voice_snr_gain_db:
+    bar: 3.0
+    direction: higher

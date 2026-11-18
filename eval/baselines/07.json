@@ -1,0 +1,12 @@
+{
+  "stage": "07",
+  "accepted_at": "2026-11-18T17:16:47+00:00",
+  "dataset_version": "audiofx@v1",
+  "code_version": "f5a8719",
+  "metrics": {
+    "detector_accuracy": 1.0,
+    "skip_when_no_music": 1.0,
+    "radio_no_longer_matches": 1.0,
+    "voice_snr_gain_db": 12.38096833229065
+  }
+}

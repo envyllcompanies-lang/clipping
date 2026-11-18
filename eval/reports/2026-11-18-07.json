@@ -1,0 +1,50 @@
+{
+  "stage": "07",
+  "name": "Audio Cleanup & Music Removal",
+  "passed": true,
+  "seconds": 56.41,
+  "dataset_version": "audiofx@v1",
+  "code_version": "f5a8719",
+  "metrics": [
+    {
+      "metric": "detector_accuracy",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 0.85,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "skip_when_no_music",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "radio_no_longer_matches",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 0.95,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "voice_snr_gain_db",
+      "value": 12.38096833229065,
+      "baseline": null,
+      "bar": 3.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "radio_windows": 7
+  }
+}

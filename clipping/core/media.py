@@ -48,18 +48,26 @@ def decode_frames(
     start: float | None = None,
     dur: float | None = None,
     gray: bool = False,
+    keyframes_only: bool = False,
 ) -> np.ndarray:
     info = [s for s in probe(path)["streams"] if s["codec_type"] == "video"][0]
     w0, h0 = int(info["width"]), int(info["height"])
     height = int(round(h0 * width / w0 / 2) * 2)
     cmd = ["ffmpeg", "-v", "error"]
+    if keyframes_only:
+        cmd += ["-skip_frame", "nokey"]
     if start is not None:
         cmd += ["-ss", f"{start:.3f}"]
     cmd += ["-i", str(path)]
     if dur is not None:
         cmd += ["-t", f"{dur:.3f}"]
     pix = "gray" if gray else "rgb24"
-    cmd += ["-vf", f"fps={fps},scale={width}:{height}", "-f", "rawvideo", "-pix_fmt", pix, "-"]
+    vf = f"scale={width}:{height}" if keyframes_only else f"fps={fps},scale={width}:{height}"
+    cmd += (
+        ["-vsync", "0", "-vf", vf, "-f", "rawvideo", "-pix_fmt", pix, "-"]
+        if keyframes_only
+        else ["-vf", vf, "-f", "rawvideo", "-pix_fmt", pix, "-"]
+    )
     p = subprocess.run(cmd, capture_output=True, timeout=1200)
     if p.returncode != 0:
         raise RuntimeError(p.stderr.decode()[-800:])

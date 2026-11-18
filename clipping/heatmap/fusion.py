@@ -44,8 +44,16 @@ class Window:
     score: float
 
 
-def pick_windows(score: np.ndarray, *, separation_s: int = 45, pct: float = 95, floor: float = 0.35, before_s: float = 45,
-                 after_s: float = 30, max_per_hour: int = 10) -> list[Window]:
+def pick_windows(
+    score: np.ndarray,
+    *,
+    separation_s: int = 45,
+    pct: float = 95,
+    floor: float = 0.35,
+    before_s: float = 45,
+    after_s: float = 30,
+    max_per_hour: int = 10,
+) -> list[Window]:
     from scipy.signal import find_peaks
 
     T = len(score)
