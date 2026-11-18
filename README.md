@@ -5,7 +5,7 @@ Fully automated AI clipping and posting for GTA 6: finds the top GTA 6 streamers
 ## Docs
 
 - [Build plan](docs/00-build-plan.md): overview, research findings, architecture, phases
-- [Component docs](docs/components/): one detailed spec per component (01–30)
+- [Component docs](docs/components/): one detailed spec per component (01–32)
 - [Owner setup checklist](docs/components/26-owner-setup-checklist.md): what has to be done by hand, and when
 - [References](docs/references.md): reference channels, guides and open-source projects
 - [Kickoff prompt](docs/KICKOFF.md): paste into Claude Code to start the build

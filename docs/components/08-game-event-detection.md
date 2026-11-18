@@ -7,7 +7,7 @@ Game Event Detection reads what's happening on screen in GTA 6 (deaths, police e
 ## Job and boundaries
 
 - **Does:** detect GTA 6 HUD and screen events in sampled frames around candidate peaks; emit timestamped events with confidence.
-- **Doesn't:** run on every frame of every stream (too expensive). It runs on frames near heatmap peaks and inside candidate windows.
+- **Doesn't:** classify whole moments (cutscene, chase, crash, discovery); that's Component 31, which uses these events as inputs. Doesn't run on every frame of every stream (too expensive). It runs on frames near heatmap peaks and inside candidate windows.
 - **Starts empty:** GTA 6 HUD details are unknown until launch (November 19, 2026). The profile is filled in during the first week from real footage.
 
 ## Event types to detect (to confirm against the real HUD)

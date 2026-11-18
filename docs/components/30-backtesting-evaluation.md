@@ -35,6 +35,8 @@ Early access note: GTA VI streams are live before release, so the first GTA 6 da
 | Transcription (06) | Word error rate per language; median word timing error | WER ≤ 15% (en), ≤ 25% others; timing ≤ 0.15 s |
 | Music removal (07) | Music detector score on output; fingerprint match rate | ≥ 95% of radio windows no longer match |
 | Game events (08) | Precision/recall per event type | Precision ≥ 0.9 |
+| Gameplay moments (31) | Type precision/recall; boundary IoU per type; heatmap recall@20 with vs without the gameplay score | Precision ≥ 0.8 (cutscene, chase, crash, death); recall@20 must improve |
+| Creator profiles (32) | Normalized reaction recall@20 vs raw; sponsor/BRB exclusion; catchphrase precision; collab alignment error | Recall improves; exclusion ≥ 99%; alignment < 0.2 s |
 | Reframe (10) | Share of frames where the tracked subject stays in the crop; in stacked layout, face fully inside the top panel and captions never over the face | ≥ 95%; 100% caption-clear |
 | Captions (11) | Caption timing drift; characters per line within profile | Drift ≤ 0.1 s |
 | Render (12) | Output passes each platform spec (codec, size, duration, loudness −14 LUFS ±1) | 100% |
