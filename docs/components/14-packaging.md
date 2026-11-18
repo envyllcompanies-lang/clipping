@@ -6,7 +6,7 @@ Packaging writes everything around the video for each platform and language: on-
 
 ## Job and boundaries
 
-- **Does:** generate hook text (for Component 11), titles, descriptions/captions, hashtags and credit lines; enforce character limits; vary wording so posts aren't templated.
+- **Does:** generate hook text (for Component 11; in hook-only mode this headline is the only on-screen text for the whole clip, so it must describe or tease the moment on its own), titles, descriptions/captions, hashtags and credit lines; enforce character limits; vary wording so posts aren't templated.
 - **Doesn't:** post (16–20) or choose the clip (09).
 
 ## Inputs
