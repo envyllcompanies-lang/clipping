@@ -45,6 +45,7 @@ Every component has its own detailed doc: job and boundaries, inputs, step-by-st
 | 23 | Dashboard & Kill Switch | [Open](components/23-dashboard-kill-switch.md) |
 | 24 | Accounts, Credentials & Language Pages | [Open](components/24-accounts-credentials-language-pages.md) |
 | 25 | Infrastructure, Hosting & Data Model | [Open](components/25-infrastructure-hosting-data-model.md) |
+| 26 | Owner Setup Checklist | [Open](components/26-owner-setup-checklist.md) |
 
 ## Findings that change the design
 
@@ -57,15 +58,15 @@ Six things researched on November 18, 2026 that the build has to account for. Th
 | **TikTok Creator Rewards.** 10,000 followers, 100,000 views in 30 days, only original videos over 1 minute earn ([TikTok program terms via Lilach Bullock](https://www.lilachbullock.com/?p=136446)) | Under-60 s clips earn nothing on TikTok. Render a 61–90 s version (compilation or extended moment) for TikTok monetization, alongside short versions for reach. Originality is judged per video |
 | **GTA 6 radio and licensed music.** A song playing in the game is not a license to publish it; Rockstar's guidance gives no blanket soundtrack license, and Content ID claims on in-game radio songs are long-standing ([iTechGuides](https://www.itechguides.com/gta-vi-music-what-creators-can-safely-use-in-videos-and-streams), [Kotaku](https://kotaku.com/heres-what-youtube-has-to-say-to-angry-youtubers-1485168478)) | Streamers' radio will be in the source audio. Add music detection plus source separation (split voice and game sound from music) so radio is removed or ducked before render. This protects monetization on every claim-checking platform |
 | **Recording cost.** Twitch 1080p60 is about 2.7 GB per hour; Streamlink saves the source without re-encoding, so recording is storage- and bandwidth-bound, not CPU-bound ([space-node](https://space-node.net/blog/record-twitch-stream-automatically-vps-script)) | 10 creators streaming 6 hours a day is about 160 GB a day. Keep only windows around scored moments and delete the rest within 24–48 h. Recording should run on a cheap always-on server, not the MacBook |
-| **Multiple accounts.** Multiple accounts are allowed, but near-duplicate accounts posting the same video get flagged as spam, and accounts sharing a device or IP can be linked as a network ([Recurpost](https://recurpost.com/blog/multiple-tiktok-accounts/), [Ayrshare](https://app.ayrshare.com/docs/help-center/technical-support/tiktok_account_restricted)) | Language pages are safe (different content). Several brands on the same platform posting the same clip is a reach risk: give each a different edit or different clips. Each account needs its own email and phone number |
+| **Multiple accounts.** Multiple accounts are allowed, but near-duplicate accounts posting the same video get flagged as spam, and accounts sharing a device or IP can be linked as a network ([Recurpost](https://recurpost.com/blog/multiple-tiktok-accounts/), [Ayrshare](https://app.ayrshare.com/docs/help-center/technical-support/tiktok_account_restricted)) | Language pages are safe (different content). Several brands on the same platform posting the same clip is a reach risk: give each a different edit or different clips. Each language channel uses one email across its platforms; never reuse an email or number for a second account on the same platform |
 
 ## Still to look into
 
-- [ ] Chat capture: Twitch chat (IRC/EventSub), Kick chat (websocket), YouTube live chat (quota cost) for the chat-velocity signal.
-- [ ] Kick: official API scope and how to record Kick streams.
+- [x] Chat capture: Twitch chat (IRC/EventSub), Kick chat (websocket), YouTube live chat (quota cost) for the chat-velocity signal. Covered in doc 03.
+- [x] Kick: official API scope and how to record Kick streams. Covered in docs 02 and 04.
 - [ ] Snapchat, Facebook and Threads monetization programs and thresholds.
 - [ ] Payouts and taxes: platforms need tax info for payouts; decide whether to register Envy as a formal LLC first.
-- [ ] Account setup logistics: an email and phone number per account, devices, warm-up period for new accounts.
+- [x] Account setup logistics: one email per language, phone only where required, provisioning tool, warm-up. Covered in doc 24 and doc 26.
 - [ ] Compute: transcription and render speed on your MacBook model; when a cloud worker becomes necessary.
 - [ ] GTA 6 platform IDs: Twitch game ID and Kick category once launched (November 19, 2026).
 - [ ] Brand names and handle availability on all six platforms, per language.
@@ -75,7 +76,16 @@ Six things researched on November 18, 2026 that the build has to account for. Th
 
 Seven stages share one database of sources, clips, channels and posts. Rendering stays on the MacBook, where it costs nothing. The posting checks, publishing and analytics run in the cloud, so scheduled posts still go out with the laptop closed.
 
-&#91;embedded content: pipeline · 7 stages, 1 feedback loop\]
+```
+SOURCE   radar (01) -> recorder (02) + chat (03) + platform clips/VODs (04)
+ANALYZE  heatmap (05) -> audio cleanup (07) -> transcription (06) -> game events (08)
+CUT      clip builder (09) -> reframe (10) -> captions (11) -> render (12), styled by profiles (13)
+PACKAGE  titles, captions, hashtags per platform and language (14)
+GATE     automatic quality / duplicate / originality checks (15)
+PUBLISH  scheduler (16) -> YouTube (17), Instagram/Facebook/Threads (18), TikTok (19), Snapchat (20)
+LEARN    analytics (22) -> updates weights in 01, 05, 09, 13, 15, 16
+Support: storage lifecycle (21), dashboard + kill switch (23), accounts (24), infrastructure (25)
+```
 
 The analytics loop is what makes this more than an editor: each clip's results update the scoring weights the Analyze stage uses.
 
@@ -199,14 +209,14 @@ GTA 5 reference channels:
 
 ## Languages and regions
 
-Each language gets its own set of pages (which languages is decided by the data in step 1), filled only with clips from creators who stream in that language. No translated or dubbed clips: the audio, captions, titles and hashtags are all native to the page's language.
+Each language gets its own set of pages (launch set of 10 below, re-ranked by the data in step 1), filled only with clips from creators who stream in that language. No translated or dubbed clips: the audio, captions, titles and hashtags are all native to the page's language.
 
 1. **Pick languages by numbers:** Twitch's live-streams endpoint reports each stream's language. The radar measures GTA 6 viewers by language, and a YouTube scan of existing GTA 6 clip pages shows which languages already have strong clip pages and which are underserved. New language pages open where demand is high and competition is thin.
 2. **A separate radar per language:** each language runs its own creator ranking and heatmap, filtered to creators streaming in that language.
 3. **Native captions and copy:** Whisper transcribes in the clip's own language. The LLM writes titles, hooks and hashtags natively in that language, following that region's top clip pages.
 4. **One account set per language:** its own brand on each platform, a posting schedule in that region's time zone, and its own analytics and style profile.
 
-Start with the main language plus the one or two languages the data ranks highest, then add more as each proves out in analytics.
+**Launch set (10):** English, Spanish, Portuguese (Brazil), Arabic, French, Russian, German, Japanese, Turkish, Vietnamese, all at once. Weekly re-ranking can flag swaps (Polish, Chinese (Traditional), Thai, Hindi, Indonesian, Italian, Korean are next in line); analytics moves volume toward languages that perform. Details in doc 24.
 
 ## Moment heatmap: where to cut, by the numbers
 
@@ -239,7 +249,7 @@ How the publisher is built:
 
 ## More platforms
 
-Six more platforms can take fully automatic video posts, which brings the total to nine. The API ceilings are far above what's worth posting, so the real limit is reach. Each account posts up to its platform's limit, and analytics move volume toward whatever performs.
+Besides YouTube, Instagram and TikTok, three more platforms take fully automatic video posts, for six in total (X deferred). The API ceilings are far above what's worth posting, so the real limit is reach. Each account posts up to its platform's limit, and analytics move volume toward whatever performs.
 
 | Platform | API ceiling | Catch |
 | --- | --- | --- |
@@ -248,7 +258,7 @@ Six more platforms can take fully automatic video posts, which brings the total 
 | [X](https://www.socialync.io/blog/x-api-pricing-and-posting-2026) | 100 posts per 15 min per user | Deferred until there's revenue. Paid per post: $0.015, or $0.20 with a link |
 | [Snapchat Spotlight](https://www.ayrshare.com/snapchat-api.md) | Varies | Built direct on Snap's Public Profile API: apply for the allowlist, set up a Snap Business account and an Ads Manager organization, and encrypt media (AES-256-CBC) before upload. Spotlight takes 9:16 video up to 60 s. Fallback while waiting: a posting service that already has access |
 
-With all nine connected, every clip can go to every platform, each with its own caption.
+With all six connected, every clip can go to every platform, each with its own caption.
 
 ## Channel protection
 
@@ -266,7 +276,7 @@ These mechanisms keep the channels alive at full volume. None of them stops a cl
 
 Seven phases, in order. Phase 0 starts the platform reviews so they run in the background while phases 1 to 3 get built. Each phase ends with a test you can actually run.
 
-1. **Phase 0 — Accounts and reviews.** Create the brand accounts, a Google Cloud project, a Meta app, a TikTok developer app, a Twitch developer app, and a Snap Business account with a Public Profile API allowlist request. Switch Instagram to Professional. Submit YouTube's compliance audit and TikTok's Content Posting audit.
+1. **Phase 0 — Developer apps and reviews.** Create a Google Cloud project, a Meta app, a TikTok developer app, a Twitch developer app, a Kick developer app, and a Snap Business account with a Public Profile API allowlist request. Switch Instagram to Professional. Submit YouTube's compliance audit and TikTok's Content Posting audit.
    - Done when: all three apps exist, your accounts are connected as testers, and both audits are submitted.
 2. **Phase 1 — Clipping engine (CLI).** `clip run recording.mp4` produces 10–30 ranked candidate clips, each with a 9:16 render, burned-in captions, a hook, and a JSON file of metadata and scores.
    - Done when: on 3 real recordings, at least half of the top 10 clips are ones you'd actually post.
@@ -324,7 +334,7 @@ Trade-off: a deleted clip can't be re-posted to a platform added later without r
 ## Open decisions
 
 - [ ] TikTok route: build the dashboard to pass TikTok's audit, use a pre-audited posting service, or stay on inbox drafts?
-- [ ] Number of channels at launch: one brand, or 2–3 angle channels from the start?
+- [x] Number of channels at launch: one brand per language, 10 languages, 6 platforms each (60 accounts).
 - [ ] LLM provider for scoring and captions, and a monthly cost ceiling.
 - [ ] Dashboard hosting: local-only, or deployed so you can monitor and pull clips from your phone?
 - [ ] Style: copy one reference channel, blend several, or run several profiles and let analytics pick?
