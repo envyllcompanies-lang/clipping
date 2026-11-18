@@ -1,0 +1,55 @@
+# GTA 5 reference set for the clip-channel tracker.
+# Used as the baseline until GTA 6 channels have a few weeks of history.
+# verified: the channel was confirmed to exist. handle/channel_id null = still to fill in.
+# role: tracker = clip/compilation channel we learn formats from
+#       radar   = source creator (footage to clip), goes to the creator radar instead
+
+clip_channels:
+  - name: Red Arcade
+    channel_id: UCHZZo1h1cI1vg4I9g2RqOUQ
+    url: https://www.youtube.com/c/redarcade/
+    style: long-form fails & wins compilations, community submissions, multi-game
+    verified: true
+    role: tracker
+  - name: Prestige Clips
+    handle: null
+    style: GTA 5 funny-moment and fail compilations
+    verified: true
+    role: tracker
+  - name: GameSprout
+    handle: null
+    style: heavily edited, SFX-driven fail compilations
+    verified: true
+    role: tracker
+  - name: Hazardous
+    handle: null
+    style: stunt, trickshot and fail compilations
+    verified: true
+    role: tracker
+  # Not yet confirmed to exist under these names — fill in handles from YouTube or drop.
+  - {name: Top Gaming Plays, handle: null, verified: false, role: tracker}
+  - {name: Onespot Gaming, handle: null, verified: false, role: tracker}
+  - {name: GTA 5 Ragdolls Test, handle: null, verified: false, role: tracker}
+  - {name: Wasted Clips, handle: null, verified: false, role: tracker}
+  - {name: Ward, handle: null, verified: false, role: tracker}
+  - {name: Roleplay Clips, handle: null, verified: false, role: tracker}
+  - {name: Daily Clipped, handle: null, verified: false, role: tracker}
+  - {name: GTA NoPixel Moments, handle: null, verified: false, role: tracker}
+  - {name: Infinity GTA Clips, handle: null, verified: false, role: tracker}
+
+source_creators:
+  - {name: VanossGaming, verified: true, role: radar}
+  - {name: Nought, verified: true, role: radar}
+  - {name: TGG, verified: true, role: radar}
+  - {name: DarkViperAU, verified: true, role: radar}
+  - {name: IcyDeluxe, verified: false, role: radar}
+  - {name: Ivanowski, verified: false, role: radar}
+  - {name: Putther, verified: false, role: radar}
+  - {name: Bay Area Buggs, verified: false, role: radar}
+  - {name: Soup, verified: false, role: radar}
+
+data_sources:
+  - name: HasRoot
+    url: https://nopixel.hasroot.com/
+    use: per-server GTA RP stream history, streamer and character lists, clip/VOD lookups
+    verified: true
