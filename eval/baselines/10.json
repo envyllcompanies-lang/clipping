@@ -1,14 +1,15 @@
 {
   "stage": "10",
-  "accepted_at": "2026-11-18T19:33:06+00:00",
+  "accepted_at": "2026-11-18T19:43:50+00:00",
   "dataset_version": "reframefx@v1",
-  "code_version": "61cc0a7",
+  "code_version": "e494086",
   "metrics": {
     "facecam_found": 1.0,
     "facecam_false": 0.0,
     "subject_in_crop": 0.9634920634920637,
     "caption_clear": 1.0,
     "face_in_top_panel": 1.0,
-    "max_pan_speed_ratio": 1.0
+    "max_pan_speed_ratio": 1.0,
+    "facecam_in_game_crop": 0.14572310405643737
   }
 }

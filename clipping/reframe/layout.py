@@ -294,6 +294,15 @@ def plan(
         excl = lay.overlay_mask if excl is None else (excl | lay.overlay_mask)
     tg = motion_targets(frames, fps, small_rect, excl) * np.array([sx, sy])
     band_h = int(Hc * caption_size_pct * 1.25 * caption_lines)
+    avoid_boxes = [lay.facecam] if lay.facecam else []
+    if lay.overlay_mask is not None:
+        n, _, st, _ = cv2.connectedComponentsWithStats(lay.overlay_mask.astype(np.uint8))
+        msx, msy = lay.width / lay.overlay_mask.shape[1], lay.height / lay.overlay_mask.shape[0]
+        avoid_boxes += [
+            (int(st[i, 0] * msx), int(st[i, 1] * msy), int(st[i, 2] * msx), int(st[i, 3] * msy))
+            for i in range(1, n)
+            if st[i, 4] > 0.003 * lay.overlay_mask.size
+        ]
     panels = []
     if layout == "stacked" and lay.facecam:
         cam_h = int(Hc * cam_ratio)

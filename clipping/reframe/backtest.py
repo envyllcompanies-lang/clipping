@@ -16,7 +16,7 @@ SCALE = 3  # synthetic 640x360 frames stand in for 1920x1080 streams
 
 @stage("10", "Reframe & Layout")
 def run() -> StageResult:
-    found, false_cam, inside, clear, face_in, jitter, ex = [], [], [], [], [], [], []
+    found, false_cam, inside, clear, face_in, jitter, cam_dup, ex = [], [], [], [], [], [], [], []
     for k in range(12):
         has_cam = k % 4 != 3
         s = reframefx.stream(1000 + k, cam=has_cam, cam_corner=["br", "bl", "tl", "br"][k % 4])
@@ -49,6 +49,14 @@ def run() -> StageResult:
             inside.append(share)
             clear.append(rl.caption_clear(cp))
             if layout == "stacked":
+                fx, fy, fw, fh = lay.facecam
+                ov = []
+                for kf_ in next(p for p in cp["panels"] if p["name"] == "game")["keyframes"]:
+                    bx, by, bw, bh = kf_["box"]
+                    ix = max(0, min(bx + bw, fx + fw) - max(bx, fx))
+                    iy = max(0, min(by + bh, fy + fh) - max(by, fy))
+                    ov.append(ix * iy / (fw * fh))
+                cam_dup.append(float(np.mean(ov)))
                 f = cp["face_dst"]
                 face_in.append(
                     f[1] >= 0
@@ -73,6 +81,7 @@ def run() -> StageResult:
             "caption_clear": float(np.mean(clear)),
             "face_in_top_panel": float(np.mean(face_in)),
             "max_pan_speed_ratio": float(np.max(jitter)),
+            "facecam_in_game_crop": float(np.mean(cam_dup)),
         },
         ex,
         "reframefx@v1",

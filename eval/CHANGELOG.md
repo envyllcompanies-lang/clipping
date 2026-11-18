@@ -29,3 +29,11 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 09 (Clip Builder): boundary_iou 0.797, payoff_included 0.983, plans_valid 1.000, both_versions 1.000, standalone_openings 1.000
 
 - 2026-11-18 stage 10 (Reframe & Layout): facecam_found 1.000, facecam_false 0.000, subject_in_crop 0.963, caption_clear 1.000, face_in_top_panel 1.000, max_pan_speed_ratio 1.000
+
+- 2026-11-18 stage 11 (Captions & On-screen Text): timing_drift_max_s 0.000, lines_fit 1.000, hook_and_credit 1.000, libass_ok 1.000, profile_driven 1.000
+
+- 2026-11-18 stage 10 (Reframe & Layout): facecam_found 1.000→1.000, facecam_false 0.000→0.000, subject_in_crop 0.963→0.963, caption_clear 1.000→1.000, face_in_top_panel 1.000→1.000, max_pan_speed_ratio 1.000→1.000
+
+- 2026-11-18 stage 10 (Reframe & Layout): facecam_found 1.000→1.000, facecam_false 0.000→0.000, subject_in_crop 0.963→0.963, caption_clear 1.000→1.000, face_in_top_panel 1.000→1.000, max_pan_speed_ratio 1.000→1.000, facecam_in_game_crop 0.146
+
+- 2026-11-18 stage 12 (Render Engine): validation_pass 1.000, platform_fit 1.000, versions_rendered 1.000, render_s_per_40s_linux 57.287

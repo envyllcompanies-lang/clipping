@@ -1,0 +1,50 @@
+{
+  "stage": "12",
+  "name": "Render Engine",
+  "passed": true,
+  "seconds": 503.61,
+  "dataset_version": "windowfx@v1",
+  "code_version": "e494086",
+  "metrics": [
+    {
+      "metric": "validation_pass",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "platform_fit",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "versions_rendered",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "render_s_per_40s_linux",
+      "value": 57.286695915575876,
+      "baseline": null,
+      "bar": 90,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "encoder": "libx264 (Linux fallback); M1 uses h264_videotoolbox"
+  }
+}

@@ -142,24 +142,84 @@
     bar: 10
     direction: lower
     tolerance: 0.5
-"13":
-  cut_rate_rel_err: {bar: 0.15, direction: lower}
-  caption_y_err: {bar: 0.05, direction: lower}
-  caps_detected: {bar: 1.0, direction: higher}
-  fill_color_err: {bar: 0.25, direction: lower}
-  layout_detected: {bar: 1.0, direction: higher}
-  split_err: {bar: 0.05, direction: lower}
-  zoom_rate_abs_err: {bar: 1.0, direction: lower}  # weakest analyzer measure (no doc bar); tighten with real samples
-"09":
-  boundary_iou: {bar: 0.6, direction: higher}
-  payoff_included: {bar: 0.95, direction: higher}
-  plans_valid: {bar: 1.0, direction: higher}
-  both_versions: {bar: 1.0, direction: higher}
-  standalone_openings: {bar: 1.0, direction: higher}
-"10":
-  facecam_found: {bar: 0.95, direction: higher}
-  facecam_false: {bar: 0.0, direction: lower}
-  subject_in_crop: {bar: 0.95, direction: higher}
-  caption_clear: {bar: 1.0, direction: higher}
-  face_in_top_panel: {bar: 1.0, direction: higher}
-  max_pan_speed_ratio: {bar: 1.01, direction: lower}
+'13':
+  cut_rate_rel_err:
+    bar: 0.15
+    direction: lower
+  caption_y_err:
+    bar: 0.05
+    direction: lower
+  caps_detected:
+    bar: 1.0
+    direction: higher
+  fill_color_err:
+    bar: 0.25
+    direction: lower
+  layout_detected:
+    bar: 1.0
+    direction: higher
+  split_err:
+    bar: 0.05
+    direction: lower
+  zoom_rate_abs_err:
+    bar: 1.0
+    direction: lower
+09:
+  boundary_iou:
+    bar: 0.6
+    direction: higher
+  payoff_included:
+    bar: 0.95
+    direction: higher
+  plans_valid:
+    bar: 1.0
+    direction: higher
+  both_versions:
+    bar: 1.0
+    direction: higher
+  standalone_openings:
+    bar: 1.0
+    direction: higher
+'10':
+  facecam_found:
+    bar: 0.95
+    direction: higher
+  facecam_false:
+    bar: 0.0
+    direction: lower
+  subject_in_crop:
+    bar: 0.95
+    direction: higher
+  caption_clear:
+    bar: 1.0
+    direction: higher
+  face_in_top_panel:
+    bar: 1.0
+    direction: higher
+  max_pan_speed_ratio:
+    bar: 1.01
+    direction: lower
+  facecam_in_game_crop:
+    bar: 0.25
+    direction: lower
+'11':
+  timing_drift_max_s:
+    bar: 0.1
+    direction: lower
+  lines_fit:
+    bar: 1.0
+    direction: higher
+  hook_and_credit:
+    bar: 1.0
+    direction: higher
+  libass_ok:
+    bar: 1.0
+    direction: higher
+  profile_driven:
+    bar: 1.0
+    direction: higher
+"12":
+  validation_pass: {bar: 1.0, direction: higher}
+  platform_fit: {bar: 1.0, direction: higher}
+  versions_rendered: {bar: 1.0, direction: higher}
+  render_s_per_40s_linux: {bar: 90, direction: lower, tolerance: 0.5}   # doc bar (30 s) applies on the M1 with VideoToolbox

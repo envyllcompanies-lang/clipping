@@ -2,14 +2,14 @@
   "stage": "10",
   "name": "Reframe & Layout",
   "passed": true,
-  "seconds": 55.6,
+  "seconds": 57.53,
   "dataset_version": "reframefx@v1",
-  "code_version": "61cc0a7",
+  "code_version": "e494086",
   "metrics": [
     {
       "metric": "facecam_found",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 0.95,
       "direction": "higher",
       "passed": true,
@@ -18,7 +18,7 @@
     {
       "metric": "facecam_false",
       "value": 0.0,
-      "baseline": null,
+      "baseline": 0.0,
       "bar": 0.0,
       "direction": "lower",
       "passed": true,
@@ -27,7 +27,7 @@
     {
       "metric": "subject_in_crop",
       "value": 0.9634920634920637,
-      "baseline": null,
+      "baseline": 0.9634920634920637,
       "bar": 0.95,
       "direction": "higher",
       "passed": true,
@@ -36,7 +36,7 @@
     {
       "metric": "caption_clear",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -45,7 +45,7 @@
     {
       "metric": "face_in_top_panel",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -54,8 +54,17 @@
     {
       "metric": "max_pan_speed_ratio",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.01,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "facecam_in_game_crop",
+      "value": 0.14572310405643737,
+      "baseline": null,
+      "bar": 0.25,
       "direction": "lower",
       "passed": true,
       "reason": ""

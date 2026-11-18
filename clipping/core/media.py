@@ -108,3 +108,31 @@ def loudness(path: str | Path) -> dict:
         elif line.startswith("Peak:"):
             out["true_peak"] = float(line.split()[1])
     return out
+
+
+def iter_frames(
+    path: str | Path,
+    fps: float,
+    start: float = 0.0,
+    dur: float | None = None,
+    size: tuple[int, int] | None = None,
+):
+    """Stream RGB frames one at a time (constant memory) at a fixed fps, starting at `start` (accurate seek)."""
+    info = [s for s in probe(path)["streams"] if s["codec_type"] == "video"][0]
+    w, h = size or (int(info["width"]), int(info["height"]))
+    cmd = ["ffmpeg", "-v", "error", "-ss", f"{start:.3f}", "-i", str(path)]
+    if dur is not None:
+        cmd += ["-t", f"{dur:.3f}"]
+    cmd += ["-vf", f"fps={fps},scale={w}:{h}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"]
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    n = w * h * 3
+    try:
+        while True:
+            buf = proc.stdout.read(n)
+            if len(buf) < n:
+                break
+            yield np.frombuffer(buf, np.uint8).reshape(h, w, 3)
+    finally:
+        proc.stdout.close()
+        proc.kill()
+        proc.wait()

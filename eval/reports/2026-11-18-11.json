@@ -1,0 +1,132 @@
+{
+  "stage": "11",
+  "name": "Captions & On-screen Text",
+  "passed": true,
+  "seconds": 2.95,
+  "dataset_version": "synthetic@v1",
+  "code_version": "e494086",
+  "metrics": [
+    {
+      "metric": "timing_drift_max_s",
+      "value": 2.4868995751603507e-14,
+      "baseline": null,
+      "bar": 0.1,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "lines_fit",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "hook_and_credit",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "libass_ok",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "profile_driven",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [
+    {
+      "example_id": "seed1101:es",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1102:pt",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1103:fr",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1104:de",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1105:ru",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1111:es",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1112:pt",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1113:fr",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1114:de",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1115:ru",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1124:de",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    },
+    {
+      "example_id": "seed1126:tr",
+      "metric": "width",
+      "value": 0.8000000000000002,
+      "notes": ""
+    }
+  ],
+  "info": {
+    "lines": 489
+  }
+}
