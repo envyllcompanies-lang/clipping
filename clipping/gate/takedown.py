@@ -7,7 +7,7 @@ import psycopg
 
 from clipping.core import db, jobs
 
-NO_API_DELETE = {"snapchat"}
+NO_API_DELETE = {"snapchat", "tiktok"}  # no delete endpoint: manual task in the dashboard
 
 
 def blocklist_creator(

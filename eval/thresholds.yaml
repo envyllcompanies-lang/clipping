@@ -236,3 +236,16 @@
   first_post_allowed: {bar: 1.0, direction: higher}
   decisions_have_reasons: {bar: 1.0, direction: higher}
   blocklist_pulls_everywhere: {bar: 1.0, direction: higher}
+"16":
+  one_clip_every_platform: {bar: 1.0, direction: higher}
+  no_double_posts: {bar: 1.0, direction: higher}
+  fallback_tasks_created: {bar: 1.0, direction: higher}
+  fields_valid: {bar: 1.0, direction: higher}
+  media_deleted_after_upload: {bar: 1.0, direction: higher}
+  rate_limit_respected: {bar: 1.0, direction: higher}
+  spacing_respected: {bar: 1.0, direction: higher}
+"23":
+  alerts_fire: {bar: 1.0, direction: higher}
+  kill_switch_removes: {bar: 1.0, direction: higher}
+  undeletable_become_tasks: {bar: 1.0, direction: higher}
+  screens_within_3_taps: {bar: 1.0, direction: higher}

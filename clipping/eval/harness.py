@@ -291,6 +291,9 @@ def scratch_db(name: str = "clipping_eval"):
         c.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
         db.migrate(c)
     old_url, old_dir = db._url_override, os.environ.get("CLIPPING_DATA_DIR")
+    old_key = os.environ.get("TOKEN_ENCRYPTION_KEY")
+    if not old_key:
+        os.environ["TOKEN_ENCRYPTION_KEY"] = "backtest-only-throwaway-key"
     tmp = tempfile.mkdtemp(prefix="clipping-eval-")
     db.set_url(url)
     os.environ["CLIPPING_DATA_DIR"] = tmp
@@ -299,6 +302,8 @@ def scratch_db(name: str = "clipping_eval"):
             yield c
     finally:
         db.set_url(old_url)
+        if not old_key:
+            os.environ.pop("TOKEN_ENCRYPTION_KEY", None)
         if old_dir is None:
             os.environ.pop("CLIPPING_DATA_DIR", None)
         else:

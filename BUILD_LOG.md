@@ -9,9 +9,9 @@ Live status of the build. Newest first in "Progress". Spec: `docs/`. Run `make t
 | 1 Foundation and sources | done |
 | 2 Finding moments | done (synthetic + TTS data; real-stream check pending keys) |
 | 3 Making clips | done (owner's "would post" check on the top 10 pending real footage) |
-| 4 Dashboard and public site | in progress |
-| 5 Publishing | not started |
-| 6 Accounts and languages | not started |
+| 4 Dashboard and public site | done (needs a host to go live: see Needs B) |
+| 5 Publishing | done in fallback mode against platform fakes (real uploads need the apps/keys) |
+| 6 Accounts and languages | in progress |
 | 7 Analytics and autopilot | not started |
 
 ## Component results
@@ -36,8 +36,20 @@ Live status of the build. Newest first in "Progress". Spec: `docs/`. Run `make t
 | 12 | Render engine | pass | 6/6 versions valid (1080×1920, H.264/AAC, −14 LUFS), platform fit 100%; Linux libx264 57 s per 40 s clip (M1 VideoToolbox target 30 s, to measure) |
 | 14 | Packaging | pass | 600 posts: fields within limits 100%, language = channel 100% (10 languages), no repeated titles, patterns tracked |
 | 15 | Auto-gate | pass | seeded duplicates caught 100%, false duplicates 0%, repeat to same account blocked, reasons stored, blocklist pulls everywhere |
+| 23 | Dashboard & kill switch | pass | all 8 alert types fire on simulated failures; "pull everywhere" removes a live clip from YouTube/IG/FB/Threads in one worker cycle; TikTok/Snapchat deletions become manual tasks; every screen one tap from Home |
+| 29 | Public site & policy pages | pass (tests) | /, /privacy, /terms, /data-deletion, Meta signed-request deletion callback, OAuth callbacks |
+| 24 | Credential storage | pass (tests) | tokens encrypted, refresh ahead of expiry, failures alert to reconnect, token use audit-logged |
+| 16–20 | Publisher framework + YouTube, Meta (IG/FB/Threads), TikTok, Snapchat | pass | one clip live on all 6 (fakes) with correct fields; injected 5xx/crash mid-upload never double-posts; rolling 24 h never above limit minus 10% reserve; 15-min spacing; YouTube private + TikTok inbox fallbacks create tap tasks; file and bucket copy deleted after the last upload |
 
 ## Needs B
+
+- **Hosting for the dashboard + policy pages** (docs 25, 29): pick a host (free subdomain is fine) so `/privacy`, `/terms`, `/data-deletion` are live over HTTPS for the platform reviews. Deploy files are in the repo (`Dockerfile`, see docs below).
+- **Google Cloud project** (`GOOGLE_OAUTH_CLIENT_ID/SECRET`): YouTube uploads/stats; then submit the API compliance audit (until then uploads go private and show up as one-tap tasks).
+- **Your existing YouTube uploader**: copy it to `legacy/youtube-uploader/uploader.py` exposing `upload(path, metadata, credentials) -> video_id`; the connector uses it automatically (built-in uploader is used until then).
+- **Meta app** (`META_APP_ID/SECRET`): Instagram, Facebook Pages, Threads; app review for publishing.
+- **TikTok developer app** (`TIKTOK_CLIENT_KEY/SECRET`): Content Posting API; submit the audit with the dashboard's posting screen (until then posts go to the inbox as drafts).
+- **Snap Business + Public Profile API allowlist** (`SNAP_CLIENT_ID/SECRET`): Spotlight posting; endpoint paths get confirmed on approval.
+- **Owner dashboard login**: run `clip dashboard create-owner --email you@...` once and add the printed 2FA secret to an authenticator app.
 
 - **Style samples decision** (doc 13 open question): how to obtain reference-channel videos (YouTube's terms forbid downloading outside its features). Once decided, run `clip style study <channel> <folder>` per channel; until then the house profile (your reference screenshot) is used.
 - **Render timing on the MacBook**: run `make backtest STAGE=12` on the M1 once to record the VideoToolbox time (target ≤ 30 s per 40 s clip).

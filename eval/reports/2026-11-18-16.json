@@ -1,0 +1,78 @@
+{
+  "stage": "16",
+  "name": "Publishing (framework + connectors 17-20)",
+  "passed": true,
+  "seconds": 28.46,
+  "dataset_version": "fakeplatforms@v1",
+  "code_version": "e238cba",
+  "metrics": [
+    {
+      "metric": "one_clip_every_platform",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "no_double_posts",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "fallback_tasks_created",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "fields_valid",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "media_deleted_after_upload",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "rate_limit_respected",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "spacing_respected",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "max_rolling_24h": 13,
+    "cap": 13
+  }
+}

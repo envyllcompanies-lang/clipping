@@ -1,0 +1,52 @@
+{
+  "stage": "23",
+  "name": "Dashboard & Kill Switch",
+  "passed": true,
+  "seconds": 1.99,
+  "dataset_version": "simulated@v1",
+  "code_version": "e238cba",
+  "metrics": [
+    {
+      "metric": "alerts_fire",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "kill_switch_removes",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "undeletable_become_tasks",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "screens_within_3_taps",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "removed": 4,
+    "manual": 2,
+    "tiktok_delete_dead": 0
+  }
+}

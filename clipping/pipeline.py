@@ -82,3 +82,48 @@ def after_extract(c: psycopg.Connection, window_id: int) -> None:
 
 
 _ = config  # config imported for handlers added in later phases
+
+
+# ---------------- Phase 4-5: control and publishing (server) ----------------
+@periodic("server", "commands", 5)
+def run_commands(c: psycopg.Connection) -> None:
+    from clipping.dashboard import commands
+
+    commands.execute_pending(c)
+
+
+@periodic("server", "alerts", 60)
+def alerts(c: psycopg.Connection) -> None:
+    from clipping.dashboard import alerts as al
+
+    al.run_checks(c)
+    al.deliver(c)
+
+
+@periodic("server", "token_refresh", 300)
+def token_refresh(c: psycopg.Connection) -> None:
+    from clipping.accounts import credentials
+    from clipping.publish import oauth
+
+    credentials.refresh_all(c, oauth.refreshers())
+
+
+@periodic("server", "scheduler", 60)
+def scheduler(c: psycopg.Connection) -> None:
+    from clipping.publish import framework
+
+    framework.schedule(c)
+
+
+@periodic("server", "publisher", 30)
+def publisher(c: psycopg.Connection) -> None:
+    from clipping.publish import framework, registry
+
+    framework.run_due(c, registry.adapters(c))
+
+
+@handler("server", "post_delete")
+def post_delete(c: psycopg.Connection, p: dict) -> dict:
+    from clipping.publish import framework, registry
+
+    return {"deleted": framework.delete_post(c, p["post_id"], registry.adapters(c))}

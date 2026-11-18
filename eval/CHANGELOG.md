@@ -41,3 +41,11 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 14 (Packaging): within_limits 1.000, language_match 1.000, no_duplicate_titles 1.000, patterns_tracked 1.000, safety_blocks_pii 1.000
 
 - 2026-11-18 stage 15 (Auto-Gate): duplicates_caught 1.000, false_duplicates 0.000, repeat_to_same_account_blocked 1.000, first_post_allowed 1.000, decisions_have_reasons 1.000, blocklist_pulls_everywhere 1.000
+
+- 2026-11-18 stage 16 (Publishing (framework + connectors 17-20)): one_clip_every_platform 1.000, no_double_posts 1.000, fallback_tasks_created 1.000, fields_valid 1.000, media_deleted_after_upload 1.000, rate_limit_respected 1.000, spacing_respected 1.000
+
+- 2026-11-18 stage 23 (Dashboard & Kill Switch): alerts_fire 1.000, kill_switch_removes 1.000, undeletable_become_tasks 1.000, screens_within_3_taps 1.000
+
+- 2026-11-18 stage 15 (Auto-Gate): duplicates_caught 1.000→1.000, false_duplicates 0.000→0.000, repeat_to_same_account_blocked 1.000→1.000, first_post_allowed 1.000→1.000, decisions_have_reasons 1.000→1.000, blocklist_pulls_everywhere 1.000→1.000
+
+- 2026-11-18 stage 16 (Publishing (framework + connectors 17-20)): one_clip_every_platform 1.000→1.000, no_double_posts 1.000→1.000, fallback_tasks_created 1.000→1.000, fields_valid 1.000→1.000, media_deleted_after_upload 1.000→1.000, rate_limit_respected 1.000→1.000, spacing_respected 1.000→1.000
