@@ -19,7 +19,7 @@ def test_output_time_skips_hook_and_cuts():
     ]
     assert engine.output_time(6, segs) == 2 + 1
     assert engine.output_time(12, segs) == 2 + 5 + 1
-    assert ass.map_time(21, segs) == 1  # hook position for a time inside the hook
+    assert ass.map_time(21, segs) == 2 + 5 + 10  # also in the body: captions follow the body occurrence
     assert engine.output_time(10.5, segs) is None  # removed dead air
 
 
