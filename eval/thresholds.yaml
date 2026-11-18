@@ -249,3 +249,18 @@
   kill_switch_removes: {bar: 1.0, direction: higher}
   undeletable_become_tasks: {bar: 1.0, direction: higher}
   screens_within_3_taps: {bar: 1.0, direction: higher}
+"27":
+  one_run_creates_everything: {bar: 1.0, direction: higher}
+  naming_carries_language: {bar: 1.0, direction: higher}
+  taken_handle_gets_variant: {bar: 1.0, direction: higher}
+  codes_route_to_right_slot: {bar: 1.0, direction: higher}
+  no_cross_language_codes: {bar: 1.0, direction: higher}
+  wrong_account_rejected: {bar: 1.0, direction: higher}
+  rerun_changes_nothing: {bar: 1.0, direction: higher}
+"28":
+  weekly_table_complete: {bar: 1.0, direction: higher}
+  four_week_streak_required: {bar: 1.0, direction: higher}
+  recommendation_replaces_lowest: {bar: 1.0, direction: higher}
+  provisioning_prepped: {bar: 1.0, direction: higher}
+  shares_follow_scores: {bar: 1.0, direction: higher}
+  frozen_after_release: {bar: 1.0, direction: higher}

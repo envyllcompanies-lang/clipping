@@ -127,3 +127,27 @@ def post_delete(c: psycopg.Connection, p: dict) -> dict:
     from clipping.publish import framework, registry
 
     return {"deleted": framework.delete_post(c, p["post_id"], registry.adapters(c))}
+
+
+# ---------------- Phase 6: accounts and languages ----------------
+@periodic("server", "language_weekly", 7 * 86400)
+def language_weekly(c: psycopg.Connection) -> None:
+    from clipping.languages import market
+
+    market.weekly(c)
+
+
+@periodic("server", "signup_codes", 30)
+def signup_codes(c: psycopg.Connection) -> None:
+    """Poll the owner inbox for verification codes only while some slot is mid-signup (doc 27)."""
+    import time
+
+    from clipping.accounts import provision
+
+    provision.purge_codes(c)
+    if not db.scalar(c, "SELECT count(*) FROM account_slot WHERE status='signed_up'"):
+        return
+    gm = provision.gmail_client(c)
+    if gm:
+        for raw in gm.recent_raw(int(time.time()) - 900):
+            provision.route_code(c, raw)

@@ -225,7 +225,7 @@ def daily_rank(
     day = day or dt.date.today()
     slots = slots if slots is not None else config.settings()["recorder"]["slots"]
     languages = languages or [
-        ch["stream_language"] for ch in config.channels().values() if ch.get("active", True)
+        ch["stream_language"] for ch in config.channels().values() if ch.get("active", True) or ch.get("prep")
     ]
     weights = active_weights(c, "radar", cfg["weights"])
     inputs = [i for i in build_inputs(c, day, cfg["sample_interval_min"]) if i.language in languages]

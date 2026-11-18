@@ -70,6 +70,19 @@ def has_capacity(c: psycopg.Connection, account: dict) -> bool:
         )
         if proj >= cap:
             return False
+        shares = db.get_flag(c, "language_shares") or {}
+        lang = db.scalar(c, "SELECT language FROM channel WHERE id=%s", account["channel_id"])
+        if (
+            shares and lang in shares
+        ):  # the shared project quota is split across languages by market score (doc 28)
+            ch_used = db.scalar(
+                c,
+                """SELECT count(*) FROM quota_use q JOIN account a ON a.id=q.account_id WHERE a.platform='youtube'
+                                      AND a.channel_id=%s AND q.scope='publish' AND q.at > now() - interval '24 hours'""",
+                account["channel_id"],
+            )
+            if ch_used >= max(1, int(cap * shares[lang])):
+                return False
     return used_24h(c, account["id"]) < cap
 
 

@@ -304,3 +304,7 @@ CREATE TABLE IF NOT EXISTS claim (
   id serial PRIMARY KEY, post_id int REFERENCES post(id), account_id int REFERENCES account(id), kind text NOT NULL,
   details jsonb NOT NULL DEFAULT '{}', created_at timestamptz NOT NULL DEFAULT now(), resolved_at timestamptz
 );
+
+CREATE TABLE IF NOT EXISTS verification_code (
+  id serial PRIMARY KEY, slot_code text NOT NULL, platform text NOT NULL, code text NOT NULL, expires_at timestamptz NOT NULL
+);

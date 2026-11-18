@@ -1,0 +1,98 @@
+{
+  "stage": "27",
+  "name": "Account Provisioning Tool",
+  "passed": true,
+  "seconds": 7.44,
+  "dataset_version": "fake-services@v1",
+  "code_version": "ce71542",
+  "metrics": [
+    {
+      "metric": "one_run_creates_everything",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "naming_carries_language",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "taken_handle_gets_variant",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "codes_route_to_right_slot",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "no_cross_language_codes",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wrong_account_rejected",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "rerun_changes_nothing",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "run1": {
+      "aliases_created": 10,
+      "aliases_adopted": 0,
+      "labels": 10,
+      "passwords": 60,
+      "handles_checked": 60,
+      "kits": 10,
+      "worksheets": 10,
+      "skipped_filled": 0,
+      "alias_errors": []
+    },
+    "run2": {
+      "aliases_created": 0,
+      "aliases_adopted": 0,
+      "labels": 10,
+      "passwords": 0,
+      "handles_checked": 0,
+      "kits": 0,
+      "worksheets": 0,
+      "skipped_filled": 0,
+      "alias_errors": []
+    }
+  }
+}

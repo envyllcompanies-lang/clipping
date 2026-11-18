@@ -1,0 +1,79 @@
+{
+  "stage": "28",
+  "name": "Language Market Ranking",
+  "passed": true,
+  "seconds": 7.46,
+  "dataset_version": "synthetic@v1",
+  "code_version": "ce71542",
+  "metrics": [
+    {
+      "metric": "weekly_table_complete",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "four_week_streak_required",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recommendation_replaces_lowest",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "provisioning_prepped",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "shares_follow_scores",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "frozen_after_release",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "recs_by_week": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        "pl"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "stage": "28",
+  "accepted_at": "2026-11-18T20:45:47+00:00",
+  "dataset_version": "synthetic@v1",
+  "code_version": "ce71542",
+  "metrics": {
+    "weekly_table_complete": 1.0,
+    "four_week_streak_required": 1.0,
+    "recommendation_replaces_lowest": 1.0,
+    "provisioning_prepped": 1.0,
+    "shares_follow_scores": 1.0,
+    "frozen_after_release": 1.0
+  }
+}

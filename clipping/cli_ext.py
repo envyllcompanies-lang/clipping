@@ -18,6 +18,13 @@ def register(sub):
     dsh.add_argument("--port", type=int, default=8000)
     dsh.set_defaults(fn=_dashboard)
 
+    ac = sub.add_parser("accounts", help="account provisioning tool (doc 27)")
+    ac.add_argument("action", choices=["provision", "reveal", "codes"])
+    ac.add_argument("--code")
+    ac.add_argument("--platform")
+    ac.add_argument("--no-handles", action="store_true")
+    ac.set_defaults(fn=_accounts)
+
     rn = sub.add_parser("run", help="make clips from one window file (offline)")
     rn.add_argument("window")
     rn.add_argument("--out", default="var/clip-run")
@@ -97,6 +104,35 @@ def _dashboard(a):
         uid, secret = auth.create_user(c, a.email, pw, owner=True)
         print(f"Owner created (id {uid}). Add this to your authenticator app:")
         print(f"otpauth://totp/Clipping:{a.email}?secret={secret}&issuer=Clipping")
+
+
+def _accounts(a):
+    from clipping.accounts import provision
+    from clipping.core import db
+
+    with db.conn() as c:
+        if a.action == "provision":
+            print(
+                json.dumps(
+                    provision.provision(c, gmail=provision.gmail_client(c), check_handles=not a.no_handles),
+                    indent=2,
+                )
+            )
+            print("worksheets:", provision.WORKSHEETS)
+        elif a.action == "reveal":
+            print(provision.reveal_password(c, a.code, a.platform, "cli"))
+        elif a.action == "codes":
+            gm = provision.gmail_client(c)
+            if not gm:
+                print("connect the owner inbox first (Gmail OAuth)")
+                return
+            import time
+
+            for raw in gm.recent_raw(int(time.time()) - 3600):
+                r = provision.route_code(c, raw)
+                if r:
+                    print(f"{r['code']}:{r['platform']} -> {r['value']}")
+            provision.purge_codes(c)
 
 
 def _radar(a):

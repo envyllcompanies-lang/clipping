@@ -11,8 +11,8 @@ Live status of the build. Newest first in "Progress". Spec: `docs/`. Run `make t
 | 3 Making clips | done (owner's "would post" check on the top 10 pending real footage) |
 | 4 Dashboard and public site | done (needs a host to go live: see Needs B) |
 | 5 Publishing | done in fallback mode against platform fakes (real uploads need the apps/keys) |
-| 6 Accounts and languages | in progress |
-| 7 Analytics and autopilot | not started |
+| 6 Accounts and languages | done (the 60 signups are yours: see Needs B) |
+| 7 Analytics and autopilot | in progress |
 
 ## Component results
 
@@ -40,8 +40,15 @@ Live status of the build. Newest first in "Progress". Spec: `docs/`. Run `make t
 | 29 | Public site & policy pages | pass (tests) | /, /privacy, /terms, /data-deletion, Meta signed-request deletion callback, OAuth callbacks |
 | 24 | Credential storage | pass (tests) | tokens encrypted, refresh ahead of expiry, failures alert to reconnect, token use audit-logged |
 | 16–20 | Publisher framework + YouTube, Meta (IG/FB/Threads), TikTok, Snapchat | pass | one clip live on all 6 (fakes) with correct fields; injected 5xx/crash mid-upload never double-posts; rolling 24 h never above limit minus 10% reserve; 15-min spacing; YouTube private + TikTok inbox fallbacks create tap tasks; file and bucket copy deleted after the last upload |
+| 27 | Account provisioning tool | pass | one run: 10 aliases, 10 inbox labels, 60 passwords, 60 handle checks (taken handles get variants), 10 profile kits, 10 worksheets; 50/50 test codes routed to the right language+platform only; wrong-language connect rejected; re-run changes nothing |
+| 28 | Language market ranking | pass | weekly table complete; challenger recommended only after 4 straight winning weeks (a broken streak resets), replaces the lowest language, provisioning prepped automatically; shares follow scores with a 5% floor; frozen 4 weeks after release |
 
 ## Needs B
+
+- **addy.io account** (`ALIAS_API_KEY`, plus `ALIAS_DOMAIN` = your free username subdomain, e.g. `yourname.anonaddy.com`): then `clip accounts provision` creates all 10 language aliases, passwords, handle checks, profile kits and worksheets in one run.
+- **Brand name** (`config/brand.yaml`): placeholder `gta6clips` is used for handles until you pick one.
+- **Gmail connection for the owner inbox** (Gmail API OAuth, read + settings): inbox labels per language and automatic verification codes on the worksheets.
+- **The 60 signups** (10 languages × 6 platforms) using the worksheets at `/setup` in the dashboard, then press Connect on each row. `OWNER_PHONE` only where a platform requires it.
 
 - **Hosting for the dashboard + policy pages** (docs 25, 29): pick a host (free subdomain is fine) so `/privacy`, `/terms`, `/data-deletion` are live over HTTPS for the platform reviews. Deploy files are in the repo (`Dockerfile`, see docs below).
 - **Google Cloud project** (`GOOGLE_OAUTH_CLIENT_ID/SECRET`): YouTube uploads/stats; then submit the API compliance audit (until then uploads go private and show up as one-tap tasks).

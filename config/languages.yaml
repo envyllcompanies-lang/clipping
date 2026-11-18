@@ -1,0 +1,16 @@
+# Language market ranking (doc 28). Weights refit by analytics after 8+ weeks of data.
+release_date: 2026-11-19
+swaps_disabled_weeks_after_release: 4
+streak_weeks: 4
+hysteresis: 0.10
+viewer_floor: 1000
+share_floor: 0.05
+weights: {audience: 0.40, depth: 0.15, opportunity: 0.20, value: 0.10, ours: 0.15}
+watch_list:
+  pl: {language: Polish, native_name: Polski, flag: "🇵🇱", time_zone: Europe/Warsaw, rpm_tier: 0.35}
+  zh-Hant: {language: Chinese (Traditional), native_name: 繁體中文, flag: "🇹🇼", time_zone: Asia/Taipei, rpm_tier: 0.45, stream_language: zh}
+  th: {language: Thai, native_name: ไทย, flag: "🇹🇭", time_zone: Asia/Bangkok, rpm_tier: 0.2}
+  hi: {language: Hindi, native_name: हिन्दी, flag: "🇮🇳", time_zone: Asia/Kolkata, rpm_tier: 0.1}
+  id: {language: Indonesian, native_name: Bahasa Indonesia, flag: "🇮🇩", time_zone: Asia/Jakarta, rpm_tier: 0.15}
+  it: {language: Italian, native_name: Italiano, flag: "🇮🇹", time_zone: Europe/Rome, rpm_tier: 0.55}
+  ko: {language: Korean, native_name: 한국어, flag: "🇰🇷", time_zone: Asia/Seoul, rpm_tier: 0.6}

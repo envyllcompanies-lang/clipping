@@ -49,3 +49,7 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 15 (Auto-Gate): duplicates_caught 1.000→1.000, false_duplicates 0.000→0.000, repeat_to_same_account_blocked 1.000→1.000, first_post_allowed 1.000→1.000, decisions_have_reasons 1.000→1.000, blocklist_pulls_everywhere 1.000→1.000
 
 - 2026-11-18 stage 16 (Publishing (framework + connectors 17-20)): one_clip_every_platform 1.000→1.000, no_double_posts 1.000→1.000, fallback_tasks_created 1.000→1.000, fields_valid 1.000→1.000, media_deleted_after_upload 1.000→1.000, rate_limit_respected 1.000→1.000, spacing_respected 1.000→1.000
+
+- 2026-11-18 stage 27 (Account Provisioning Tool): one_run_creates_everything 1.000, naming_carries_language 1.000, taken_handle_gets_variant 1.000, codes_route_to_right_slot 1.000, no_cross_language_codes 1.000, wrong_account_rejected 1.000, rerun_changes_nothing 1.000
+
+- 2026-11-18 stage 28 (Language Market Ranking): weekly_table_complete 1.000, four_week_streak_required 1.000, recommendation_replaces_lowest 1.000, provisioning_prepped 1.000, shares_follow_scores 1.000, frozen_after_release 1.000
