@@ -142,3 +142,11 @@
     bar: 10
     direction: lower
     tolerance: 0.5
+"13":
+  cut_rate_rel_err: {bar: 0.15, direction: lower}
+  caption_y_err: {bar: 0.05, direction: lower}
+  caps_detected: {bar: 1.0, direction: higher}
+  fill_color_err: {bar: 0.25, direction: lower}
+  layout_detected: {bar: 1.0, direction: higher}
+  split_err: {bar: 0.05, direction: lower}
+  zoom_rate_abs_err: {bar: 1.0, direction: lower}  # weakest analyzer measure (no doc bar); tighten with real samples

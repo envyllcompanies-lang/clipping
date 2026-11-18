@@ -23,3 +23,5 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 06 (Transcription): wer_en 0.000, wer_es 0.000, wer_pt 0.091, wer_fr 0.000, wer_de 0.000, wer_ru 0.000, wer_tr 0.000, wer_vi 0.080, wer_ar 0.071, wer_ja 0.070, wer_others_max 0.091, wer_others_mean 0.035, timing_median_s 0.019
 
 - 2026-11-18 stage 08 (Game Event Detection): precision_death 1.000, recall_death 1.000, precision_arrest 1.000, recall_arrest 1.000, precision_wanted 1.000, recall_wanted 1.000, precision_mission 1.000, recall_mission 1.000, precision_crash 1.000, recall_crash 1.000, precision_loading 1.000, recall_loading 1.000, precision_menu 1.000, recall_menu 1.000, precision_min_core 1.000, seconds_per_window 2.928
+
+- 2026-11-18 stage 13 (Style Study): cut_rate_rel_err 0.024, caption_y_err 0.003, caps_detected 1.000, fill_color_err 0.016, layout_detected 1.000, split_err 0.009, zoom_rate_abs_err 0.695

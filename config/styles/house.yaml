@@ -1,0 +1,54 @@
+# House style. Starting values: doc 11/13 defaults + the owner's reference (docs/assets/layout-reference.png):
+# creator facecam top ~40%, captions centered on the seam (yellow headline, white spoken captions), gameplay bottom.
+# Measured reference-channel profiles (clip style study) replace or blend with this; analytics A/B tests arms.
+name: house
+source: defaults + owner reference screenshot (not measured)
+length:
+  short: {target: 30, min: 15, max: 45}
+  long: {target: 75, min: 61, max: 90}
+pacing:
+  cuts_per_10s: 2.0
+  median_shot_s: 3.5
+  zooms_per_10s: 2.5
+  zoom_amount: 1.15
+  dead_air_s: 0.4
+hook:
+  cold_open_share: 0.85
+  hook_s: 2.0
+  hook_text_s: 2.5
+  transition: whoosh
+layout:
+  arms: {stacked: 0.6, full: 0.25, small_cam: 0.15}   # starting mix; analytics bandit reallocates per channel+platform
+  stacked: {cam_ratio: 0.40}
+  small_cam: {bubble_width: 0.34, corner: top_left}
+captions:
+  words_per_line: [2, 4]
+  max_lines: 2
+  position: seam          # stacked: centered on the cam/gameplay seam; full: middle band
+  all_caps: true
+  font: Montserrat
+  weight: 800
+  size_pct: 0.062
+  fill: "#FFFFFF"
+  headline_fill: "#FFE11A"
+  accent: "#FFE11A"
+  outline_px: 7
+  shadow_px: 2
+  emphasis_scale: 1.1
+  animation: pop
+  karaoke: false
+  min_on_screen_s: 0.4
+  bridge_gap_s: 0.3
+audio:
+  lufs: -14
+  true_peak: -1
+  sfx_per_10s: 1.0
+  game_duck_db: -6
+ending:
+  loop_share: 0.3
+  hold_after_payoff_s: 0.8
+  hold_after_explosion_s: 1.0
+extras:
+  emoji_rate: 0.0
+credit:
+  template: "@{creator} on {platform}"

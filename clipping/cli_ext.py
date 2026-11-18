@@ -11,10 +11,32 @@ def register(sub):
     w.add_argument("--once", action="store_true")
     w.set_defaults(fn=lambda a: __import__("clipping.worker", fromlist=["loop"]).loop(a.role, once=a.once))
 
+    st = sub.add_parser("style", help="style study (doc 13)")
+    st.add_argument("action", choices=["study"])
+    st.add_argument("name")
+    st.add_argument("dir", help="folder of sample videos for one reference channel")
+    st.set_defaults(fn=_style)
+
     r = sub.add_parser("radar", help="creator radar")
     r.add_argument("action", choices=["poll", "rank", "show"])
     r.add_argument("--language")
     r.set_defaults(fn=_radar)
+
+
+def _style(a):
+    from pathlib import Path
+
+    from clipping.core import config
+    from clipping.style import analyze
+
+    vids = sorted(p for p in Path(a.dir).iterdir() if p.suffix.lower() in (".mp4", ".mov", ".mkv", ".webm"))
+    if not vids:
+        print("no videos in", a.dir)
+        return
+    res = [analyze.analyze(str(v)) for v in vids]
+    prof = analyze.profile_from(res, a.name, f"style study of {len(vids)} local files ({a.dir})")
+    config.save(f"styles/{a.name}.yaml", prof)
+    print(f"wrote config/styles/{a.name}.yaml from {len(vids)} videos")
 
 
 def _radar(a):
