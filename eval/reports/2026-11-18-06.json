@@ -1,0 +1,131 @@
+{
+  "stage": "06",
+  "name": "Transcription",
+  "passed": true,
+  "seconds": 59.11,
+  "dataset_version": "tts@v1",
+  "code_version": "c37a49f",
+  "metrics": [
+    {
+      "metric": "wer_en",
+      "value": 0.0,
+      "baseline": null,
+      "bar": 0.15,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_es",
+      "value": 0.0,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_pt",
+      "value": 0.09090909090909091,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_fr",
+      "value": 0.0,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_de",
+      "value": 0.0,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_ru",
+      "value": 0.0,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_tr",
+      "value": 0.0,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_vi",
+      "value": 0.08,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_ar",
+      "value": 0.07142857142857142,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_ja",
+      "value": 0.06976744186046512,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_others_max",
+      "value": 0.09090909090909091,
+      "baseline": null,
+      "bar": 0.25,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "wer_others_mean",
+      "value": 0.03467834491090305,
+      "baseline": null,
+      "bar": 0.25,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "timing_median_s",
+      "value": 0.01853125000000011,
+      "baseline": null,
+      "bar": 0.15,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "engine": "faster-whisper:large-v3-turbo"
+  }
+}

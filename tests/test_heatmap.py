@@ -107,10 +107,8 @@ def test_score_stream_from_recorded_segments(conn, tmp_data):
         for t in range(0, 240, 10)
     ]
     conn.cursor().executemany("INSERT INTO chat_bucket VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", rows)
-    from clipping.chat import capture
 
     conn.execute("UPDATE stream SET ended_at=%s WHERE id=%s", (t0 + dt.timedelta(seconds=240), sid))
-    capture.compute_buckets  # buckets inserted directly above
     conn.execute("UPDATE chat_bucket SET velocity_z = CASE WHEN msgs > 10 THEN 8 ELSE 0 END")
     ids = service.score_stream(conn, sid)
     assert ids, "expected a candidate moment"

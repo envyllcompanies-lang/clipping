@@ -76,3 +76,8 @@
   voice_snr_gain_db:
     bar: 3.0
     direction: higher
+"06":
+  wer_en: {bar: 0.15, direction: lower}
+  wer_others_max: {bar: 0.25, direction: lower}
+  wer_others_mean: {bar: 0.25, direction: lower}
+  timing_median_s: {bar: 0.15, direction: lower}

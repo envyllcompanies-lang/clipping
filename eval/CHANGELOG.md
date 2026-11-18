@@ -19,3 +19,5 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 07 (Audio Cleanup & Music Removal): detector_accuracy 1.000, skip_when_no_music 1.000, radio_no_longer_matches 1.000, voice_snr_gain_db 12.381
 
 - 2026-11-18 stage 05 (Moment Heatmap): score_s_per_hour 43.271, recall_at_20 0.983→0.983, precision_at_20 0.975→0.975, recall_at_20_live 0.933→0.933, precision_at_20_live 0.925→0.925, fuse_s_per_hour 0.005→0.005
+
+- 2026-11-18 stage 06 (Transcription): wer_en 0.000, wer_es 0.000, wer_pt 0.091, wer_fr 0.000, wer_de 0.000, wer_ru 0.000, wer_tr 0.000, wer_vi 0.080, wer_ar 0.071, wer_ja 0.070, wer_others_max 0.091, wer_others_mean 0.035, timing_median_s 0.019
