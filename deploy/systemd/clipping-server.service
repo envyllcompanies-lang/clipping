@@ -1,0 +1,11 @@
+[Unit]
+Description=Clipping server worker (recorder, scheduler, publishers)
+After=network-online.target postgresql.service
+[Service]
+WorkingDirectory=/opt/clipping
+EnvironmentFile=/opt/clipping/.env
+ExecStart=/opt/clipping/.venv/bin/clip worker server
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target

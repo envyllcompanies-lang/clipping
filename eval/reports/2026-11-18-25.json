@@ -1,0 +1,45 @@
+{
+  "stage": "25",
+  "name": "Infrastructure: end-to-end through the queue",
+  "passed": true,
+  "seconds": 221.57,
+  "dataset_version": "windowfx-stream@v1",
+  "code_version": "05b0cdb",
+  "metrics": [
+    {
+      "metric": "end_to_end_ok",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "platforms_live",
+      "value": 6.0,
+      "baseline": null,
+      "bar": 6,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "renders_left_after_upload",
+      "value": 0.0,
+      "baseline": null,
+      "bar": 0,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "moments": 1,
+    "server_jobs": 1,
+    "m1_jobs": 4,
+    "queued_versions": 2,
+    "platforms_live": 6
+  }
+}

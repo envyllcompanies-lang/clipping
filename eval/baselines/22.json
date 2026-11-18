@@ -1,0 +1,15 @@
+{
+  "stage": "22",
+  "accepted_at": "2026-11-18T20:53:16+00:00",
+  "dataset_version": "simulated@v1",
+  "code_version": "05b0cdb",
+  "metrics": {
+    "stats_missing_share": 0.0,
+    "bandit_finds_best_layout": 1.0,
+    "worse_refit_refused": 1.0,
+    "changes_explained": 1.0,
+    "digest_produced": 1.0,
+    "score_performance_spearman": 0.3699979773794491,
+    "layout_weights_written": 1.0
+  }
+}

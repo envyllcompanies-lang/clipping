@@ -2,9 +2,9 @@
   "stage": "03",
   "name": "Chat Capture",
   "passed": true,
-  "seconds": 12.7,
+  "seconds": 12.97,
   "dataset_version": "simstream@v1",
-  "code_version": "c318f76",
+  "code_version": "05b0cdb",
   "metrics": [
     {
       "metric": "align_within_2s",

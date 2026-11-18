@@ -13,4 +13,22 @@ Fully automated AI clipping and posting for GTA 6: finds the top GTA 6 streamers
 
 ## Status
 
-Planning complete; build starts with Phase 1 in Claude Code. Copy `.env.example` to `.env` for local development.
+All 7 build phases are implemented and tested; what remains needs the owner's keys and accounts (see `BUILD_LOG.md` → Needs B).
+
+## Quick start
+
+```bash
+uv venv -p 3.11 .venv && uv pip install -e ".[asr,dev]"   # plus ".[audio]" on the MacBook for Demucs/PANNs
+cp .env.example .env                                       # fill in keys as you get them; set TOKEN_ENCRYPTION_KEY
+clip db migrate
+clip dashboard create-owner --email you@example.com        # prints the 2FA secret for your authenticator app
+clip worker server      # VPS: radar, recorder, chat, clips, heatmap, scheduler, publishers, analytics
+clip worker m1          # MacBook: audio cleanup, transcription, events, build/render
+clip dashboard serve    # phone-friendly dashboard + public policy pages
+clip accounts provision # aliases, passwords, handle checks, worksheets for the 60 accounts
+clip run window.ts      # make clips from one window file, offline
+make test               # unit tests (fast); make test-all includes the slow end-to-end test
+make backtest-all       # every stage backtest against eval/thresholds.yaml and the accepted baselines
+```
+
+Deployment: `docker-compose.yml` (VPS), `deploy/systemd/` units, `deploy/launchd/com.clipping.m1.plist` (MacBook), `scripts/backup.sh` / `restore.sh`.

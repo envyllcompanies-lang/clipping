@@ -2,14 +2,14 @@
   "stage": "09",
   "name": "Clip Builder",
   "passed": true,
-  "seconds": 2.49,
+  "seconds": 2.24,
   "dataset_version": "synthetic@v1",
-  "code_version": "61cc0a7",
+  "code_version": "05b0cdb",
   "metrics": [
     {
       "metric": "boundary_iou",
       "value": 0.7969211526281528,
-      "baseline": null,
+      "baseline": 0.7969211526281528,
       "bar": 0.6,
       "direction": "higher",
       "passed": true,
@@ -18,7 +18,7 @@
     {
       "metric": "payoff_included",
       "value": 0.9833333333333333,
-      "baseline": null,
+      "baseline": 0.9833333333333333,
       "bar": 0.95,
       "direction": "higher",
       "passed": true,
@@ -27,7 +27,7 @@
     {
       "metric": "plans_valid",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -36,7 +36,7 @@
     {
       "metric": "both_versions",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -45,7 +45,7 @@
     {
       "metric": "standalone_openings",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,

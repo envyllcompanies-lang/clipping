@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- MacBook render worker (doc 25). Install: cp to ~/Library/LaunchAgents/ and `launchctl load` it. Edit the paths. -->
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.clipping.m1</string>
+  <key>ProgramArguments</key><array><string>/Users/YOU/clipping/.venv/bin/clip</string><string>worker</string><string>m1</string></array>
+  <key>WorkingDirectory</key><string>/Users/YOU/clipping</string>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>/Users/YOU/clipping/var/m1.log</string>
+  <key>StandardErrorPath</key><string>/Users/YOU/clipping/var/m1.log</string>
+</dict></plist>

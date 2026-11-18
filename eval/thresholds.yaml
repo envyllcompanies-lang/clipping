@@ -66,6 +66,10 @@
     bar: 120
     direction: lower
     tolerance: 0.5
+  recall_at_20_live_real:
+    bar: 0.7
+    direction: higher
+    required: false
 '07':
   detector_accuracy:
     bar: 0.85
@@ -218,49 +222,154 @@
   profile_driven:
     bar: 1.0
     direction: higher
-"12":
-  validation_pass: {bar: 1.0, direction: higher}
-  platform_fit: {bar: 1.0, direction: higher}
-  versions_rendered: {bar: 1.0, direction: higher}
-  render_s_per_40s_linux: {bar: 90, direction: lower, tolerance: 0.5}   # doc bar (30 s) applies on the M1 with VideoToolbox
-"14":
-  within_limits: {bar: 1.0, direction: higher}
-  language_match: {bar: 1.0, direction: higher}
-  no_duplicate_titles: {bar: 1.0, direction: higher}
-  patterns_tracked: {bar: 1.0, direction: higher}
-  safety_blocks_pii: {bar: 1.0, direction: higher}
-"15":
-  duplicates_caught: {bar: 0.99, direction: higher}
-  false_duplicates: {bar: 0.0, direction: lower}
-  repeat_to_same_account_blocked: {bar: 1.0, direction: higher}
-  first_post_allowed: {bar: 1.0, direction: higher}
-  decisions_have_reasons: {bar: 1.0, direction: higher}
-  blocklist_pulls_everywhere: {bar: 1.0, direction: higher}
-"16":
-  one_clip_every_platform: {bar: 1.0, direction: higher}
-  no_double_posts: {bar: 1.0, direction: higher}
-  fallback_tasks_created: {bar: 1.0, direction: higher}
-  fields_valid: {bar: 1.0, direction: higher}
-  media_deleted_after_upload: {bar: 1.0, direction: higher}
-  rate_limit_respected: {bar: 1.0, direction: higher}
-  spacing_respected: {bar: 1.0, direction: higher}
-"23":
-  alerts_fire: {bar: 1.0, direction: higher}
-  kill_switch_removes: {bar: 1.0, direction: higher}
-  undeletable_become_tasks: {bar: 1.0, direction: higher}
-  screens_within_3_taps: {bar: 1.0, direction: higher}
-"27":
-  one_run_creates_everything: {bar: 1.0, direction: higher}
-  naming_carries_language: {bar: 1.0, direction: higher}
-  taken_handle_gets_variant: {bar: 1.0, direction: higher}
-  codes_route_to_right_slot: {bar: 1.0, direction: higher}
-  no_cross_language_codes: {bar: 1.0, direction: higher}
-  wrong_account_rejected: {bar: 1.0, direction: higher}
-  rerun_changes_nothing: {bar: 1.0, direction: higher}
-"28":
-  weekly_table_complete: {bar: 1.0, direction: higher}
-  four_week_streak_required: {bar: 1.0, direction: higher}
-  recommendation_replaces_lowest: {bar: 1.0, direction: higher}
-  provisioning_prepped: {bar: 1.0, direction: higher}
-  shares_follow_scores: {bar: 1.0, direction: higher}
-  frozen_after_release: {bar: 1.0, direction: higher}
+'12':
+  validation_pass:
+    bar: 1.0
+    direction: higher
+  platform_fit:
+    bar: 1.0
+    direction: higher
+  versions_rendered:
+    bar: 1.0
+    direction: higher
+  render_s_per_40s_linux:
+    bar: 90
+    direction: lower
+    tolerance: 0.5
+'14':
+  within_limits:
+    bar: 1.0
+    direction: higher
+  language_match:
+    bar: 1.0
+    direction: higher
+  no_duplicate_titles:
+    bar: 1.0
+    direction: higher
+  patterns_tracked:
+    bar: 1.0
+    direction: higher
+  safety_blocks_pii:
+    bar: 1.0
+    direction: higher
+'15':
+  duplicates_caught:
+    bar: 0.99
+    direction: higher
+  false_duplicates:
+    bar: 0.0
+    direction: lower
+  repeat_to_same_account_blocked:
+    bar: 1.0
+    direction: higher
+  first_post_allowed:
+    bar: 1.0
+    direction: higher
+  decisions_have_reasons:
+    bar: 1.0
+    direction: higher
+  blocklist_pulls_everywhere:
+    bar: 1.0
+    direction: higher
+'16':
+  one_clip_every_platform:
+    bar: 1.0
+    direction: higher
+  no_double_posts:
+    bar: 1.0
+    direction: higher
+  fallback_tasks_created:
+    bar: 1.0
+    direction: higher
+  fields_valid:
+    bar: 1.0
+    direction: higher
+  media_deleted_after_upload:
+    bar: 1.0
+    direction: higher
+  rate_limit_respected:
+    bar: 1.0
+    direction: higher
+  spacing_respected:
+    bar: 1.0
+    direction: higher
+'23':
+  alerts_fire:
+    bar: 1.0
+    direction: higher
+  kill_switch_removes:
+    bar: 1.0
+    direction: higher
+  undeletable_become_tasks:
+    bar: 1.0
+    direction: higher
+  screens_within_3_taps:
+    bar: 1.0
+    direction: higher
+'27':
+  one_run_creates_everything:
+    bar: 1.0
+    direction: higher
+  naming_carries_language:
+    bar: 1.0
+    direction: higher
+  taken_handle_gets_variant:
+    bar: 1.0
+    direction: higher
+  codes_route_to_right_slot:
+    bar: 1.0
+    direction: higher
+  no_cross_language_codes:
+    bar: 1.0
+    direction: higher
+  wrong_account_rejected:
+    bar: 1.0
+    direction: higher
+  rerun_changes_nothing:
+    bar: 1.0
+    direction: higher
+'28':
+  weekly_table_complete:
+    bar: 1.0
+    direction: higher
+  four_week_streak_required:
+    bar: 1.0
+    direction: higher
+  recommendation_replaces_lowest:
+    bar: 1.0
+    direction: higher
+  provisioning_prepped:
+    bar: 1.0
+    direction: higher
+  shares_follow_scores:
+    bar: 1.0
+    direction: higher
+  frozen_after_release:
+    bar: 1.0
+    direction: higher
+'22':
+  stats_missing_share:
+    bar: 0.02
+    direction: lower
+  bandit_finds_best_layout:
+    bar: 1.0
+    direction: higher
+  worse_refit_refused:
+    bar: 1.0
+    direction: higher
+  changes_explained:
+    bar: 1.0
+    direction: higher
+  digest_produced:
+    bar: 1.0
+    direction: higher
+  score_performance_spearman:
+    bar: 0.2
+    direction: higher
+  layout_weights_written:
+    bar: 1.0
+    direction: higher
+"25":
+  end_to_end_ok: {bar: 1.0, direction: higher}
+  platforms_live: {bar: 6, direction: higher}
+  renders_left_after_upload: {bar: 0, direction: lower}

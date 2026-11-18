@@ -308,3 +308,8 @@ CREATE TABLE IF NOT EXISTS claim (
 CREATE TABLE IF NOT EXISTS verification_code (
   id serial PRIMARY KEY, slot_code text NOT NULL, platform text NOT NULL, code text NOT NULL, expires_at timestamptz NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS heatmap_signal (
+  stream_id int NOT NULL REFERENCES stream(id) ON DELETE CASCADE, name text NOT NULL, "values" real[] NOT NULL,
+  PRIMARY KEY(stream_id, name)
+);

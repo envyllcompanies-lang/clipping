@@ -53,3 +53,7 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 27 (Account Provisioning Tool): one_run_creates_everything 1.000, naming_carries_language 1.000, taken_handle_gets_variant 1.000, codes_route_to_right_slot 1.000, no_cross_language_codes 1.000, wrong_account_rejected 1.000, rerun_changes_nothing 1.000
 
 - 2026-11-18 stage 28 (Language Market Ranking): weekly_table_complete 1.000, four_week_streak_required 1.000, recommendation_replaces_lowest 1.000, provisioning_prepped 1.000, shares_follow_scores 1.000, frozen_after_release 1.000
+
+- 2026-11-18 stage 22 (Analytics & Feedback Loop): stats_missing_share 0.000, bandit_finds_best_layout 1.000, worse_refit_refused 1.000, changes_explained 1.000, digest_produced 1.000, score_performance_spearman 0.370, layout_weights_written 1.000
+
+- 2026-11-18 stage 25 (Infrastructure: end-to-end through the queue): end_to_end_ok 1.000, platforms_live 6.000, renders_left_after_upload 0.000

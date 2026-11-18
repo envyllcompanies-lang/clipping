@@ -2,9 +2,9 @@
   "stage": "08",
   "name": "Game Event Detection",
   "passed": true,
-  "seconds": 36.53,
+  "seconds": 35.21,
   "dataset_version": "eventfx@v1",
-  "code_version": "c318f76",
+  "code_version": "05b0cdb",
   "metrics": [
     {
       "metric": "precision_death",
@@ -143,7 +143,7 @@
     },
     {
       "metric": "seconds_per_window",
-      "value": 2.868441715836525,
+      "value": 2.7764635320220674,
       "baseline": 2.9275855741330554,
       "bar": 10,
       "direction": "lower",

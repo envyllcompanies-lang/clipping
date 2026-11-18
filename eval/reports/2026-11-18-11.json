@@ -2,14 +2,14 @@
   "stage": "11",
   "name": "Captions & On-screen Text",
   "passed": true,
-  "seconds": 2.95,
+  "seconds": 2.9,
   "dataset_version": "synthetic@v1",
-  "code_version": "e494086",
+  "code_version": "05b0cdb",
   "metrics": [
     {
       "metric": "timing_drift_max_s",
       "value": 2.4868995751603507e-14,
-      "baseline": null,
+      "baseline": 2.4868995751603507e-14,
       "bar": 0.1,
       "direction": "lower",
       "passed": true,
@@ -18,7 +18,7 @@
     {
       "metric": "lines_fit",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -27,7 +27,7 @@
     {
       "metric": "hook_and_credit",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -36,7 +36,7 @@
     {
       "metric": "libass_ok",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -45,7 +45,7 @@
     {
       "metric": "profile_driven",
       "value": 1.0,
-      "baseline": null,
+      "baseline": 1.0,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,

@@ -144,6 +144,12 @@ def score_stream(c: psycopg.Connection, stream_id: int, request_windows: bool = 
     st = db.one(c, "SELECT * FROM stream WHERE id=%s", stream_id)
     T, sig = stream_arrays(c, stream_id)
     score = fusion.fuse(sig, active_weights(c, st["language"]), cfg["smooth_s"])
+    upsert = (
+        'INSERT INTO heatmap_signal(stream_id,name,"values") VALUES (%s,%s,%s) '
+        'ON CONFLICT (stream_id,name) DO UPDATE SET "values"=EXCLUDED."values"'
+    )
+    for name, arr in sig.items():  # kept for weekly weight refits (labels arrive later as viewer clips)
+        c.execute(upsert, (stream_id, name, [None if np.isnan(v) else round(float(v), 3) for v in arr]))
     c.execute(
         """INSERT INTO heatmap_curve(stream_id,step_s,"values") VALUES (%s,1,%s) ON CONFLICT (stream_id)
                  DO UPDATE SET "values"=EXCLUDED."values", computed_at=now()""",
@@ -205,3 +211,79 @@ def score_stream(c: psycopg.Connection, stream_id: int, request_windows: bool = 
                 priority=int(w.score * 100),
             )
     return ids
+
+
+def refit(c: psycopg.Connection, holdout_frac: float = 0.3, min_streams: int = 6) -> dict | None:
+    """Weekly: logistic fit, label = a viewer clip lands within 15 s; ships only if held-out recall@20 improves."""
+    from clipping.analytics.loop import ship
+    from clipping.heatmap import learn
+
+    sids = [
+        r["stream_id"]
+        for r in db.all_(
+            c,
+            """SELECT DISTINCT hs.stream_id FROM heatmap_signal hs JOIN platform_clip pc ON pc.stream_id=hs.stream_id
+                                                  WHERE pc.abs_utc_start IS NOT NULL ORDER BY 1""",
+        )
+    ]
+    if len(sids) < min_streams:
+        return None
+    data = {}
+    for sid in sids:
+        st = db.one(c, "SELECT started_at FROM stream WHERE id=%s", sid)
+        sig = {
+            r["name"]: np.array([np.nan if v is None else v for v in r["values"]], float)
+            for r in db.all_(c, 'SELECT name, "values" FROM heatmap_signal WHERE stream_id=%s', sid)
+        }
+        T = len(next(iter(sig.values())))
+        clips = [
+            {
+                "t_start": (r["abs_utc_start"] - st["started_at"]).total_seconds(),
+                "duration": r["duration"] or 30,
+                "views": r["view_count"] or 0,
+            }
+            for r in db.all_(
+                c, "SELECT * FROM platform_clip WHERE stream_id=%s AND abs_utc_start IS NOT NULL", sid
+            )
+        ]
+        data[sid] = (sig, clips, T)
+    k = max(1, int(len(sids) * holdout_frac))
+    train, hold = sids[:-k], sids[-k:]
+    names = [n for n in config.settings()["heatmap"]["weights"] if n != "viewer_clips"]
+    X = np.vstack([learn.design(data[s][0], names) for s in train if all(n in data[s][0] for n in names)])
+    y = np.concatenate(
+        [
+            learn.labels_from_clips(data[s][1], data[s][2])
+            for s in train
+            if all(n in data[s][0] for n in names)
+        ]
+    )
+    new = learn.to_weights(learn.fit_logistic(X, y), names)
+    if not new:
+        return None
+    new["viewer_clips"] = config.settings()["heatmap"]["weights"]["viewer_clips"]
+    cur = active_weights(c, None)
+
+    def recall(w):
+        hits = []
+        for s in hold:
+            sig, clips, T = data[s]
+            score = fusion.fuse({n: sig[n] for n in sig if n != "viewer_clips"}, w, 5)
+            wins = fusion.pick_windows(score, floor=0.0)[: max(1, int(20 * T / 14400))]
+            pos = [
+                cl["t_start"] + 0.65 * cl["duration"] for cl in sorted(clips, key=lambda x: -x["views"])[:10]
+            ]
+            hits += [any(wn.start_s <= p <= wn.end_s for wn in wins) for p in pos]
+        return float(np.mean(hits)) if hits else 0.0
+
+    r_new, r_cur = recall(new), recall(cur)
+    top = max((n for n in new if n != "viewer_clips"), key=new.get)
+    shipped = ship(
+        c,
+        "heatmap",
+        new,
+        r_new,
+        r_cur,
+        f"Heatmap refit: '{top.replace('_', ' ')}' predicts viewer clips best",
+    )
+    return {"weights": new, "holdout_new": r_new, "holdout_current": r_cur, "shipped": shipped}

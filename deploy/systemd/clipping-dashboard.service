@@ -1,0 +1,10 @@
+[Unit]
+Description=Clipping dashboard and public pages
+After=network-online.target
+[Service]
+WorkingDirectory=/opt/clipping
+EnvironmentFile=/opt/clipping/.env
+ExecStart=/opt/clipping/.venv/bin/clip dashboard serve --host 127.0.0.1 --port 8000
+Restart=always
+[Install]
+WantedBy=multi-user.target

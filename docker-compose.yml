@@ -1,0 +1,31 @@
+# Local or single-VPS deployment. Secrets come from .env (never committed) or the host's secret manager.
+services:
+  db:
+    image: postgres:16
+    environment: {POSTGRES_DB: clipping, POSTGRES_USER: clipping, POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-change-me}"}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U clipping"], interval: 5s, retries: 10}
+  migrate:
+    build: .
+    command: clip db migrate
+    env_file: .env
+    environment: {DATABASE_URL: "postgresql://clipping:${POSTGRES_PASSWORD:-change-me}@db:5432/clipping"}
+    depends_on: {db: {condition: service_healthy}}
+  server:
+    build: .
+    command: clip worker server
+    restart: unless-stopped
+    env_file: .env
+    environment: {DATABASE_URL: "postgresql://clipping:${POSTGRES_PASSWORD:-change-me}@db:5432/clipping"}
+    volumes: [data:/data]
+    depends_on: {migrate: {condition: service_completed_successfully}}
+  dashboard:
+    build: .
+    command: clip dashboard serve --port 8000
+    restart: unless-stopped
+    env_file: .env
+    environment: {DATABASE_URL: "postgresql://clipping:${POSTGRES_PASSWORD:-change-me}@db:5432/clipping"}
+    ports: ["8000:8000"]
+    volumes: [data:/data]
+    depends_on: {migrate: {condition: service_completed_successfully}}
+volumes: {pgdata: {}, data: {}}

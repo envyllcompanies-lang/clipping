@@ -2,9 +2,9 @@
   "stage": "07",
   "name": "Audio Cleanup & Music Removal",
   "passed": true,
-  "seconds": 81.92,
+  "seconds": 59.51,
   "dataset_version": "audiofx@v1",
-  "code_version": "c318f76",
+  "code_version": "05b0cdb",
   "metrics": [
     {
       "metric": "detector_accuracy",
@@ -35,7 +35,7 @@
     },
     {
       "metric": "voice_snr_gain_db",
-      "value": 12.447867631912231,
+      "value": 12.439656496047974,
       "baseline": 12.38096833229065,
       "bar": 3.0,
       "direction": "higher",

@@ -151,3 +151,30 @@ def signup_codes(c: psycopg.Connection) -> None:
     if gm:
         for raw in gm.recent_raw(int(time.time()) - 900):
             provision.route_code(c, raw)
+
+
+# ---------------- Phase 7: analytics and autopilot ----------------
+@periodic("server", "stats", 3600)
+def stats(c: psycopg.Connection) -> None:
+    from clipping.analytics import loop
+    from clipping.publish import registry
+
+    loop.pull_stats(c, registry.adapters(c))
+
+
+@periodic("server", "analytics_weekly", 7 * 86400)
+def analytics_weekly(c: psycopg.Connection) -> None:
+    from clipping.analytics import loop
+    from clipping.heatmap import service
+
+    service.refit(c)
+    loop.weekly(c)
+
+
+@periodic("m1", "nightly_backtests", 86400)
+def nightly_backtests(c: psycopg.Connection) -> None:
+    """Refresh the rolling real dataset and run every stage backtest; results show on the dashboard (doc 30)."""
+    from clipping.eval import harness, real
+
+    real.build_recent(c)
+    harness.run_all()

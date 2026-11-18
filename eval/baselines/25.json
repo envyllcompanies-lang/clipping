@@ -1,0 +1,11 @@
+{
+  "stage": "25",
+  "accepted_at": "2026-11-18T21:02:47+00:00",
+  "dataset_version": "windowfx-stream@v1",
+  "code_version": "05b0cdb",
+  "metrics": {
+    "end_to_end_ok": 1.0,
+    "platforms_live": 6.0,
+    "renders_left_after_upload": 0.0
+  }
+}

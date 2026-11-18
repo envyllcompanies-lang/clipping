@@ -24,6 +24,7 @@ MODULES = [
     "clipping.accounts.backtest",
     "clipping.languages.backtest",
     "clipping.dashboard.backtest",
+    "clipping.eval.e2e",
 ]
 for m in MODULES:
     try:

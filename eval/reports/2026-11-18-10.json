@@ -2,9 +2,9 @@
   "stage": "10",
   "name": "Reframe & Layout",
   "passed": true,
-  "seconds": 57.53,
+  "seconds": 56.26,
   "dataset_version": "reframefx@v1",
-  "code_version": "e494086",
+  "code_version": "05b0cdb",
   "metrics": [
     {
       "metric": "facecam_found",
@@ -63,7 +63,7 @@
     {
       "metric": "facecam_in_game_crop",
       "value": 0.14572310405643737,
-      "baseline": null,
+      "baseline": 0.14572310405643737,
       "bar": 0.25,
       "direction": "lower",
       "passed": true,

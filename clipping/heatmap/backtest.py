@@ -85,6 +85,7 @@ def run(weights: dict | None = None) -> StageResult:
             notes = " ".join(f"{k}={np.nan_to_num(sig[k][at : at + 8]).max():.2f}" for k in sig)
             ex.append(Example(f"seed{seed}@{t:.0f}s", "missed_live", float(v), notes))
     ex.sort(key=lambda e: -e.value)
+    real_recall(cfg, w_live)
     feat_h = feature_cost_per_hour()
     return StageResult(
         {
@@ -162,3 +163,36 @@ def feature_cost_per_hour() -> float:
             return (time.time() - t0) * 60
         finally:
             service.db.one = orig
+
+
+def real_recall(cfg: dict, weights: dict) -> dict:
+    """Recall@20 (live signals) on the rolling real dataset, when one has been built from our recordings."""
+    from clipping.eval import datasets
+    from clipping.eval.harness import DATASETS, dataset_dir
+
+    if not (DATASETS / "viewer_clips_recent").exists():
+        return {}
+    d = dataset_dir("viewer_clips_recent")
+    hits = []
+    for it in datasets.read(d, "streams.json"):
+        sig = {
+            k: np.array([np.nan if v is None else v for v in vals], float)
+            for k, vals in it["signals"].items()
+            if k != "viewer_clips"
+        }
+        T = len(next(iter(sig.values())))
+        score = fusion.fuse(sig, weights, cfg["smooth_s"])
+        wins = fusion.pick_windows(
+            score,
+            separation_s=cfg["peak_separation_s"],
+            pct=cfg["peak_percentile"],
+            floor=cfg["abs_floor"],
+            before_s=cfg["window_before_s"],
+            after_s=cfg["window_after_s"],
+            max_per_hour=cfg["max_per_hour"],
+        )
+        wins = wins[: max(1, int(20 * T / 14400))]
+        for cl in sorted(it["clips"], key=lambda x: -x["views"])[:10]:
+            p = cl["t_start"] + 0.65 * cl["duration"]
+            hits.append(any(w.start_s <= p <= w.end_s for w in wins))
+    return {"recall_at_20_live_real": float(np.mean(hits))} if hits else {}

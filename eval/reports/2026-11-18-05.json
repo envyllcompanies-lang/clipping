@@ -2,13 +2,13 @@
   "stage": "05",
   "name": "Moment Heatmap",
   "passed": true,
-  "seconds": 35.76,
+  "seconds": 35.42,
   "dataset_version": "simstream@v1",
-  "code_version": "c318f76",
+  "code_version": "05b0cdb",
   "metrics": [
     {
       "metric": "score_s_per_hour",
-      "value": 44.5878360470136,
+      "value": 49.48482897877693,
       "baseline": 43.27114391326904,
       "bar": 120,
       "direction": "lower",
@@ -53,7 +53,7 @@
     },
     {
       "metric": "fuse_s_per_hour",
-      "value": 0.005430956681569417,
+      "value": 0.005311042070388794,
       "baseline": 0.00496673583984375,
       "bar": 120,
       "direction": "lower",
