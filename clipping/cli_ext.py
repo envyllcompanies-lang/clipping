@@ -11,6 +11,17 @@ def register(sub):
     w.add_argument("--once", action="store_true")
     w.set_defaults(fn=lambda a: __import__("clipping.worker", fromlist=["loop"]).loop(a.role, once=a.once))
 
+    rn = sub.add_parser("run", help="make clips from one window file (offline)")
+    rn.add_argument("window")
+    rn.add_argument("--out", default="var/clip-run")
+    rn.add_argument("--language", default="en")
+    rn.add_argument("--creator", default="streamer")
+    rn.add_argument("--platform", default="twitch")
+    rn.add_argument("--style", default="house")
+    rn.add_argument("--layout", choices=["stacked", "full", "small_cam"])
+    rn.add_argument("--peak", type=float, help="moment peak (s into the window), if known")
+    rn.set_defaults(fn=_run)
+
     st = sub.add_parser("style", help="style study (doc 13)")
     st.add_argument("action", choices=["study"])
     st.add_argument("name")
@@ -37,6 +48,30 @@ def _style(a):
     prof = analyze.profile_from(res, a.name, f"style study of {len(vids)} local files ({a.dir})")
     config.save(f"styles/{a.name}.yaml", prof)
     print(f"wrote config/styles/{a.name}.yaml from {len(vids)} videos")
+
+
+def _run(a):
+    from clipping import run
+
+    res = run.run_window(
+        a.window,
+        a.out,
+        language=a.language,
+        creator=a.creator,
+        platform=a.platform,
+        style_name=a.style,
+        layout=a.layout,
+        peak_t=a.peak,
+    )
+    for v, x in res.get("versions", {}).items():
+        print(f"{v}: {x['path']} {x['duration']:.1f}s layout={x['layout']} valid={x['validation']['passed']}")
+    pk = res.get("packaging", {})
+    if pk.get("fields"):
+        print("hook:", pk["hook_text"].replace("\n", " / "))
+        for plat, f in pk["fields"].items():
+            print(f"  {plat}: {json.dumps(f, ensure_ascii=False)[:160]}")
+    if res.get("discarded"):
+        print("discarded:", res["discarded"])
 
 
 def _radar(a):

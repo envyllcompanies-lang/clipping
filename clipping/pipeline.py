@@ -68,6 +68,15 @@ def events(c: psycopg.Connection, p: dict) -> dict:
     return res
 
 
+@handler("m1", "build")
+def build(c: psycopg.Connection, p: dict) -> dict:
+    from clipping.produce import produce
+
+    if db.get_flag(c, "global_pause"):
+        raise RuntimeError("global pause: rendering held")
+    return produce(c, p["window_id"])
+
+
 def after_extract(c: psycopg.Connection, window_id: int) -> None:
     jobs.enqueue(c, "audio_clean", {"window_id": window_id}, dedupe_key=f"clean:{window_id}")
 

@@ -37,3 +37,7 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 10 (Reframe & Layout): facecam_found 1.000→1.000, facecam_false 0.000→0.000, subject_in_crop 0.963→0.963, caption_clear 1.000→1.000, face_in_top_panel 1.000→1.000, max_pan_speed_ratio 1.000→1.000, facecam_in_game_crop 0.146
 
 - 2026-11-18 stage 12 (Render Engine): validation_pass 1.000, platform_fit 1.000, versions_rendered 1.000, render_s_per_40s_linux 57.287
+
+- 2026-11-18 stage 14 (Packaging): within_limits 1.000, language_match 1.000, no_duplicate_titles 1.000, patterns_tracked 1.000, safety_blocks_pii 1.000
+
+- 2026-11-18 stage 15 (Auto-Gate): duplicates_caught 1.000, false_duplicates 0.000, repeat_to_same_account_blocked 1.000, first_post_allowed 1.000, decisions_have_reasons 1.000, blocklist_pulls_everywhere 1.000

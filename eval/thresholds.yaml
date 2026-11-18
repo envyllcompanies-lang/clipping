@@ -223,3 +223,16 @@
   platform_fit: {bar: 1.0, direction: higher}
   versions_rendered: {bar: 1.0, direction: higher}
   render_s_per_40s_linux: {bar: 90, direction: lower, tolerance: 0.5}   # doc bar (30 s) applies on the M1 with VideoToolbox
+"14":
+  within_limits: {bar: 1.0, direction: higher}
+  language_match: {bar: 1.0, direction: higher}
+  no_duplicate_titles: {bar: 1.0, direction: higher}
+  patterns_tracked: {bar: 1.0, direction: higher}
+  safety_blocks_pii: {bar: 1.0, direction: higher}
+"15":
+  duplicates_caught: {bar: 0.99, direction: higher}
+  false_duplicates: {bar: 0.0, direction: lower}
+  repeat_to_same_account_blocked: {bar: 1.0, direction: higher}
+  first_post_allowed: {bar: 1.0, direction: higher}
+  decisions_have_reasons: {bar: 1.0, direction: higher}
+  blocklist_pulls_everywhere: {bar: 1.0, direction: higher}

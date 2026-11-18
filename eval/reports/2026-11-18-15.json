@@ -1,0 +1,66 @@
+{
+  "stage": "15",
+  "name": "Auto-Gate",
+  "passed": true,
+  "seconds": 37.41,
+  "dataset_version": "seeded@v1",
+  "code_version": "70b6c79",
+  "metrics": [
+    {
+      "metric": "duplicates_caught",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 0.99,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "false_duplicates",
+      "value": 0.0,
+      "baseline": null,
+      "bar": 0.0,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "repeat_to_same_account_blocked",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "first_post_allowed",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "decisions_have_reasons",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "blocklist_pulls_everywhere",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {}
+}

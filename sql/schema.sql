@@ -297,3 +297,10 @@ CREATE TABLE IF NOT EXISTS segment_feature (
   segment_id bigint PRIMARY KEY REFERENCES segment(id) ON DELETE CASCADE, audio_db real[] NOT NULL, voice real[] NOT NULL,
   scene real[] NOT NULL, music real[]
 );
+
+ALTER TABLE account ADD COLUMN IF NOT EXISTS health jsonb NOT NULL DEFAULT '{}';
+ALTER TABLE clip_version ADD COLUMN IF NOT EXISTS rerenders int NOT NULL DEFAULT 0;
+CREATE TABLE IF NOT EXISTS claim (
+  id serial PRIMARY KEY, post_id int REFERENCES post(id), account_id int REFERENCES account(id), kind text NOT NULL,
+  details jsonb NOT NULL DEFAULT '{}', created_at timestamptz NOT NULL DEFAULT now(), resolved_at timestamptz
+);

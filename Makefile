@@ -1,9 +1,11 @@
 PY ?= .venv/bin/python
 STAGE ?= 05
 
-.PHONY: test lint fmt db backtest backtest-all datasets
+.PHONY: test test-all lint fmt db backtest backtest-all datasets
 test:
 	$(PY) -m pytest
+test-all:
+	$(PY) -m pytest -m ""
 lint:
 	$(PY) -m ruff check clipping tests && $(PY) -m ruff format --check clipping tests
 fmt:

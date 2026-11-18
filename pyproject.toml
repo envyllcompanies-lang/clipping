@@ -18,10 +18,16 @@ dependencies = [
   "opencv-python-headless>=4.9",
   "websockets>=12",
   "streamlink>=6",
+  "lingua-language-detector>=2",
+  "imagehash>=4",
+  "soundfile>=0.12",
+  "pytesseract>=0.3",
 ]
 
 [project.optional-dependencies]
 asr = ["faster-whisper>=1.0"]
+audio = ["torch>=2.1", "demucs>=4", "panns-inference>=0.1"]
+eval = ["piper-tts>=1.2", "pyopenjtalk-plus", "pykakasi>=2", "scikit-image>=0.22", "fonttools>=4"]
 dev = ["pytest>=8", "ruff>=0.5"]
 
 [project.scripts]
@@ -40,5 +46,5 @@ ignore = ["E501", "B008"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = "-q -m \"not slow\""
 markers = ["slow: needs ffmpeg renders"]

@@ -1,0 +1,13 @@
+{
+  "stage": "14",
+  "accepted_at": "2026-11-18T20:15:59+00:00",
+  "dataset_version": "synthetic@v1",
+  "code_version": "70b6c79",
+  "metrics": {
+    "within_limits": 1.0,
+    "language_match": 1.0,
+    "no_duplicate_titles": 1.0,
+    "patterns_tracked": 1.0,
+    "safety_blocks_pii": 1.0
+  }
+}

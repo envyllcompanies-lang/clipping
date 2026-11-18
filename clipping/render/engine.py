@@ -388,7 +388,14 @@ def perceptual_hash(path: Path | str, n: int = 8) -> str:
 
     fr = media.decode_frames(path, fps=n / max(media.duration(path), 1), width=160)
     idx = np.linspace(0, len(fr) - 1, min(n, len(fr))).astype(int)
-    return "".join(str(imagehash.dhash(Image.fromarray(fr[i]), 8)) for i in idx)
+
+    def center(
+        f,
+    ):  # ignore borders: light crops, frames and watermarks at the edges shouldn't change the hash
+        h, w = f.shape[:2]
+        return f[int(0.075 * h) : int(0.925 * h), int(0.075 * w) : int(0.925 * w)]
+
+    return "".join(str(imagehash.dhash(Image.fromarray(center(fr[i])), 8)) for i in idx)
 
 
 def thumbnail(path: Path | str, t: float) -> bytes:
