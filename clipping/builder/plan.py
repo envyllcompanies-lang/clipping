@@ -28,6 +28,8 @@ class Inputs:
     negative_spans: list[tuple[float, float]] = field(default_factory=list)  # loading/menu
     language: str = "en"
     creator: str = ""
+    moment: dict | None = None  # doc 31 typed moment: type, type_confidence, anchor_s, start_s, end_s, hook_style
+    catchphrases: list[str] = field(default_factory=list)  # doc 32 signature lines (kept in the clip when present)
 
 
 @dataclass
@@ -47,8 +49,11 @@ def payoff(inp: Inputs) -> tuple[float, str, int | None]:
         s = EVENT_PRIORITY[e["type"]] * e.get("confidence", 1) * (0.5 + 0.5 * near)
         if best is None or s > best[0]:
             best = (s, e["t"], e["type"])
+    m = inp.moment or {}
     if best:
         t, kind = best[1], best[2]
+    elif m.get("type_confidence", 0) >= 0.5 and m.get("anchor_s") is not None:  # doc 31: typed payoff (impact, beat, laugh)
+        t, kind = float(m["anchor_s"]), m["type"]
     elif inp.peak_t is not None:
         t, kind = inp.peak_t, "peak"
     else:
@@ -120,8 +125,10 @@ def backref(inp: Inputs, start_word: int | None) -> bool:
 
 
 def choose_rule(
-    starts: list[Candidate], ends: list[Candidate], pay: float, target: float, lo: float, hi: float
+    starts: list[Candidate], ends: list[Candidate], pay: float, target: float, lo: float, hi: float,
+    hint: tuple[float, float] | None = None,
 ) -> tuple[Candidate, Candidate] | None:
+    """hint: doc 31 type-specific (start, end) recommendation; candidates near it score higher."""
     best, best_s = None, -1e9
     for s in starts:
         for e in ends:
@@ -132,6 +139,8 @@ def choose_rule(
             score += {"sentence": 0.3, "silence": 0.15, "scene": 0.1}.get(s.kind, 0)
             score += 0.2 if e.kind == "sentence_end" else 0
             score -= 0.05 * max(0.0, e.t - pay - 1.5)
+            if hint is not None:
+                score -= 0.02 * (abs(s.t - hint[0]) + abs(e.t - hint[1]))
             if score > best_s:
                 best, best_s = (s, e), score
     return best
@@ -233,7 +242,9 @@ def build_version(inp: Inputs, style: dict, version: str, c=None) -> dict | None
         e = next(x for x in ends if x.word == chosen_llm["end_word"])
         if L["min"] <= e.t - s.t <= L["max"] and s.t < pay < e.t:
             pick = (s, e)
-    pick = pick or choose_rule(starts, ends, pay, L["target"], L["min"], L["max"])
+    m = inp.moment or {}
+    hint = (m["start_s"], m["end_s"]) if version == "short" and m.get("type_confidence", 0) >= 0.5 and "start_s" in m else None
+    pick = pick or choose_rule(starts, ends, pay, L["target"], L["min"], L["max"], hint)
     if pick is None:
         return None
     s, e = pick

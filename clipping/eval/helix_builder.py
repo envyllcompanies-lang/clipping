@@ -152,7 +152,7 @@ def build(version: str | None = None, n_vods: int = 6, game: str = "Grand Theft 
         if not npz.exists():
             from concurrent.futures import ThreadPoolExecutor
 
-            def do_chunk(k):
+            def do_chunk(k, T=T, vod=vod, s0=s0):
                 d = min(CHUNK_S, T - k)
                 with tempfile.TemporaryDirectory() as tmp:
                     with ThreadPoolExecutor(2) as ex2:  # audio and video in parallel

@@ -115,7 +115,55 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
         for r in db.all_(c, "SELECT * FROM game_event WHERE window_id=%s", window_id)
         if (r["details"] or {}).get("negative")
     ]
-    inp = bp.Inputs(dur, words, evs, w["peak_s"] - offset, [], None, neg, language, w["handle"])
+    from clipping.creators import service as creators
+    from clipping.heatmap import features as feat
+    from clipping.moments import analysis as moments
+
+    seg = creators.never_clip(c, w["stream_id"], offset, offset + dur)
+    if seg:  # doc 32: sponsor reads, BRB, IRL are never clipped
+        c.execute(
+            "UPDATE moment SET status='discarded', reason=%s WHERE id=%s", (f"{seg} segment", w["moment_id"])
+        )
+        return {"discarded": f"{seg} segment"}
+    f = feat.compute(w["path"], w["path"], int(dur))
+    react = creators.reaction_for_stream(c, w["creator_id"], f)
+    ma = moments.analyze_window(f, react, w["peak_s"] - offset, evs)
+    c.execute(
+        """INSERT INTO moment_analysis(window_id,type,type_confidence,gameplay_score,reaction_score,payoff_s,beat_s,start_s,end_s,hook_style,signals)
+                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (window_id) DO UPDATE SET type=EXCLUDED.type,
+                 type_confidence=EXCLUDED.type_confidence, gameplay_score=EXCLUDED.gameplay_score, reaction_score=EXCLUDED.reaction_score,
+                 payoff_s=EXCLUDED.payoff_s, beat_s=EXCLUDED.beat_s, start_s=EXCLUDED.start_s, end_s=EXCLUDED.end_s, hook_style=EXCLUDED.hook_style""",
+        (
+            window_id,
+            ma.type,
+            ma.type_confidence,
+            ma.gameplay_score,
+            ma.reaction_score,
+            ma.anchor_s,
+            ma.beat_s,
+            ma.start_s,
+            ma.end_s,
+            ma.hook_style,
+            db.j({"reaction_peak": ma.reaction_score}),
+        ),
+    )
+    phrases = (
+        db.scalar(c, "SELECT signature_phrases FROM creator_profile WHERE creator_id=%s", w["creator_id"])
+        or {}
+    ).get(language, [])
+    inp = bp.Inputs(
+        dur,
+        words,
+        evs,
+        w["peak_s"] - offset,
+        [],
+        None,
+        neg,
+        language,
+        w["handle"],
+        moment=ma.__dict__,
+        catchphrases=phrases,
+    )
     plans = bp.build(inp, style_name, c)
     if not plans["versions"]:
         c.execute(
