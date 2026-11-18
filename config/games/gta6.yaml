@@ -1,0 +1,26 @@
+# Game profile: everything game-specific lives here so new games need no code changes.
+name: Grand Theft Auto VI
+slug: gta6
+launch_date: 2026-11-19
+
+# Platform category IDs (fill in once known)
+twitch_game_id: null
+kick_category_slug: null
+
+# Terms used to decide whether a video/channel is about this game
+match_terms:
+  - GTA 6
+  - GTA VI
+  - GTA6
+  - Vice City
+  - Leonida
+
+# Clip-channel tracker: a channel counts if this share of recent uploads match
+tracker:
+  min_match_share: 0.6
+  recent_uploads: 30
+
+# Clip length bounds in seconds (tuned later by analytics)
+clip_length:
+  min: 15
+  max: 60
