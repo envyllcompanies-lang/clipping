@@ -28,6 +28,7 @@ The Style Study measures how the best clipping channels edit, from their actual 
 | Length | Duration; Shorts vs long-form | ffprobe |
 | Pacing | Cuts per 10 s, median shot length | Histogram-distance cut detection at 10 fps (PySceneDetect or equivalent) |
 | Zooms | Punch-ins per 10 s, typical zoom amount | Feature matching between frames (scale estimate), ignoring static overlay points |
+| Text mode | Hook-only headline held for the whole clip vs headline + key lines vs full spoken subtitles (does on-screen text change with speech or stay fixed?) | OCR text stability across frames: same text for > 80% of the clip = hook-only |
 | Captions | Coverage, vertical position, words per line, all-caps share, fill color, outline, font class | OCR (tesseract) on frames at 1 fps; color clustering inside word boxes; line grouping by y-position |
 | Hook | Text on screen in first 3 s, cuts in first 3 s, whether the payoff is teased first | OCR + cut times + vision check |
 | Layout | Full gameplay vs stacked facecam, split ratio | Persistent full-width horizontal divider detection; face detection |
@@ -44,7 +45,8 @@ The Style Study measures how the best clipping channels edit, from their actual 
 
 - Clip Builder (09): target lengths, cold-open use, ending style.
 - Reframe (10): starting layout mix and split ratio, zoom rate. The owner's reference layout (stacked: creator top, captions on the seam, gameplay bottom; `docs/assets/layout-reference.png`) always gets the largest starting share; analytics (22) then reallocates by performance.
-- Captions (11): words per line, position, case, colors, animation style.
+- Seed examples: `docs/research/gta6-clip-examples.md` (owner-captured GTA 6 clips with views) are loaded as the first labelled examples before the automated study has data.
+- Captions (11): starting text-mode mix (hook-only is the starting favorite, matching current GTA 6 clips), words per line, position, case, colors, animation style.
 - Render (12): loudness target, SFX density.
 
 ## Blending and testing

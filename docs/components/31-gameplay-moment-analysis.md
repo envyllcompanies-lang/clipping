@@ -29,6 +29,7 @@ Gameplay Moment Analysis decides what kind of moment a stretch of GTA 6 footage 
 | **Stunt / skill** | Big jump, long airtime, near miss, precise driving | Always | High |
 | **Death / fail payoff** | Wasted/busted banner after a buildup | Always | Very high (fail compilation staple) |
 | **NPC / world comedy** | NPC reacts absurdly, dialogue with strangers, animals, unexpected AI behaviour; creator laughing | Always | High |
+| **Music / celebrity moment** | Creator reacts to a real artist's song on the in-game radio or a celebrity reference; sings along; strong reaction | Launch window | High (sets `music_subject=true`, so doc 07 keeps the song) |
 | **Duo / social moments** | Jason–Lucia banter, co-op or online interactions | Always; online later | Medium |
 | **Roleplay scene** (when RP servers exist) | Character dialogue, scenarios, arrests, court, comedy | Later | Very high (RP clip channels) |
 | **Negative spans** | Loading, menus, map, phone, pause, character creator, long driving with no talk, BRB screens | — | Never clip |

@@ -6,7 +6,7 @@ Packaging writes everything around the video for each platform and language: on-
 
 ## Job and boundaries
 
-- **Does:** generate hook text (for Component 11), titles, descriptions/captions, hashtags and credit lines; enforce character limits; vary wording so posts aren't templated.
+- **Does:** generate hook text (for Component 11; in hook-only mode this headline is the only on-screen text for the whole clip, so it must describe or tease the moment on its own), titles, descriptions/captions, hashtags and credit lines; enforce character limits; vary wording so posts aren't templated.
 - **Doesn't:** post (16–20) or choose the clip (09).
 
 ## Inputs
@@ -27,9 +27,9 @@ Threads allows one topic tag per post through the API ([Meta docs](https://devel
 
 ## Writing rules
 
-1. **Hook text** (on screen, first 1.5–3 s): one of the profile's winning patterns: reaction ("HE DID NOT SEE THAT COMING"), question ("How did he survive this?"), number/stakes ("5 stars and one tire"), or creator-first ("xQc vs the entire police force"). Max ~40 characters per line, two lines.
+1. **Hook text** (on screen; for hook-only mode it's the whole clip's text): starting patterns from current GTA 6 clips (`docs/research/gta6-clip-examples.md`): **creator + what happened + "in GTA 6" + 1–2 emojis** ("N3on survived a plane crash in GTA 6 😭"), and **quote + context** ("\"I can't do it anymore\" we taking grandmas out the wheelchair now? 😭"). Emojis match the reaction (laughter 😭🤣, shock 😳😨, hype 🔥). Other patterns: reaction ("HE DID NOT SEE THAT COMING"), question ("How did he survive this?"), number/stakes ("5 stars and one tire"), or creator-first ("xQc vs the entire police force"). Max ~40 characters per line, two lines.
 2. **Titles:** front-load the payoff, name the creator when they're big (searchable), no clickbait that misrepresents the clip.
-3. **Hashtags:** a fixed core set per channel (e.g. #GTA6 #GTAVI #gaming) plus 1–2 dynamic ones (creator name, event type), never more than the platform norm. Rotate so identical tag blocks don't repeat on every post.
+3. **Post caption + hashtags:** short reaction line in the channel's language or an ALL-CAPS topic ("Oh hell nah 😭", "DRAKE IN GTA 6"), then a core set (e.g. #fyp #viral #gta #gta6 on TikTok/Snapchat; #GTA6 #shorts on YouTube) plus the creator's name tag. On YouTube add a credit line in the description ("Clip: <creator> on <platform>"), and allow "PART 2/3" series titles for multi-part moments. Plus 1–2 dynamic tags (creator name, event type), never more than the platform norm. Rotate so identical tag blocks don't repeat on every post.
 4. **Variation:** never reuse a title or caption verbatim within the channel's last 200 posts; similarity check by embedding distance.
 5. **Language:** written natively in the page language by the LLM with a style sheet of local slang and conventions; numbers and creator names untouched.
 6. **Safety:** no slurs, no doxxing, no claims about real people beyond what the clip shows.

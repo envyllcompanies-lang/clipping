@@ -198,6 +198,7 @@ Reference set: top GTA 5 clip channels now. GTA 6 channels replace them once the
 | Pacing | Cuts per 10 s, median shot length, zoom/punch-in frequency | Cut and zoom rhythm of our renders |
 | Captions | Coverage, screen position, words per line, all-caps share, fill and outline colours, font style | Caption template |
 | Hook | Text on screen and number of cuts in the first 3 s, what moment opens the clip | Cold-open rules |
+| Text mode | One fixed hook headline vs headline + key lines vs full subtitles | Starting text-mode mix. Current GTA 6 clips favor a single hook headline in the middle band with no subtitles; that's the starting favorite, then A/B tested (doc 11) |
 | Layout | Full-screen gameplay vs facecam stacked over gameplay, divider position, crop | Starting layout mix. Layouts are A/B tested per language and platform; the owner's reference ([creator top, captions middle, gameplay bottom](assets/layout-reference.png)) starts as the favorite |
 | Audio | Integrated loudness, loudness range, SFX and spike density, music under speech | Audio mix targets |
 | Length and format | Clip duration, vertical vs horizontal, ending style (hard cut, loop) | Length bounds and ending rules |

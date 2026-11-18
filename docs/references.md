@@ -11,6 +11,10 @@ GTA 5 channels are the reference for what works; tracked channels in production 
 - **GTA creators (source-footage examples):** @IcyDeluxe, @Ivanowski, @NoughtPointFourLIVE, @VanossGaming, @TGG_, @DarkViperAU, @putther, @Buggs, @soup
 - **GTA RP tracker:** HasRoot (stream history, streamers, clips): https://nopixel.hasroot.com/
 
+## Current GTA 6 clip examples
+
+- [GTA 6 clip examples with views and takeaways](research/gta6-clip-examples.md) (owner-captured, Nov 18, 2026)
+
 ## Short-form editing guides
 
 - Clipfox short-form editing guide: 3-second hooks, multi-pass editing, muted mobile audits, B-roll discipline

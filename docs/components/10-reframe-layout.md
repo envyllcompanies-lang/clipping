@@ -22,6 +22,7 @@ Reframe & Layout converts 16:9 stream footage into a 9:16 vertical frame: it fin
 | Layout | When | Composition (1080×1920) |
 | --- | --- | --- |
 | **Stacked (starting favorite)** | Facecam exists and the reaction matters | Creator facecam top ~40% (0–768 px), caption band centered on the seam, gameplay bottom ~60% (768–1920 px). See [reference](../assets/layout-reference.png) |
+| Raw letterbox (test arm, low share) | Any; cheapest format: original 16:9 stream frame centered with black bars, original corner cam kept, hook text in the top bar | 1080 wide 16:9 frame in the middle, text above. Seen on current GTA 6 clips doing worse than stacked on average (see `docs/research/gta6-clip-examples.md`) |
 | Full gameplay | No facecam, or the moment is purely visual | Gameplay crop fills the frame, tracking the action |
 | Gameplay + small cam | Facecam exists but action needs most of the frame | Gameplay fills; facecam in a corner bubble clear of caption zone |
 | Split speakers | Two creators' POVs of the same moment (from two recordings) | Top/bottom halves |
