@@ -1,11 +1,13 @@
 {
   "stage": "02",
-  "accepted_at": "2026-11-18T16:54:19+00:00",
-  "dataset_version": "synthetic@v1",
-  "code_version": "698e6cb",
+  "accepted_at": "2026-11-18T21:35:58+00:00",
+  "dataset_version": "live:squeezie",
+  "code_version": "58fb575",
   "metrics": {
+    "recording_started_s": 3.003000020980835,
+    "segments_recorded": 8.0,
     "extract_exact": 1.0,
-    "extract_p95_s": 0.42255449295043945,
-    "disk_ratio": 1.05
+    "extract_p95_s": 0.28371143341064453,
+    "disk_ratio": 1.0055555555555555
   }
 }

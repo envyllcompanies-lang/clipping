@@ -313,3 +313,23 @@ CREATE TABLE IF NOT EXISTS heatmap_signal (
   stream_id int NOT NULL REFERENCES stream(id) ON DELETE CASCADE, name text NOT NULL, "values" real[] NOT NULL,
   PRIMARY KEY(stream_id, name)
 );
+
+CREATE TABLE IF NOT EXISTS creator_profile (
+  creator_id int PRIMARY KEY REFERENCES creator(id), identity jsonb NOT NULL DEFAULT '{}', baselines jsonb NOT NULL DEFAULT '{}',
+  reaction_style text, style_weights jsonb, signature_phrases jsonb NOT NULL DEFAULT '{}', moment_type_mix jsonb NOT NULL DEFAULT '{}',
+  negative_patterns jsonb NOT NULL DEFAULT '{}', dialect text, hours_seen double precision NOT NULL DEFAULT 0, updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS creator_segment (
+  id bigserial PRIMARY KEY, stream_id int NOT NULL REFERENCES stream(id) ON DELETE CASCADE, start_s double precision NOT NULL,
+  end_s double precision NOT NULL, label text NOT NULL, confidence real NOT NULL
+);
+CREATE TABLE IF NOT EXISTS creator_collab (
+  creator_a int NOT NULL REFERENCES creator(id), creator_b int NOT NULL REFERENCES creator(id), stream_overlap double precision,
+  sessions int NOT NULL DEFAULT 0, offset_s double precision, last_seen timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(creator_a, creator_b)
+);
+CREATE TABLE IF NOT EXISTS moment_analysis (
+  window_id int PRIMARY KEY REFERENCES "window"(id) ON DELETE CASCADE, type text, type_confidence real, gameplay_score real,
+  reaction_score real, payoff_s real, beat_s real, story_beat_id text, start_s real, end_s real, hook_style text, signals jsonb
+);
+
+ALTER TABLE segment_feature ADD COLUMN IF NOT EXISTS extra jsonb;

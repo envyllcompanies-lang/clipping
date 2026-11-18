@@ -138,7 +138,6 @@ def process_window(c, window_id: int, detector: str | None = None) -> dict:
     """Job handler: window file -> voice.wav + clean_mix.wav in work/<window>/, flags music_risk."""
     from clipping.audio.fingerprint import _resample  # noqa: F401
     from clipping.core import db, media
-    from clipping.eval.audiofx import write_wav
     from clipping.storage import files
 
     w = db.one(c, 'SELECT * FROM "window" WHERE id=%s', window_id)
@@ -146,8 +145,11 @@ def process_window(c, window_id: int, detector: str | None = None) -> dict:
     audio = media.decode_audio(w["path"], sr)
     res = clean(audio, sr, detector or music_mod.backend())
     wd = files.work_dir(c, f"w{window_id}")
-    write_wav(wd / "voice.wav", res.voice, sr)
-    raw = write_wav(wd / "clean_raw.wav", res.clean, sr)
+    import soundfile as sf
+
+    sf.write(wd / "voice.wav", res.voice, sr)
+    raw = wd / "clean_raw.wav"
+    sf.write(raw, res.clean, sr)
     loudnorm(raw, wd / "clean_mix.wav")
     raw.unlink()
     info = {

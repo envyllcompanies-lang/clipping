@@ -4,9 +4,9 @@ import time
 import numpy as np
 
 from clipping.core import db
-from clipping.eval.fixtures import make_segments
 from clipping.heatmap import fusion, learn, service, signals
 from clipping.recorder import recorder
+from tests.synth.fixtures import make_segments
 
 UTC = dt.UTC
 

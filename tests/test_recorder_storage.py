@@ -3,9 +3,9 @@ import os
 import time
 
 from clipping.core import db, media
-from clipping.eval.fixtures import make_segments, realtime_command
 from clipping.recorder import recorder
 from clipping.storage import files, guard, refcount
+from tests.synth.fixtures import make_segments, realtime_command
 
 UTC = dt.UTC
 
@@ -68,7 +68,9 @@ def test_extract_window_exact_copy_fast(conn, tmp_data):
     assert res["status"] == "extracted"
     w = db.one(conn, 'SELECT * FROM "window" WHERE id=%s', wid)
     # covering segments of [100, 230] are 60..240 -> exact span
-    assert w["start_utc"] == dt.datetime.fromtimestamp(base + 60, UTC)
+    assert (
+        abs((w["start_utc"] - dt.datetime.fromtimestamp(base + 60, UTC)).total_seconds()) < 0.1
+    )  # chained, content-accurate
     assert abs(media.duration(w["path"]) - (w["end_utc"] - w["start_utc"]).total_seconds()) < 0.2
     assert [s["codec_name"] for s in media.probe(w["path"])["streams"]][0] == "h264"
 

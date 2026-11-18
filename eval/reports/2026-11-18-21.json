@@ -2,9 +2,9 @@
   "stage": "21",
   "name": "Storage Lifecycle",
   "passed": true,
-  "seconds": 3.25,
+  "seconds": 3.38,
   "dataset_version": "synthetic@v1",
-  "code_version": "c318f76",
+  "code_version": "58fb575",
   "metrics": [
     {
       "metric": "deleted_promptly",

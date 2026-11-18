@@ -1,24 +1,24 @@
 {
   "stage": "04",
-  "name": "Platform Clips & VOD Ingest",
+  "name": "Platform Clips & VOD Ingest (real)",
   "passed": true,
-  "seconds": 7.86,
-  "dataset_version": "synthetic@v1",
-  "code_version": "05b0cdb",
+  "seconds": 6.61,
+  "dataset_version": "helix-live@2026-11-18T21",
+  "code_version": "58fb575",
   "metrics": [
     {
-      "metric": "mapped_correct",
+      "metric": "mapped_consistent",
       "value": 1.0,
-      "baseline": 1.0,
+      "baseline": null,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
       "reason": ""
     },
     {
-      "metric": "mapped_within_1h",
+      "metric": "mapped_share_of_resolvable",
       "value": 1.0,
-      "baseline": 1.0,
+      "baseline": null,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -27,7 +27,7 @@
     {
       "metric": "null_offset_trend_only",
       "value": 1.0,
-      "baseline": 1.0,
+      "baseline": null,
       "bar": 1.0,
       "direction": "higher",
       "passed": true,
@@ -35,5 +35,10 @@
     }
   ],
   "worst_examples": [],
-  "info": {}
+  "info": {
+    "clips": 1000,
+    "with_vod_offset": 847,
+    "vod_available": 847,
+    "median_minutes_moment_to_clip": 0.7666666666666667
+  }
 }

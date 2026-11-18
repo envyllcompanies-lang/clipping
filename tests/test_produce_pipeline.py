@@ -5,7 +5,7 @@ import time
 import pytest
 
 from clipping.core import db
-from clipping.eval import windowfx
+from tests.synth import windowfx
 
 UTC = dt.UTC
 

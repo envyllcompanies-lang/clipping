@@ -1,11 +1,11 @@
 {
   "stage": "04",
-  "accepted_at": "2026-11-18T17:01:34+00:00",
-  "dataset_version": "synthetic@v1",
-  "code_version": "2b8a5c7",
+  "accepted_at": "2026-11-18T21:36:05+00:00",
+  "dataset_version": "helix-live@2026-11-18T21",
+  "code_version": "58fb575",
   "metrics": {
-    "mapped_correct": 1.0,
-    "mapped_within_1h": 1.0,
+    "mapped_consistent": 1.0,
+    "mapped_share_of_resolvable": 1.0,
     "null_offset_trend_only": 1.0
   }
 }

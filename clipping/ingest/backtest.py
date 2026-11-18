@@ -1,85 +1,84 @@
-"""Stage backtest 04: hourly clip polling over a simulated day; every clip with a VOD position is mapped to the
-right UTC instant within 1 hour of creation; clips without vod_offset stay trend-only."""
+"""Stage backtest 04 on real Twitch data: the last 24 h of GTA VI clips (Helix) are ingested and mapped to UTC
+through their VODs. Every clip with a VOD position must map to an instant inside its VOD that precedes the clip's
+creation; clips without one stay trend-only. Needs TWITCH_CLIENT_ID/SECRET."""
 
 from __future__ import annotations
 
 import datetime as dt
 
-import numpy as np
-
 from clipping.core import db
 from clipping.eval.harness import Example, StageResult, scratch_db, stage
 from clipping.ingest import clips
-from clipping.radar.sources import FakeLiveSource
+from clipping.radar.sources import TwitchHelix
 
 UTC = dt.UTC
 
 
-@stage("04", "Platform Clips & VOD Ingest")
+@stage("04", "Platform Clips & VOD Ingest (real)")
 def run() -> StageResult:
-    rng = np.random.default_rng(4)
-    day0 = dt.datetime(2026, 11, 18, tzinfo=UTC)
-    api = FakeLiveSource("twitch")
-    truth = {}
-    for v in range(12):
-        vstart = day0 + dt.timedelta(minutes=int(rng.integers(0, 600)))
-        api.video_list.append(
-            {"id": f"v{v}", "created_at": vstart.isoformat().replace("+00:00", "Z"), "duration": "6h"}
-        )
-        for k in range(40):
-            off = float(rng.uniform(0, 6 * 3600))
-            created = vstart + dt.timedelta(seconds=off + float(rng.uniform(30, 3 * 3600)))
-            null = rng.random() < 0.05
-            cid = f"v{v}c{k}"
-            api.clip_list.append(
-                {
-                    "id": cid,
-                    "broadcaster_id": f"b{v}",
-                    "video_id": "" if null else f"v{v}",
-                    "vod_offset": None if null else off,
-                    "duration": 30,
-                    "view_count": int(rng.lognormal(5, 1.3)),
-                    "created_at": created.isoformat().replace("+00:00", "Z"),
-                    "_created": created,
-                }
-            )
-            truth[cid] = (None if null else vstart + dt.timedelta(seconds=off), created)
-    ex, mapped_ok, latency_ok, trend_ok = [], [], [], []
+    h = TwitchHelix.from_env()
+    if h is None:
+        raise RuntimeError("needs Twitch keys")
+    gid = h.resolve_game(["Grand Theft Auto VI"])
+    now = dt.datetime.now(UTC)
+    ex = []
     with scratch_db() as c:
-        for v in range(12):
-            db.scalar(
-                c,
-                "INSERT INTO creator(platform,platform_id,handle) VALUES ('twitch',%s,%s) RETURNING id",
-                f"b{v}",
-                f"b{v}",
+        n = clips.discover(c, h, gid, hours=24, now=now)
+        for r in db.all_(c, "SELECT DISTINCT broadcaster_id FROM platform_clip"):
+            c.execute(
+                "INSERT INTO creator(platform,platform_id,handle) VALUES ('twitch',%s,%s) ON CONFLICT DO NOTHING",
+                (r["broadcaster_id"], r["broadcaster_id"]),
             )
-        seen_at = {}
-        all_clips = api.clip_list
-        for hour in range(1, 40):
-            now = day0 + dt.timedelta(hours=hour)
-            api.clip_list = [x for x in all_clips if x["_created"] <= now]
-            clips.discover(c, api, "g", hours=24, now=now)
-            clips.map_to_utc(c, api)
-            for r in db.all_(c, "SELECT clip_id FROM platform_clip WHERE abs_utc_start IS NOT NULL"):
-                seen_at.setdefault(r["clip_id"], now)
-        rows = {r["clip_id"]: r for r in db.all_(c, "SELECT * FROM platform_clip")}
-    for cid, (want, created) in truth.items():
-        r = rows.get(cid)
-        if want is None:
-            trend_ok.append(bool(r and r["trend_only"]))
-            continue
-        ok = bool(r and r["abs_utc_start"] and abs((r["abs_utc_start"] - want).total_seconds()) < 1)
-        mapped_ok.append(ok)
-        lat = (seen_at.get(cid, created + dt.timedelta(days=9)) - created).total_seconds()
-        latency_ok.append(lat <= 3600)
-        if not ok or lat > 3600:
-            ex.append(Example(cid, "map", float(lat), f"ok={ok}"))
+        c.execute(
+            "UPDATE platform_clip pc SET creator_id=cr.id FROM creator cr WHERE cr.platform_id=pc.broadcaster_id"
+        )
+        mapped = clips.map_to_utc(c, h)
+        rows = db.all_(
+            c,
+            """SELECT pc.*, v.created_at vod_start, v.duration_s, v.available FROM platform_clip pc
+                             LEFT JOIN vod v ON v.platform=pc.platform AND v.video_id=pc.video_id""",
+        )
+        with_off = [r for r in rows if r["vod_offset"] is not None and r["video_id"]]
+        resolvable = [r for r in with_off if r["available"] and r["vod_start"]]
+        consistent = []
+        for r in resolvable:
+            ok = (
+                r["abs_utc_start"] is not None
+                and r["vod_start"] <= r["abs_utc_start"]
+                and (
+                    r["duration_s"] is None
+                    or r["abs_utc_start"] <= r["vod_start"] + dt.timedelta(seconds=r["duration_s"] + 60)
+                )
+                and r["abs_utc_start"] <= r["created_at"] + dt.timedelta(seconds=60)
+            )
+            consistent.append(ok)
+            if not ok:
+                ex.append(
+                    Example(
+                        r["clip_id"],
+                        "inconsistent",
+                        0,
+                        f"abs={r['abs_utc_start']} vod={r['vod_start']} created={r['created_at']}",
+                    )
+                )
+        trend_ok = all(r["trend_only"] for r in rows if r["vod_offset"] is None)
+        lag = sorted(
+            (r["created_at"] - r["abs_utc_start"]).total_seconds() / 60
+            for r in resolvable
+            if r["abs_utc_start"]
+        )
     return StageResult(
         {
-            "mapped_correct": float(np.mean(mapped_ok)),
-            "mapped_within_1h": float(np.mean(latency_ok)),
-            "null_offset_trend_only": float(np.mean(trend_ok)),
+            "mapped_consistent": sum(consistent) / max(len(consistent), 1),
+            "mapped_share_of_resolvable": mapped / max(len(resolvable), 1) if resolvable else 0.0,
+            "null_offset_trend_only": 1.0 if trend_ok else 0.0,
         },
         ex,
-        "synthetic@v1",
+        f"helix-live@{now:%Y-%m-%dT%H}",
+        {
+            "clips": n,
+            "with_vod_offset": len(with_off),
+            "vod_available": len(resolvable),
+            "median_minutes_moment_to_clip": lag[len(lag) // 2] if lag else None,
+        },
     )

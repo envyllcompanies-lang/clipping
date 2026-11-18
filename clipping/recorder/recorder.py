@@ -38,8 +38,17 @@ def record_command(url: str, out_dir: Path, segment_s: int = 60, quality: str = 
         f"ffmpeg -hide_banner -loglevel error -probesize 1M -analyzeduration 1000000 -i - -map 0 -c copy -f segment -segment_time {segment_s} "
         f"-segment_format mpegts -reset_timestamps 1 -strftime 1 {shlex.quote(str(out_dir))}/%s.ts"
     )
-    sl = f"streamlink --stdout --retry-open 3 --hls-live-restart {shlex.quote(url)} {shlex.quote(quality)}"
+    sl = f"{shlex.quote(streamlink_bin())} --stdout --retry-open 3 --hls-live-restart {shlex.quote(url)} {shlex.quote(quality)}"
     return f"{sl} | {ff}"
+
+
+def streamlink_bin() -> str:
+    """streamlink installed next to this Python (venv) even when its bin folder isn't on PATH."""
+    import shutil
+    import sys
+
+    cand = Path(sys.executable).with_name("streamlink")
+    return str(cand) if cand.exists() else (shutil.which("streamlink") or "streamlink")
 
 
 def acquire_lock(
@@ -98,6 +107,10 @@ def register_segments(
         segs = segs[:-1]
     n = 0
     buf_h = config.settings()["recorder"]["buffer_hours"]
+    prev = db.one(
+        c, "SELECT end_utc FROM segment WHERE stream_id=%s ORDER BY start_utc DESC LIMIT 1", stream_id
+    )
+    prev_end = prev["end_utc"] if prev else None
     for p in segs:
         if str(p) in known:
             continue
@@ -105,8 +118,12 @@ def register_segments(
             dur = media.duration(p)
         except Exception:  # noqa: BLE001 - truncated segment from a crash: still usable, probe later
             continue
-        start = dt.datetime.fromtimestamp(int(p.stem), UTC)
+        opened = dt.datetime.fromtimestamp(int(p.stem), UTC)
+        # Segments of one continuous recording are contiguous in content time. The file-open time bunches up when the
+        # platform delivers a backlog at startup, so chain to the previous segment's end; a real gap re-anchors.
+        start = prev_end if prev_end is not None and opened <= prev_end + dt.timedelta(seconds=5) else opened
         end = start + dt.timedelta(seconds=dur)
+        prev_end = end
         size = p.stat().st_size
         c.execute(
             "INSERT INTO segment(stream_id,path,start_utc,end_utc,size) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",

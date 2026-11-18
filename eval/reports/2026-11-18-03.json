@@ -1,34 +1,43 @@
 {
   "stage": "03",
-  "name": "Chat Capture",
+  "name": "Chat Capture (real)",
   "passed": true,
-  "seconds": 12.97,
-  "dataset_version": "simstream@v1",
-  "code_version": "05b0cdb",
+  "seconds": 0.06,
+  "dataset_version": "live_chat@2026-11-18T2131",
+  "code_version": "58fb575",
   "metrics": [
     {
-      "metric": "align_within_2s",
-      "value": 0.8333333333333334,
-      "baseline": 0.8333333333333334,
-      "bar": 0.8,
-      "direction": "higher",
-      "passed": true,
-      "reason": ""
-    },
-    {
-      "metric": "align_median_s",
-      "value": 0.9710070843236736,
-      "baseline": 0.9710070843236736,
-      "bar": 2.0,
+      "metric": "missing_share",
+      "value": 0.0,
+      "baseline": null,
+      "bar": 0.01,
       "direction": "lower",
       "passed": true,
       "reason": ""
     },
     {
-      "metric": "excess_missing_share",
-      "value": 0.0,
-      "baseline": 0.0,
-      "bar": 0.01,
+      "metric": "clip_moments_with_spike_10s",
+      "value": 0.375,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "align_within_2s_vs_clip_labels",
+      "value": 0.125,
+      "baseline": null,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "align_median_s_vs_clip_labels",
+      "value": 6.5,
+      "baseline": null,
+      "bar": null,
       "direction": "lower",
       "passed": true,
       "reason": ""
@@ -36,31 +45,50 @@
   ],
   "worst_examples": [
     {
-      "example_id": "seed302@6640",
+      "example_id": "rubius@649",
       "metric": "align_err",
-      "value": 3.1575945851172946,
-      "notes": "lag=4.6"
+      "value": 12.5,
+      "notes": "lag=14.5"
     },
     {
-      "example_id": "seed305@5695",
+      "example_id": "rubius@613",
       "metric": "align_err",
-      "value": 2.514344630348205,
-      "notes": "lag=3.0"
+      "value": 11.5,
+      "notes": "lag=14.5"
     },
     {
-      "example_id": "seed301@5502",
+      "example_id": "rubius@114",
       "metric": "align_err",
-      "value": 2.4052166031287925,
-      "notes": "lag=3.6"
+      "value": 9.5,
+      "notes": "lag=14.5"
     },
     {
-      "example_id": "seed301@4804",
+      "example_id": "rubius@157",
       "metric": "align_err",
-      "value": 2.3209582992558353,
-      "notes": "lag=3.6"
+      "value": 6.5,
+      "notes": "lag=14.5"
+    },
+    {
+      "example_id": "rubius@261",
+      "metric": "align_err",
+      "value": 6.5,
+      "notes": "lag=14.5"
+    },
+    {
+      "example_id": "rubius@489",
+      "metric": "align_err",
+      "value": 4.5,
+      "notes": "lag=14.5"
+    },
+    {
+      "example_id": "squeezie@190",
+      "metric": "align_err",
+      "value": 4.0,
+      "notes": "lag=2.0"
     }
   ],
   "info": {
-    "n": 24
+    "aligned": 8,
+    "clip_moments": 37
   }
 }

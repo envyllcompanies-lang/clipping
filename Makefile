@@ -13,7 +13,7 @@ fmt:
 db:
 	$(PY) -m clipping.cli db migrate
 datasets:
-	$(PY) -m clipping.cli eval build-synthetic
+	$(PY) -m clipping.cli eval build-real
 backtest:
 	$(PY) -m clipping.cli eval run --stage $(STAGE)
 backtest-all:

@@ -121,14 +121,15 @@ def _mlx(audio: np.ndarray, language: str | None, prompt: str, size: str) -> tup
 
 def _whispercpp(audio: np.ndarray, language: str | None, prompt: str, size: str) -> tuple[str, list[dict]]:
     """whisper.cpp CLI (Metal). Model file: $WHISPER_CPP_MODELS/ggml-<size>-q5_0.bin."""
-    from clipping.eval.audiofx import write_wav
+    import soundfile as sf
 
     models = Path(os.environ.get("WHISPER_CPP_MODELS", "~/whisper.cpp/models")).expanduser()
     model = next(iter(sorted(models.glob(f"ggml-{size}*.bin"))), None)
     if model is None:
         raise FileNotFoundError(f"no whisper.cpp model for {size} in {models}")
     with tempfile.TemporaryDirectory() as d:
-        wav = write_wav(Path(d) / "a.wav", audio, 16000)
+        wav = Path(d) / "a.wav"
+        sf.write(wav, audio, 16000)
         cmd = [
             "whisper-cli",
             "-m",

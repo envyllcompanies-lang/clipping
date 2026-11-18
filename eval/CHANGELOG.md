@@ -57,3 +57,11 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 22 (Analytics & Feedback Loop): stats_missing_share 0.000, bandit_finds_best_layout 1.000, worse_refit_refused 1.000, changes_explained 1.000, digest_produced 1.000, score_performance_spearman 0.370, layout_weights_written 1.000
 
 - 2026-11-18 stage 25 (Infrastructure: end-to-end through the queue): end_to_end_ok 1.000, platforms_live 6.000, renders_left_after_upload 0.000
+
+- 2026-11-18 stage 02 (Stream Recorder (real live stream)): recording_started_s 3.003, segments_recorded 8.000, extract_exact 1.000, extract_p95_s 0.284, disk_ratio 1.006
+
+- 2026-11-18 stage 04 (Platform Clips & VOD Ingest (real)): mapped_consistent 1.000, mapped_share_of_resolvable 1.000, null_offset_trend_only 1.000
+
+- 2026-11-18 stage 21 (Storage Lifecycle): deleted_promptly 1.000→1.000, disk_growth_ratio 0.860→0.860, orphans_left 0.000→0.000
+
+- 2026-11-18 stage 03 (Chat Capture (real)): missing_share 0.000, clip_moments_with_spike_10s 0.375, align_within_2s_vs_clip_labels 0.125, align_median_s_vs_clip_labels 6.500

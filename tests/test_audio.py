@@ -1,7 +1,7 @@
 import numpy as np
 
 from clipping.audio import cleanup, fingerprint, music
-from clipping.eval import audiofx
+from tests.synth import audiofx
 
 
 def test_spans_merge_and_pad():

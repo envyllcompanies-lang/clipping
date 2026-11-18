@@ -1,11 +1,12 @@
 {
   "stage": "03",
-  "accepted_at": "2026-11-18T16:59:34+00:00",
-  "dataset_version": "simstream@v1",
-  "code_version": "2b8a5c7",
+  "accepted_at": "2026-11-18T21:38:00+00:00",
+  "dataset_version": "live_chat@2026-11-18T2131",
+  "code_version": "58fb575",
   "metrics": {
-    "align_within_2s": 0.8333333333333334,
-    "align_median_s": 0.9710070843236736,
-    "excess_missing_share": 0.0
+    "missing_share": 0.0,
+    "clip_moments_with_spike_10s": 0.375,
+    "align_within_2s_vs_clip_labels": 0.125,
+    "align_median_s_vs_clip_labels": 6.5
   }
 }

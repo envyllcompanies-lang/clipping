@@ -4,10 +4,10 @@ import time
 import numpy as np
 
 from clipping.core import db
-from clipping.eval import eventfx
-from clipping.eval.fixtures import make_segments
 from clipping.events import detect, service
 from clipping.recorder import recorder
+from tests.synth import eventfx
+from tests.synth.fixtures import make_segments
 
 UTC = dt.UTC
 

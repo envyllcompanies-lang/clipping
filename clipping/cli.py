@@ -16,10 +16,15 @@ def cmd_db(a):
 
 
 def cmd_eval(a):
-    from clipping.eval import harness, synthetic
+    from clipping.eval import harness
 
-    if a.action == "build-synthetic":
-        print("built:", ", ".join(synthetic.build_all(a.names or None)))
+    if a.action == "build-real":
+        from clipping.eval import chat_builder, helix_builder
+
+        if not a.names or "viewer_clips" in a.names:
+            print("viewer_clips:", helix_builder.build(n_vods=a.vods))
+        if not a.names or "live_chat" in a.names:
+            print("live_chat:", chat_builder.build(minutes=a.minutes))
         return
     if a.action == "run":
         reps = (
@@ -52,7 +57,9 @@ def main(argv=None):
     d.add_argument("action", choices=["migrate"])
     d.set_defaults(fn=cmd_db)
     e = sub.add_parser("eval")
-    e.add_argument("action", choices=["build-synthetic", "run"])
+    e.add_argument("action", choices=["build-real", "run"])
+    e.add_argument("--vods", type=int, default=8)
+    e.add_argument("--minutes", type=int, default=12)
     e.add_argument("--stage", action="append", default=[])
     e.add_argument("--all", action="store_true")
     e.add_argument("--accept", action="store_true", help="store passing results as the new baseline")

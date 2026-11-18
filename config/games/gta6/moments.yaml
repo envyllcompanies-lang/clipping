@@ -1,0 +1,14 @@
+# GTA 6 moment taxonomy (doc 31). Weights start from clip value and game phase; analytics (22) learns them per channel.
+phase_switch_days_after_release: 42      # launch window ~6 weeks, then "settled"
+types:
+  cutscene_reveal: {clip_value: 0.95, weight: {launch: 1.0, settled: 0.6}, start: [-6, -3], end: [2, 4], anchor: beat, hook: reaction_face}
+  discovery:       {clip_value: 0.8,  weight: {launch: 0.9, settled: 0.5}, start: [-2, 0],  end: [6, 12], anchor: onset, hook: surprise_line}
+  showcase:        {clip_value: 0.6,  weight: {launch: 0.6, settled: 0.3}, start: [-3, 0],  end: [6, 10], anchor: onset, hook: none}
+  chase:           {clip_value: 0.85, weight: {launch: 0.8, settled: 0.9}, start: [-12, -6], end: [2, 4], anchor: payoff, hook: most_intense}
+  crash:           {clip_value: 0.95, weight: {launch: 0.9, settled: 1.0}, start: [-5, -3], end: [2, 3], anchor: impact, hook: fast_start}
+  firefight:       {clip_value: 0.75, weight: {launch: 0.7, settled: 0.8}, start: [-8, -4], end: [2, 4], anchor: payoff, hook: payoff_shot}
+  stunt:           {clip_value: 0.8,  weight: {launch: 0.7, settled: 0.85}, start: [-3, -2], end: [2, 4], anchor: payoff, hook: approach}
+  death:           {clip_value: 0.95, weight: {launch: 0.9, settled: 1.0}, start: [-20, -8], end: [2, 3], anchor: banner, hook: wait_for_it}
+  comedy:          {clip_value: 0.8,  weight: {launch: 0.8, settled: 0.85}, start: [-4, -2], end: [3, 6], anchor: laugh, hook: npc_line}
+  heist:           {clip_value: 0.8,  weight: {launch: 0.7, settled: 0.8}, start: [-15, -8], end: [2, 4], anchor: payoff, hook: stake_text}
+negative: [loading, menu, brb]

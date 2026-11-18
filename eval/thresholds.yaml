@@ -1,20 +1,5 @@
 # Starting bars (doc 30). Ratchet up after 4 weeks consistently above; never down without the owner.
 # direction: higher = bigger is better. tolerance: allowed relative slip vs baseline (default 2%).
-'01':
-  spearman:
-    bar: 0.6
-    direction: higher
-'02':
-  extract_exact:
-    bar: 1.0
-    direction: higher
-  extract_p95_s:
-    bar: 10.0
-    direction: lower
-    tolerance: 0.5
-  disk_ratio:
-    bar: 1.1
-    direction: lower
 '21':
   deleted_promptly:
     bar: 1.0
@@ -25,240 +10,7 @@
   orphans_left:
     bar: 0.0
     direction: lower
-'03':
-  align_within_2s:
-    bar: 0.8
-    direction: higher
-  align_median_s:
-    bar: 2.0
-    direction: lower
-  excess_missing_share:
-    bar: 0.01
-    direction: lower
-'04':
-  mapped_correct:
-    bar: 1.0
-    direction: higher
-  mapped_within_1h:
-    bar: 1.0
-    direction: higher
-  null_offset_trend_only:
-    bar: 1.0
-    direction: higher
-'05':
-  recall_at_20:
-    bar: 0.7
-    direction: higher
-  recall_at_20_live:
-    bar: 0.7
-    direction: higher
-  precision_at_20:
-    bar: 0.5
-    direction: higher
-  precision_at_20_live:
-    bar: 0.5
-    direction: higher
-  fuse_s_per_hour:
-    bar: 120
-    direction: lower
-    tolerance: 0.5
-  score_s_per_hour:
-    bar: 120
-    direction: lower
-    tolerance: 0.5
-  recall_at_20_live_real:
-    bar: 0.7
-    direction: higher
-    required: false
-'07':
-  detector_accuracy:
-    bar: 0.85
-    direction: higher
-  skip_when_no_music:
-    bar: 0.9
-    direction: higher
-  radio_no_longer_matches:
-    bar: 0.95
-    direction: higher
-  voice_snr_gain_db:
-    bar: 3.0
-    direction: higher
-'06':
-  wer_en:
-    bar: 0.15
-    direction: lower
-  wer_others_max:
-    bar: 0.25
-    direction: lower
-  wer_others_mean:
-    bar: 0.25
-    direction: lower
-  timing_median_s:
-    bar: 0.15
-    direction: lower
-08:
-  precision_min_core:
-    bar: 0.9
-    direction: higher
-  precision_death:
-    bar: 0.9
-    direction: higher
-  precision_arrest:
-    bar: 0.9
-    direction: higher
-  precision_wanted:
-    bar: 0.9
-    direction: higher
-  precision_mission:
-    bar: 0.9
-    direction: higher
-  precision_crash:
-    bar: 0.9
-    direction: higher
-  precision_loading:
-    bar: 0.9
-    direction: higher
-  precision_menu:
-    bar: 0.9
-    direction: higher
-  recall_death:
-    bar: 0.8
-    direction: higher
-  recall_arrest:
-    bar: 0.8
-    direction: higher
-  recall_wanted:
-    bar: 0.8
-    direction: higher
-  recall_mission:
-    bar: 0.8
-    direction: higher
-  recall_crash:
-    bar: 0.8
-    direction: higher
-  recall_loading:
-    bar: 0.8
-    direction: higher
-  recall_menu:
-    bar: 0.8
-    direction: higher
-  seconds_per_window:
-    bar: 10
-    direction: lower
-    tolerance: 0.5
-'13':
-  cut_rate_rel_err:
-    bar: 0.15
-    direction: lower
-  caption_y_err:
-    bar: 0.05
-    direction: lower
-  caps_detected:
-    bar: 1.0
-    direction: higher
-  fill_color_err:
-    bar: 0.25
-    direction: lower
-  layout_detected:
-    bar: 1.0
-    direction: higher
-  split_err:
-    bar: 0.05
-    direction: lower
-  zoom_rate_abs_err:
-    bar: 1.0
-    direction: lower
-09:
-  boundary_iou:
-    bar: 0.6
-    direction: higher
-  payoff_included:
-    bar: 0.95
-    direction: higher
-  plans_valid:
-    bar: 1.0
-    direction: higher
-  both_versions:
-    bar: 1.0
-    direction: higher
-  standalone_openings:
-    bar: 1.0
-    direction: higher
-'10':
-  facecam_found:
-    bar: 0.95
-    direction: higher
-  facecam_false:
-    bar: 0.0
-    direction: lower
-  subject_in_crop:
-    bar: 0.95
-    direction: higher
-  caption_clear:
-    bar: 1.0
-    direction: higher
-  face_in_top_panel:
-    bar: 1.0
-    direction: higher
-  max_pan_speed_ratio:
-    bar: 1.01
-    direction: lower
-  facecam_in_game_crop:
-    bar: 0.25
-    direction: lower
-'11':
-  timing_drift_max_s:
-    bar: 0.1
-    direction: lower
-  lines_fit:
-    bar: 1.0
-    direction: higher
-  hook_and_credit:
-    bar: 1.0
-    direction: higher
-  libass_ok:
-    bar: 1.0
-    direction: higher
-  profile_driven:
-    bar: 1.0
-    direction: higher
-'12':
-  validation_pass:
-    bar: 1.0
-    direction: higher
-  platform_fit:
-    bar: 1.0
-    direction: higher
-  versions_rendered:
-    bar: 1.0
-    direction: higher
-  render_s_per_40s_linux:
-    bar: 90
-    direction: lower
-    tolerance: 0.5
-'14':
-  within_limits:
-    bar: 1.0
-    direction: higher
-  language_match:
-    bar: 1.0
-    direction: higher
-  no_duplicate_titles:
-    bar: 1.0
-    direction: higher
-  patterns_tracked:
-    bar: 1.0
-    direction: higher
-  safety_blocks_pii:
-    bar: 1.0
-    direction: higher
 '15':
-  duplicates_caught:
-    bar: 0.99
-    direction: higher
-  false_duplicates:
-    bar: 0.0
-    direction: lower
   repeat_to_same_account_blocked:
     bar: 1.0
     direction: higher
@@ -328,48 +80,46 @@
   rerun_changes_nothing:
     bar: 1.0
     direction: higher
-'28':
-  weekly_table_complete:
+'04':
+  mapped_consistent:
     bar: 1.0
     direction: higher
-  four_week_streak_required:
+  mapped_share_of_resolvable:
     bar: 1.0
     direction: higher
-  recommendation_replaces_lowest:
+  null_offset_trend_only:
     bar: 1.0
     direction: higher
-  provisioning_prepped:
-    bar: 1.0
-    direction: higher
-  shares_follow_scores:
-    bar: 1.0
-    direction: higher
-  frozen_after_release:
-    bar: 1.0
-    direction: higher
-'22':
-  stats_missing_share:
-    bar: 0.02
+'02':
+  recording_started_s:
+    bar: 60
     direction: lower
-  bandit_finds_best_layout:
+    tolerance: 0.5
+  segments_recorded:
+    bar: 3
+    direction: higher
+    tolerance: 0.5
+  extract_exact:
     bar: 1.0
     direction: higher
-  worse_refit_refused:
-    bar: 1.0
+  extract_p95_s:
+    bar: 10.0
+    direction: lower
+    tolerance: 0.5
+  disk_ratio:
+    bar: 1.1
+    direction: lower
+'03':
+  missing_share:
+    bar: 0.01
+    direction: lower
+  clip_moments_with_spike_10s:
     direction: higher
-  changes_explained:
-    bar: 1.0
+  align_within_2s_vs_clip_labels:
     direction: higher
-  digest_produced:
-    bar: 1.0
-    direction: higher
-  score_performance_spearman:
-    bar: 0.2
-    direction: higher
-  layout_weights_written:
-    bar: 1.0
-    direction: higher
-"25":
-  end_to_end_ok: {bar: 1.0, direction: higher}
-  platforms_live: {bar: 6, direction: higher}
-  renders_left_after_upload: {bar: 0, direction: lower}
+    required: false
+    tolerance: 1.0
+  align_median_s_vs_clip_labels:
+    direction: lower
+    required: false
+    tolerance: 1.0

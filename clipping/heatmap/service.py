@@ -62,8 +62,18 @@ def stream_arrays(c: psycopg.Connection, stream_id: int) -> tuple[int, dict[str,
     scene = np.zeros(T * 2)
     music = np.zeros(T)
     have = np.zeros(T, bool)
+    extra = {
+        k: np.zeros(T)
+        for k in ("centroid", "flux", "hiband", "onsets", "motion", "bright", "letterbox", "edges")
+    }
     for s in segs:
         f = segment_features(c, s)
+        off_e = int((s["start_utc"] - t0).total_seconds())
+        for k, arr in (f.get("extra") or {}).items():
+            src = np.asarray(arr, float)
+            b = min(T, off_e + len(src))
+            if b > off_e >= 0:
+                extra[k][off_e:b] = src[: b - off_e]
         off = int((s["start_utc"] - t0).total_seconds())
         for arr, rate, src in (
             (audio_db, 10, f["audio_db"]),
@@ -123,6 +133,26 @@ def stream_arrays(c: psycopg.Connection, stream_id: int) -> tuple[int, dict[str,
     }
     if not clips:
         sig["viewer_clips"] = np.full(T, np.nan)  # Kick / unclipped: drop, renormalize
+    w = active_weights(c, st["language"])
+    if (
+        w.get("reaction", 0) > 0 or w.get("gameplay", 0) > 0
+    ):  # docs 31/32 signals, only when the backtest kept them
+        full = {
+            "audio_db10": audio_db,
+            "voice": np.nan_to_num(voice),
+            "music": music,
+            **extra,
+            "scene": signals.per_second_max(scene, 2, T),
+        }
+        from clipping.creators import service as creators
+
+        react = creators.reaction_for_stream(c, st["creator_id"], full)
+        if w.get("reaction", 0) > 0:
+            sig["reaction"] = react
+        if w.get("gameplay", 0) > 0:
+            from clipping.moments import analysis as moments
+
+            sig["gameplay"], _ = moments.gameplay_score(full, react, evs)
     return T, sig
 
 

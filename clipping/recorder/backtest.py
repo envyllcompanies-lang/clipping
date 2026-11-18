@@ -1,4 +1,6 @@
-"""Stage backtest 02: window extraction exactness/speed and rolling-buffer disk bound."""
+"""Stage backtest 02 on a real live stream: the recorder's own streamlink -> ffmpeg pipeline records a live GTA VI
+channel for a few minutes; recording must start within 60 s, windows extract exactly (stream copy, UTC span matches
+content) in under 10 s. The rolling-buffer disk bound is checked with segment rows over a 6 h timeline."""
 
 from __future__ import annotations
 
@@ -8,86 +10,111 @@ import time
 import numpy as np
 
 from clipping.core import config, db, media
-from clipping.eval.fixtures import make_segments
 from clipping.eval.harness import Example, StageResult, scratch_db, stage
+from clipping.radar.sources import TwitchHelix
 from clipping.recorder import recorder
 
 UTC = dt.UTC
 
 
-@stage("02", "Stream Recorder")
-def run() -> StageResult:
-    rng = np.random.default_rng(2)
-    ex: list[Example] = []
+@stage("02", "Stream Recorder (real live stream)")
+def run(seconds: int = 210) -> StageResult:
+    h = TwitchHelix.from_env()
+    gid = h.resolve_game(["Grand Theft Auto VI"])
+    live = sorted(h.live_streams(gid), key=lambda s: -s.viewer_count)
+    target = live[min(5, len(live) - 1)]  # a big but not the biggest channel
+    ex = []
     with scratch_db() as c:
         cr = db.one(
             c,
-            "INSERT INTO creator(platform,platform_id,handle,language) VALUES ('twitch','1','bt','en') RETURNING *",
+            "INSERT INTO creator(platform,platform_id,handle,language) VALUES ('twitch',%s,%s,%s) RETURNING *",
+            target.user_id,
+            target.login,
+            target.language,
         )
-        base = int(time.time()) - 1800
-        sid = recorder.start_stream(c, cr["id"], "bt", dt.datetime.fromtimestamp(base, UTC))
-        d = recorder.segment_dir("bt", sid)
-        make_segments(d, 30, base)
-        recorder.register_segments(c, sid, d, include_last=True)
+        sid = recorder.start_stream(c, cr["id"], target.stream_id, None, target.language)
+        w = recorder.Worker(c, dict(cr), sid)
+        w.command = recorder.record_command(
+            recorder.stream_url("twitch", target.login), w.dir, 30, "480p,480p30,360p,worst"
+        )
+        t0 = time.time()
+        first = {}
+
+        import threading
+
+        def watch():
+            while time.time() - t0 < seconds:
+                if list(w.dir.glob("*.ts")) and "t" not in first:
+                    first["t"] = time.time() - t0
+                time.sleep(0.5)
+
+        th = threading.Thread(target=watch, daemon=True)
+        th.start()
+        w.run(is_live=lambda: True, poll_s=3, max_seconds=seconds)
+        th.join(1)
+        segs = db.all_(c, "SELECT * FROM segment WHERE stream_id=%s ORDER BY start_utc", sid)
         times, exact = [], []
-        for _i in range(20):
-            s = float(rng.uniform(60, 1600))
-            mid = db.scalar(
-                c,
-                "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,%s,%s,%s,1) RETURNING id",
-                sid,
-                s,
-                s + 75,
-                s + 45,
-            )
-            wid = db.scalar(c, 'INSERT INTO "window"(moment_id) VALUES (%s) RETURNING id', mid)
-            t0 = time.time()
-            recorder.extract_window(c, wid)
-            times.append(time.time() - t0)
-            w = db.one(c, 'SELECT * FROM "window" WHERE id=%s', wid)
-            span = (w["end_utc"] - w["start_utc"]).total_seconds()
-            dur = media.duration(w["path"])
-            want0 = dt.datetime.fromtimestamp(base + s - 30, UTC)
-            want1 = dt.datetime.fromtimestamp(base + s + 75 + 30, UTC)
-            ok = (
-                abs(dur - span) < 0.2 and w["start_utc"] <= want0 and w["end_utc"] >= min(want1, w["end_utc"])
-            )
-            codec_copy = media.probe(w["path"])["streams"][0]["codec_name"] == "h264"
-            exact.append(ok and codec_copy)
-            if not ok:
-                ex.append(Example(f"window{wid}", "exact", 0, f"dur={dur:.2f} span={span:.2f}"))
-        # Disk bound over a simulated 6 h stream (rows only; bytes from the measured bitrate).
+        if len(segs) >= 3:
+            s0, s1 = segs[0]["start_utc"], segs[-1]["end_utc"]
+            st = db.one(c, "SELECT started_at FROM stream WHERE id=%s", sid)["started_at"]
+            rng = np.random.default_rng(2)
+            for _ in range(6):
+                a = s0 + dt.timedelta(seconds=float(rng.uniform(5, max(6, (s1 - s0).total_seconds() - 40))))
+                mid = db.scalar(
+                    c,
+                    "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,%s,%s,%s,1) RETURNING id",
+                    sid,
+                    (a - st).total_seconds(),
+                    (a - st).total_seconds() + 20,
+                    (a - st).total_seconds() + 10,
+                )
+                wid = db.scalar(
+                    c,
+                    'INSERT INTO "window"(moment_id,start_utc,end_utc) VALUES (%s,%s,%s) RETURNING id',
+                    mid,
+                    a,
+                    a + dt.timedelta(seconds=20),
+                )
+                t = time.time()
+                recorder.extract_window(c, wid)
+                times.append(time.time() - t)
+                win = db.one(c, 'SELECT * FROM "window" WHERE id=%s', wid)
+                span = (win["end_utc"] - win["start_utc"]).total_seconds()
+                dur = media.duration(win["path"])
+                ok = (
+                    abs(dur - span) < 0.5
+                    and win["start_utc"] <= a
+                    and win["end_utc"] >= a + dt.timedelta(seconds=20)
+                )
+                exact.append(bool(ok))
+                if not ok:
+                    ex.append(Example(f"window{wid}", "exact", 0, f"dur={dur:.2f} span={span:.2f}"))
+        # disk bound over a 6 h timeline (segment rows; bytes irrelevant)
         sid2 = recorder.start_stream(c, cr["id"], "sim", dt.datetime(2026, 1, 1, tzinfo=UTC))
         buf_h = config.settings()["recorder"]["buffer_hours"]
         t_start = dt.datetime(2026, 1, 1, tzinfo=UTC)
         max_live = 0
-        for minute in range(0, 360):
+        for minute in range(360):
             t = t_start + dt.timedelta(minutes=minute)
             c.execute(
-                "INSERT INTO segment(stream_id,path,start_utc,end_utc,size) VALUES (%s,%s,%s,%s,%s)",
-                (sid2, f"/nonexistent/sim/{minute}.ts", t, t + dt.timedelta(minutes=1), 45_000_000),
+                "INSERT INTO segment(stream_id,path,start_utc,end_utc,size) VALUES (%s,%s,%s,%s,1)",
+                (sid2, f"/nonexistent/{minute}.ts", t, t + dt.timedelta(minutes=1)),
             )
-            if minute % 37 == 0:
-                mid = db.scalar(
-                    c,
-                    "INSERT INTO moment(stream_id,start_s,end_s,peak_s,score) VALUES (%s,%s,%s,%s,1) RETURNING id",
-                    sid2,
-                    minute * 60 - 100,
-                    minute * 60 - 25,
-                    minute * 60 - 50,
-                )
-                c.execute(
-                    'INSERT INTO "window"(moment_id,status) VALUES (%s,%s)',
-                    (mid, "requested" if minute % 74 else "extracted"),
-                )
             recorder.prune(c, now=t + dt.timedelta(minutes=1))
-            live = db.scalar(c, "SELECT count(*) FROM segment WHERE stream_id=%s AND NOT deleted", sid2)
-            max_live = max(max_live, live)
+            max_live = max(
+                max_live,
+                db.scalar(c, "SELECT count(*) FROM segment WHERE stream_id=%s AND NOT deleted", sid2),
+            )
     times.sort()
-    p95 = times[int(0.95 * (len(times) - 1))]
     return StageResult(
-        {"extract_exact": float(np.mean(exact)), "extract_p95_s": p95, "disk_ratio": max_live / (buf_h * 60)},
+        {
+            "recording_started_s": first.get("t", 999.0),
+            "segments_recorded": float(len(segs)),
+            "extract_exact": float(np.mean(exact)) if exact else 0.0,
+            "extract_p95_s": times[int(0.95 * (len(times) - 1))] if times else 999.0,
+            "disk_ratio": max_live / (buf_h * 60),
+        },
         ex,
-        "synthetic@v1",
-        {"max_live_segments": max_live},
+        f"live:{target.login}",
+        {"channel": target.login, "viewers": target.viewer_count},
     )
