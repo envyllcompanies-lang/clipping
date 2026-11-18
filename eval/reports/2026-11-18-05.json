@@ -1,0 +1,82 @@
+{
+  "stage": "05",
+  "name": "Moment Heatmap",
+  "passed": true,
+  "seconds": 23.51,
+  "dataset_version": "simstream@v1",
+  "code_version": "fa25716",
+  "metrics": [
+    {
+      "metric": "recall_at_20",
+      "value": 0.9833333333333334,
+      "baseline": null,
+      "bar": 0.7,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_at_20",
+      "value": 0.975,
+      "baseline": null,
+      "bar": 0.5,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_at_20_live",
+      "value": 0.9333333333333332,
+      "baseline": null,
+      "bar": 0.7,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_at_20_live",
+      "value": 0.9249999999999999,
+      "baseline": null,
+      "bar": 0.5,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "fuse_s_per_hour",
+      "value": 0.008157958587010702,
+      "baseline": null,
+      "bar": 120,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [
+    {
+      "example_id": "seed502@11099s",
+      "metric": "missed_live",
+      "value": 5248.0,
+      "notes": "chat_velocity=0.00 chat_reaction=0.00 viewer_clips=36.46 audio_energy=13.67 voice_excitement=6.26 visual_change=0.06 viewer_jump=0.00"
+    },
+    {
+      "example_id": "seed503@11537s",
+      "metric": "missed_live",
+      "value": 2952.0,
+      "notes": "chat_velocity=16.19 chat_reaction=0.20 viewer_clips=27.09 audio_energy=18.99 voice_excitement=4.04 visual_change=0.82 viewer_jump=0.00"
+    },
+    {
+      "example_id": "seed503@3140s",
+      "metric": "missed_live",
+      "value": 2483.0,
+      "notes": "chat_velocity=4.38 chat_reaction=0.25 viewer_clips=32.27 audio_energy=2.11 voice_excitement=5.42 visual_change=0.09 viewer_jump=0.02"
+    },
+    {
+      "example_id": "seed503@12478s",
+      "metric": "missed_live",
+      "value": 1754.0,
+      "notes": "chat_velocity=0.80 chat_reaction=0.35 viewer_clips=36.11 audio_energy=5.04 voice_excitement=3.36 visual_change=0.08 viewer_jump=0.00"
+    }
+  ],
+  "info": {}
+}

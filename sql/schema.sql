@@ -292,3 +292,8 @@ CREATE TABLE IF NOT EXISTS eval_example (
 );
 
 INSERT INTO schema_version(version) VALUES (1) ON CONFLICT DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS segment_feature (
+  segment_id bigint PRIMARY KEY REFERENCES segment(id) ON DELETE CASCADE, audio_db real[] NOT NULL, voice real[] NOT NULL,
+  scene real[] NOT NULL, music real[]
+);
