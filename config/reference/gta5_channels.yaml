@@ -1,55 +1,69 @@
 # GTA 5 reference set for the clip-channel tracker.
 # Used as the baseline until GTA 6 channels have a few weeks of history.
-# verified: the channel was confirmed to exist. handle/channel_id null = still to fill in.
+# Handles are resolved to channel IDs on the tracker's first run (YouTube channels.list forHandle);
+# any handle that doesn't resolve, or whose uploads don't match GTA terms, gets flagged.
 # role: tracker = clip/compilation channel we learn formats from
 #       radar   = source creator (footage to clip), goes to the creator radar instead
 
 clip_channels:
   - name: Red Arcade
+    handle: "@RedArcade"
     channel_id: UCHZZo1h1cI1vg4I9g2RqOUQ
-    url: https://www.youtube.com/c/redarcade/
     style: long-form fails & wins compilations, community submissions, multi-game
-    verified: true
     role: tracker
   - name: Prestige Clips
-    handle: null
+    handle: "@PrestigeClips"
     style: GTA 5 funny-moment and fail compilations
-    verified: true
     role: tracker
   - name: GameSprout
-    handle: null
+    handle: "@GameSprout"
     style: heavily edited, SFX-driven fail compilations
-    verified: true
+    role: tracker
+  - name: Onespot Gaming
+    handle: "@OnespotGaming"
+    style: physics experiments, ragdoll compilations
+    role: tracker
+  - name: Top Gaming Plays
+    handle: "@TopGamingPlaysYT"
+    style: funny moments and epic plays compilations
+    role: tracker
+  - name: GTA 5 Ragdolls Test
+    handle: "@gta5ragdollstest187"
+    style: short-form physics tests, crashes, ragdolls
     role: tracker
   - name: Hazardous
-    handle: null
+    handle: "@Hazardous"
     style: stunt, trickshot and fail compilations
-    verified: true
     role: tracker
-  # Not yet confirmed to exist under these names — fill in handles from YouTube or drop.
-  - {name: Top Gaming Plays, handle: null, verified: false, role: tracker}
-  - {name: Onespot Gaming, handle: null, verified: false, role: tracker}
-  - {name: GTA 5 Ragdolls Test, handle: null, verified: false, role: tracker}
-  - {name: Wasted Clips, handle: null, verified: false, role: tracker}
-  - {name: Ward, handle: null, verified: false, role: tracker}
-  - {name: Roleplay Clips, handle: null, verified: false, role: tracker}
-  - {name: Daily Clipped, handle: null, verified: false, role: tracker}
-  - {name: GTA NoPixel Moments, handle: null, verified: false, role: tracker}
-  - {name: Infinity GTA Clips, handle: null, verified: false, role: tracker}
+  - name: Ward
+    handle: "@WardGaming"
+    style: long-form Top 500 fails/wins compilations
+    role: tracker
+  - name: Roleplay Clips
+    handle: "@RP_Clipz"
+    style: GTA RP Shorts and compilations
+    role: tracker
+  - name: Daily GTA RP Clips
+    handle: "@dailygtarpclips"
+    style: daily top Twitch GTA RP clips
+    role: tracker
+  - name: Infinity GTA Clips
+    handle: "@infinitygtaclips"
+    style: vertical Shorts of top GTA RP streamers
+    role: tracker
 
 source_creators:
-  - {name: VanossGaming, verified: true, role: radar}
-  - {name: Nought, verified: true, role: radar}
-  - {name: TGG, verified: true, role: radar}
-  - {name: DarkViperAU, verified: true, role: radar}
-  - {name: IcyDeluxe, verified: false, role: radar}
-  - {name: Ivanowski, verified: false, role: radar}
-  - {name: Putther, verified: false, role: radar}
-  - {name: Bay Area Buggs, verified: false, role: radar}
-  - {name: Soup, verified: false, role: radar}
+  - {name: IcyDeluxe, handle: "@IcyDeluxe", role: radar}
+  - {name: Ivanowski, handle: "@Ivanowski", role: radar}
+  - {name: Nought, handle: "@NoughtPointFourLIVE", role: radar}
+  - {name: VanossGaming, handle: "@VanossGaming", role: radar}
+  - {name: TGG, handle: "@TGG_", role: radar}
+  - {name: DarkViperAU, handle: "@DarkViperAU", role: radar}
+  - {name: Putther, handle: "@putther", role: radar}
+  - {name: Bay Area Buggs, handle: "@Buggs", role: radar}
+  - {name: Soup, handle: "@soup", role: radar}
 
 data_sources:
   - name: HasRoot
     url: https://nopixel.hasroot.com/
     use: per-server GTA RP stream history, streamer and character lists, clip/VOD lookups
-    verified: true
