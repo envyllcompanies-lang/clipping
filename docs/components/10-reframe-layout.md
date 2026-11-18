@@ -21,12 +21,14 @@ Reframe & Layout converts 16:9 stream footage into a 9:16 vertical frame: it fin
 
 | Layout | When | Composition (1080×1920) |
 | --- | --- | --- |
-| Stacked | Facecam exists and the reaction matters (default for streams) | Facecam top ~35–40%, gameplay bottom ~60–65% |
+| **Stacked (starting favorite)** | Facecam exists and the reaction matters | Creator facecam top ~40% (0–768 px), caption band centered on the seam, gameplay bottom ~60% (768–1920 px). See [reference](../assets/layout-reference.png) |
 | Full gameplay | No facecam, or the moment is purely visual | Gameplay crop fills the frame, tracking the action |
 | Gameplay + small cam | Facecam exists but action needs most of the frame | Gameplay fills; facecam in a corner bubble clear of caption zone |
 | Split speakers | Two creators' POVs of the same moment (from two recordings) | Top/bottom halves |
 
-The style profile (13) sets the default layout and split ratio, copied from the reference channels.
+**How the layout is chosen (data decides):** layouts are A/B arms, not a fixed rule. The style study (13) measures which layouts the top reference channels use and sets the starting mix; analytics (22) then runs a Thompson-sampling bandit per language channel and platform, and shifts volume toward the layout with the best normalized performance (retention first, then views). The stacked layout in the [owner's reference screenshot](../assets/layout-reference.png) (creator top, captions on the seam, gameplay bottom) is the starting favorite: it gets the largest initial share until data says otherwise. Per-clip rules still apply (no facecam → full gameplay; low-res source → full gameplay).
+
+Facecam panel: crop the facecam box with ~10% padding, scale to fill the 1080-wide top panel (crop sides, never letterbox), keep the face in the upper-middle of the panel. Gameplay panel: center crop of the game rect following the action (Step 3). No border between panels; the caption band covers the seam.
 
 ## Step 3 — Gameplay crop path
 
@@ -63,4 +65,4 @@ Keep key action, faces and captions in the middle band; leave about the bottom 2
 
 ## Open questions
 
-- [ ] Default stacked split ratio, measured from reference channels in the style study (13).
+- [ ] Starting layout mix from the style study; stacked (owner's reference screenshot) starts with the largest share, then the bandit decides.

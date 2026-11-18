@@ -43,7 +43,7 @@ The Style Study measures how the best clipping channels edit, from their actual 
 ## How the editor uses profiles
 
 - Clip Builder (09): target lengths, cold-open use, ending style.
-- Reframe (10): default layout and split ratio, zoom rate.
+- Reframe (10): starting layout mix and split ratio, zoom rate. The owner's reference layout (stacked: creator top, captions on the seam, gameplay bottom; `docs/assets/layout-reference.png`) always gets the largest starting share; analytics (22) then reallocates by performance.
 - Captions (11): words per line, position, case, colors, animation style.
 - Render (12): loudness target, SFX density.
 
