@@ -23,7 +23,7 @@ This component covers every account the system posts from and every credential i
   | `tr` | Turkish | Kick | Strong on Kick |
   | `vi` | Vietnamese | YouTube | One of the strongest GTA RP bases |
 
-- **Re-ranking:** once GTA 6 is live, the radar (01) measures GTA 6 hours watched per language across all three platforms weekly. If a language outside the ten overtakes one inside it for 4 straight weeks (candidates: Polish, Chinese (Traditional, Taiwan/HK), Thai, Hindi, Indonesian, Italian, Korean), the dashboard flags the swap; analytics (22) shifts posting volume toward languages that perform.
+- **Re-ranking** (full spec: [Component 28](28-language-market-ranking.md)): once GTA 6 is live, the radar (01) measures GTA 6 hours watched per language across all three platforms weekly. If a language outside the ten overtakes one inside it for 4 straight weeks (candidates: Polish, Chinese (Traditional, Taiwan/HK), Thai, Hindi, Indonesian, Italian, Korean), the dashboard flags the swap; analytics (22) shifts posting volume toward languages that perform.
 - Channel config file (`config/channels/<key>.yaml`): language, time zone, style profile, voice notes, hashtags core set, account handles per platform, posting slots, score floor.
 - YouTube focus: one main YouTube channel per language until it's monetized, since spreading views across channels delays each one's 10M-views-in-90-days threshold.
 
@@ -40,6 +40,8 @@ This component covers every account the system posts from and every credential i
 | Records | An encrypted account register: platform, handle, email, recovery codes, 2FA method, owner (you) |
 
 ## Account provisioning tool (`accounts` package)
+
+Full spec: [Component 27](27-account-provisioning-tool.md). Summary below.
 
 Automates everything around signups except the signup itself. Social account signups are done by hand by the owner; the tool does not automate platform registration, phone verification or CAPTCHAs.
 

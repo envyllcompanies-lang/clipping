@@ -18,13 +18,13 @@ Everything the owner does by hand, in order. Claude Code builds the system; thes
 - [ ] **Meta app** (developers.facebook.com): Instagram Graph API, Pages, Threads. Submit **app review** for publishing permissions.
 - [ ] **TikTok developer app**: Content Posting API. Submit the **audit** (until approved, posts are private-only). The dashboard (23) includes the screens the audit requires.
 - [ ] **Snap Business account** + Ads Manager organization; request **Public Profile API allowlist** access.
-- [ ] Privacy policy and terms pages live at a public URL (needed by TikTok and Meta reviews). Claude Code deploys them to a free hosting subdomain; no custom domain needed.
+- [ ] Privacy policy and terms pages live at a public URL (needed by TikTok and Meta reviews; spec in doc 29). Claude Code deploys them to a free hosting subdomain; no custom domain needed.
 
 ## Before signups (after the build works end to end)
 
 - [ ] Pick the **brand name** (one brand, localized per language) and check handle availability; the `accounts` tool (24) does the check and suggests variants.
 - [ ] Create one **addy.io** account (2 minutes) and put its API key in `.env` as `ALIAS_API_KEY`.
-- [ ] Everything else here is automatic: the `accounts` tool creates the 10 language email aliases (forwarding to your inbox), passwords, handle checks and signup worksheets, and pulls verification codes into the dashboard.
+- [ ] Everything else here is automatic: the `accounts` tool (doc 27) creates the 10 language email aliases (forwarding to your inbox), passwords, handle checks and signup worksheets, and pulls verification codes into the dashboard.
 - [ ] Set `OWNER_PHONE` in `.env`. It's used only where a platform requires a phone; skip the phone wherever it's optional.
 - [ ] For each of the 10 languages, sign up on the 6 platforms (60 accounts) using the worksheet:
   - YouTube channel (under the language's Google account)

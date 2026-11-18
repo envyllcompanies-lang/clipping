@@ -46,6 +46,9 @@ Every component has its own detailed doc: job and boundaries, inputs, step-by-st
 | 24 | Accounts, Credentials & Language Pages | [Open](components/24-accounts-credentials-language-pages.md) |
 | 25 | Infrastructure, Hosting & Data Model | [Open](components/25-infrastructure-hosting-data-model.md) |
 | 26 | Owner Setup Checklist | [Open](components/26-owner-setup-checklist.md) |
+| 27 | Account Provisioning Tool | [Open](components/27-account-provisioning-tool.md) |
+| 28 | Language Market Ranking | [Open](components/28-language-market-ranking.md) |
+| 29 | Public Site & Policy Pages | [Open](components/29-public-site-policy-pages.md) |
 
 ## Findings that change the design
 

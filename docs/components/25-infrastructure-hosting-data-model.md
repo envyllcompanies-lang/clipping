@@ -51,6 +51,8 @@ The M1 being off only delays rendering; recording, scheduling and posting of alr
 | `weights` | component, version, values JSON, fitted_at, holdout_score, active | 22 |
 | `file` | path, kind, size, owner, expires_at | 21 |
 | `command` / `alert` | dashboard actions; alerts raised | 23 |
+| `account_slot` / `alias` / `profile_kit` | 60 language×platform slots, email aliases, bios and art | 27 |
+| `language_sample` / `language_week` / `language_action` | per-language market data, scores, swap recommendations | 28 |
 
 ## Reliability
 
@@ -65,7 +67,7 @@ The M1 being off only delays rendering; recording, scheduling and posting of alr
 
 ## Codebase layout (for Claude Code)
 
-One Python monorepo in `envyllcompanies-lang/clipping`: a package per component (`radar`, `recorder`, `chat`, `ingest`, `heatmap`, `transcribe`, `audio`, `events`, `builder`, `reframe`, `captions`, `render`, `style`, `packaging`, `gate`, `publish/*`, `storage`, `analytics`), a `dashboard/` web app, `config/` for games, channels, styles and token lists, and `tests/` with fixture clips.
+One Python monorepo in `envyllcompanies-lang/clipping`: a package per component (`radar`, `recorder`, `chat`, `ingest`, `heatmap`, `transcribe`, `audio`, `events`, `builder`, `reframe`, `captions`, `render`, `style`, `packaging`, `gate`, `publish/*`, `storage`, `analytics`, `accounts`, `languages`), a `dashboard/` web app (also serving the public policy pages, doc 29), `config/` for games, channels, styles and token lists, and `tests/` with fixture clips.
 
 ## Done when
 
