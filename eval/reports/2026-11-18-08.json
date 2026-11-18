@@ -1,0 +1,168 @@
+{
+  "stage": "08",
+  "name": "Game Event Detection",
+  "passed": true,
+  "seconds": 36.53,
+  "dataset_version": "eventfx@v1",
+  "code_version": "c318f76",
+  "metrics": [
+    {
+      "metric": "precision_death",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_death",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_arrest",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_arrest",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_wanted",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_wanted",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_mission",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_mission",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_crash",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_crash",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_loading",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_loading",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_menu",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "recall_menu",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.8,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "precision_min_core",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 0.9,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "seconds_per_window",
+      "value": 2.868441715836525,
+      "baseline": 2.9275855741330554,
+      "bar": 10,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "tp": {
+      "death": 7,
+      "arrest": 7,
+      "mission": 7,
+      "wanted": 7,
+      "crash": 7,
+      "loading": 7,
+      "menu": 7
+    },
+    "fp": {},
+    "fn": {}
+  }
+}

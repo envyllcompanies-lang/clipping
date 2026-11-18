@@ -115,7 +115,7 @@ def evaluate(
         if bar is not None and (value < bar if direction == "higher" else value > bar):
             ok = False
             reasons.append(f"misses bar {bar}")
-        if base is not None and _worse(value, base, direction, tol):
+        if base is not None and _worse(value, base, direction, s.get("tolerance", tol)):
             ok = False
             reasons.append(f"worse than baseline {base:.4f}")
         checks.append(MetricCheck(metric, value, base, bar, direction, ok, "; ".join(reasons)))

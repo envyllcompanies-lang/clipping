@@ -187,7 +187,12 @@ def extract_window(c: psycopg.Connection, p: dict) -> dict:
 
     if db.get_flag(c, "pause_extract_server"):
         raise RuntimeError("disk guard: extraction paused")
-    return recorder.extract_window(c, p["window_id"])
+    res = recorder.extract_window(c, p["window_id"])
+    if res.get("status") == "extracted":
+        from clipping.pipeline import after_extract
+
+        after_extract(c, p["window_id"])
+    return res
 
 
 def load_all() -> None:

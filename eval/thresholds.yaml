@@ -1,5 +1,5 @@
 # Starting bars (doc 30). Ratchet up after 4 weeks consistently above; never down without the owner.
-# direction: higher = bigger is better.
+# direction: higher = bigger is better. tolerance: allowed relative slip vs baseline (default 2%).
 '01':
   spearman:
     bar: 0.6
@@ -11,6 +11,7 @@
   extract_p95_s:
     bar: 10.0
     direction: lower
+    tolerance: 0.5
   disk_ratio:
     bar: 1.1
     direction: lower
@@ -60,9 +61,11 @@
   fuse_s_per_hour:
     bar: 120
     direction: lower
+    tolerance: 0.5
   score_s_per_hour:
     bar: 120
     direction: lower
+    tolerance: 0.5
 '07':
   detector_accuracy:
     bar: 0.85
@@ -76,8 +79,66 @@
   voice_snr_gain_db:
     bar: 3.0
     direction: higher
-"06":
-  wer_en: {bar: 0.15, direction: lower}
-  wer_others_max: {bar: 0.25, direction: lower}
-  wer_others_mean: {bar: 0.25, direction: lower}
-  timing_median_s: {bar: 0.15, direction: lower}
+'06':
+  wer_en:
+    bar: 0.15
+    direction: lower
+  wer_others_max:
+    bar: 0.25
+    direction: lower
+  wer_others_mean:
+    bar: 0.25
+    direction: lower
+  timing_median_s:
+    bar: 0.15
+    direction: lower
+08:
+  precision_min_core:
+    bar: 0.9
+    direction: higher
+  precision_death:
+    bar: 0.9
+    direction: higher
+  precision_arrest:
+    bar: 0.9
+    direction: higher
+  precision_wanted:
+    bar: 0.9
+    direction: higher
+  precision_mission:
+    bar: 0.9
+    direction: higher
+  precision_crash:
+    bar: 0.9
+    direction: higher
+  precision_loading:
+    bar: 0.9
+    direction: higher
+  precision_menu:
+    bar: 0.9
+    direction: higher
+  recall_death:
+    bar: 0.8
+    direction: higher
+  recall_arrest:
+    bar: 0.8
+    direction: higher
+  recall_wanted:
+    bar: 0.8
+    direction: higher
+  recall_mission:
+    bar: 0.8
+    direction: higher
+  recall_crash:
+    bar: 0.8
+    direction: higher
+  recall_loading:
+    bar: 0.8
+    direction: higher
+  recall_menu:
+    bar: 0.8
+    direction: higher
+  seconds_per_window:
+    bar: 10
+    direction: lower
+    tolerance: 0.5

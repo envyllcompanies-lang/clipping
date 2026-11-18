@@ -2,9 +2,9 @@
   "stage": "02",
   "name": "Stream Recorder",
   "passed": true,
-  "seconds": 45.7,
+  "seconds": 44.05,
   "dataset_version": "synthetic@v1",
-  "code_version": "2b8a5c7",
+  "code_version": "c318f76",
   "metrics": [
     {
       "metric": "extract_exact",
@@ -17,7 +17,7 @@
     },
     {
       "metric": "extract_p95_s",
-      "value": 0.37789082527160645,
+      "value": 0.3731398582458496,
       "baseline": 0.42255449295043945,
       "bar": 10.0,
       "direction": "lower",

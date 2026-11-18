@@ -2,9 +2,9 @@
   "stage": "04",
   "name": "Platform Clips & VOD Ingest",
   "passed": true,
-  "seconds": 8.33,
+  "seconds": 8.29,
   "dataset_version": "synthetic@v1",
-  "code_version": "2b8a5c7",
+  "code_version": "c318f76",
   "metrics": [
     {
       "metric": "mapped_correct",
