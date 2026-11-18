@@ -11,6 +11,13 @@ def register(sub):
     w.add_argument("--once", action="store_true")
     w.set_defaults(fn=lambda a: __import__("clipping.worker", fromlist=["loop"]).loop(a.role, once=a.once))
 
+    dsh = sub.add_parser("dashboard", help="dashboard (doc 23)")
+    dsh.add_argument("action", choices=["serve", "create-owner"])
+    dsh.add_argument("--email")
+    dsh.add_argument("--host", default="0.0.0.0")
+    dsh.add_argument("--port", type=int, default=8000)
+    dsh.set_defaults(fn=_dashboard)
+
     rn = sub.add_parser("run", help="make clips from one window file (offline)")
     rn.add_argument("window")
     rn.add_argument("--out", default="var/clip-run")
@@ -72,6 +79,24 @@ def _run(a):
             print(f"  {plat}: {json.dumps(f, ensure_ascii=False)[:160]}")
     if res.get("discarded"):
         print("discarded:", res["discarded"])
+
+
+def _dashboard(a):
+    if a.action == "serve":
+        import uvicorn
+
+        uvicorn.run("clipping.dashboard.app:app", host=a.host, port=a.port)
+        return
+    from clipping.core import db
+    from clipping.dashboard import auth
+
+    with db.conn() as c:
+        import getpass
+
+        pw = getpass.getpass("Owner password: ")
+        uid, secret = auth.create_user(c, a.email, pw, owner=True)
+        print(f"Owner created (id {uid}). Add this to your authenticator app:")
+        print(f"otpauth://totp/Clipping:{a.email}?secret={secret}&issuer=Clipping")
 
 
 def _radar(a):
