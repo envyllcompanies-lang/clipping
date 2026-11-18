@@ -15,13 +15,13 @@ Transcript excerpt with the payoff marked, game events, creator name and platfor
 
 ## Output per clip per platform
 
-| Field | YouTube Shorts | TikTok | Instagram Reels | Facebook Reels | Threads | Snapchat | Bluesky | Pinterest |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Title | Yes (title field; keep ~60 chars to read on mobile) | No | No | No | No | No | No | Pin title |
-| Caption/description | Description + hashtags | Caption with hashtags | Caption (2,200 char API limit) | Description | Text (500 chars) | Optional text | Text (300 chars) | Description |
-| Hashtags | 3–5 incl. #Shorts optional | 3–5 | 3–5 | 1–3 | 1 topic tag max via API | None | 1–2 | 2–5 keywords |
-| Credit line | "Clip from @creator (Twitch)" + link | Name in caption | Name in caption | Name in caption | Name | On-screen only | Name | Name |
-| Cover | Payoff frame (where custom thumbnails apply) | Cover frame timestamp | Cover frame or image | — | — | — | — | Cover image |
+| Field | YouTube Shorts | TikTok | Instagram Reels | Facebook Reels | Threads | Snapchat | Bluesky |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Title | Yes (title field; keep ~60 chars to read on mobile) | No | No | No | No | No | No |
+| Caption/description | Description + hashtags | Caption with hashtags | Caption (2,200 char API limit) | Description | Text (500 chars) | Optional text | Text (300 chars) |
+| Hashtags | 3–5 incl. #Shorts optional | 3–5 | 3–5 | 1–3 | 1 topic tag max via API | None | 1–2 |
+| Credit line | "Clip from @creator (Twitch)" + link | Name in caption | Name in caption | Name in caption | Name | On-screen only | Name |
+| Cover | Payoff frame (where custom thumbnails apply) | Cover frame timestamp | Cover frame or image | — | — | — | — |
 
 Threads allows one topic tag per post through the API ([Meta docs](https://developers.facebook.com/docs/threads/posts/)); Instagram captions max 2,200 characters ([Blotato](https://www.blotato.com/api/instagram)). Verify remaining limits at build time.
 

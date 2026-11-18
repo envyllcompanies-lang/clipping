@@ -47,7 +47,7 @@ Code validates every index against the candidate sets; invalid output is retried
 
 | Version | Length | Used for |
 | --- | --- | --- |
-| Short | Style target (e.g. 15–45 s) | YouTube Shorts, Instagram, Facebook, Threads, Snapchat, Bluesky, Pinterest |
+| Short | Style target (e.g. 15–45 s) | YouTube Shorts, Instagram, Facebook, Threads, Snapchat, Bluesky |
 | Long | 61–90 s (extended setup, or 2–3 related moments from the same stream as a mini-compilation) | TikTok monetization |
 | Loop variant (optional) | Short version with an ending chosen to flow into the start | A/B tests on loop-friendly platforms |
 

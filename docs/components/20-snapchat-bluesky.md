@@ -1,8 +1,8 @@
-# Clipper Component 20 — Snapchat, Bluesky & Pinterest Connectors
+# Clipper Component 20 — Snapchat & Bluesky Connectors
 
 Nov 18, 2026
 
-Three smaller connectors round out the eight platforms. Snapchat has the most gated access, Bluesky is fully open, and Pinterest needs account warm-up; X is deferred until there's revenue.
+Two smaller connectors round out the seven platforms. Snapchat has the most gated access and Bluesky is fully open; X is deferred until there's revenue. Pinterest was dropped because it isn't a short-video scroll feed.
 
 ## Snapchat Spotlight
 
@@ -32,19 +32,6 @@ Three smaller connectors round out the eight platforms. Snapchat has the most ga
 
 Small audience today, but free and fully automatable; low priority in scheduling until analytics shows traction.
 
-## Pinterest
-
-| Item | Detail | Source |
-| --- | --- | --- |
-| API | Pinterest API v5: register media upload, upload video, create pin with board ID | |
-| Limits | Standard access ~100 write requests per minute per user per app | [ShortSync](https://www.shortsync.app/resources/social-media-posting-limits-2026) |
-| Warm-up | New accounts should be warmed up manually for 2–3 weeks (1 pin/day rising slowly) before automated posting | [Blotato](https://help.blotato.com/settings/social-accounts) |
-| Requirements | Every pin needs a board; video specs 4 s–15 min | [bundle.social](https://info.bundle.social/api-reference/limits) |
-
-**Flow:** `POST /v5/media` (register) → upload to returned URL → poll media status → `POST /v5/pins` with `board_id`, title, description, `media_source` video ID and cover image.
-
-Pinterest suits evergreen, searchable clips (secrets, locations, how-to) better than reaction clips; packaging (14) writes keyword-rich titles for it.
-
 ## X (deferred)
 
 Pay-per-use: about $0.015 per post, $0.20 with a link ([Socialync](https://www.socialync.io/blog/x-api-pricing-and-posting-2026)). The adapter slot exists; turn it on once revenue covers it.
@@ -52,7 +39,6 @@ Pay-per-use: about $0.015 per post, $0.20 with a link ([Socialync](https://www.s
 ## Done when
 
 - [ ] Bluesky posts automatically with video.
-- [ ] Pinterest posts automatically after warm-up.
 - [ ] Snapchat allowlist requested; adapter built against the documented flow and tested once approved.
 
 ## Open questions

@@ -31,7 +31,6 @@ The Render Engine executes an edit plan into final MP4 files: it cuts and reorde
 | TikTok | MP4 H.264/AAC | 1080×1920 | Long version (61–90 s) for monetization, short for reach | Max duration set per creator; query before posting |
 | Snapchat Spotlight | MP4 H.264/AAC | 1080×1920 | Up to 60 s | Media encrypted before upload (Component 20) |
 | Bluesky | MP4 H.264/AAC | 1080×1920 | Up to 3 min | |
-| Pinterest | MP4 H.264/AAC | 1080×1920 | Short version | |
 
 One master render per version; platform variants only differ when limits demand it (e.g. a 55 s cut for Snapchat if the short version is over 60 s).
 

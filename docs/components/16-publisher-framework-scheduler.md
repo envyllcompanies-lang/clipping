@@ -44,7 +44,6 @@ Every connector implements the same methods:
 | TikTok | ~15 Direct Posts per creator/day, shared across apps; 6 upload starts/min per token | [ShortSync](https://www.shortsync.app/resources/social-media-posting-limits-2026) |
 | Snapchat | Varies (allowlisted API) | Component 20 |
 | Bluesky | Action-point budget per day | Component 20 |
-| Pinterest | Per-minute write limits; new accounts need warm-up | Component 20 |
 
 Limits are config values, refreshed from the platforms' limit endpoints where they exist.
 
