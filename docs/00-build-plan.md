@@ -92,7 +92,7 @@ Support: storage lifecycle (21), dashboard + kill switch (23), accounts (24), in
 
 The analytics loop is what makes this more than an editor: each clip's results update the scoring weights the Analyze stage uses.
 
-Stack: Python worker (faster-whisper, PySceneDetect, FFmpeg, an LLM API), Postgres or SQLite, object storage for clip URLs, a Next.js dashboard, and a cron-driven publisher with one adapter per platform. A game profile (vocabulary, moment types, templates) keeps the engine game-agnostic.
+Stack: Python worker (faster-whisper, PySceneDetect, FFmpeg, an LLM API), Postgres (local in Docker for development), object storage for clip URLs, a Next.js dashboard, and a cron-driven publisher with one adapter per platform. A game profile (vocabulary, moment types, templates) keeps the engine game-agnostic.
 
 ## Competitive teardown
 
@@ -277,22 +277,24 @@ These mechanisms keep the channels alive at full volume. None of them stops a cl
 
 ## Build phases
 
-Seven phases, in order. Phase 0 starts the platform reviews so they run in the background while phases 1 to 3 get built. Each phase ends with a test you can actually run.
+Eight phases, in order. Every component doc (01–29) belongs to exactly one phase. Phase 0 is owner work that runs in the background (reviews take weeks). Each phase ends with a test you can actually run; don't start the next phase until it passes.
 
-1. **Phase 0 — Developer apps and reviews.** Create a Google Cloud project, a Meta app, a TikTok developer app, a Twitch developer app, a Kick developer app, and a Snap Business account with a Public Profile API allowlist request. Switch Instagram to Professional. Submit YouTube's compliance audit and TikTok's Content Posting audit.
-   - Done when: all three apps exist, your accounts are connected as testers, and both audits are submitted.
-2. **Phase 1 — Clipping engine (CLI).** `clip run recording.mp4` produces 10–30 ranked candidate clips, each with a 9:16 render, burned-in captions, a hook, and a JSON file of metadata and scores.
-   - Done when: on 3 real recordings, at least half of the top 10 clips are ones you'd actually post.
-3. **Phase 2 — Library and monitoring dashboard.** A web app showing what posted and what's queued, with a kill switch to pull a clip or pause a channel, plus source records and channel profiles.
-   - Done when: from your phone, you can see everything that posted and pull any clip in one tap.
-4. **Phase 3 — Publishers.** YouTube auto-upload is already built: wrap it as the first adapter, then add Instagram and TikTok behind the same interface, with the job queue, retries and token refresh. Fallback modes (private upload, inbox draft) until the audits clear.
-   - Done when: one approved clip reaches all three platforms with no manual steps beyond the fallbacks.
-5. **Phase 4 — Scheduler and multi-channel.** Posting slots, a config file per channel (template, voice, hashtags, angle), and routing so each clip goes to the channel whose angle fits it best.
-   - Done when: a second channel is added by writing a config file, with no code changes.
-6. **Phase 5 — Analytics and feedback loop.** A daily stats pull (views, watch time, likes, shares) for each clip. Clip features (hook type, length, moment type, posting time) get linked to results, and the scoring weights update from that.
-   - Done when: the dashboard shows which hook types and lengths win, and new clips get ranked using that data.
-7. **Phase 6 — Autopilot and new games.** The minimum score for auto-publishing tunes itself from analytics. Weekly digest of results. Add a second game by adding a game profile (vocabulary, moment types, templates).
-   - Done when: one full week runs with no manual work beyond the weekly digest.
+0. **Phase 0 — Owner setup (in parallel, doc 26).** Twitch and Kick developer apps first (needed for Phase 1). Then Google Cloud project, Meta app, TikTok developer app, Snap Business + allowlist request, and the YouTube, Meta and TikTok reviews once Phase 4 has something to show.
+   - Done when: Twitch/Kick keys are in `.env`; reviews are submitted.
+1. **Phase 1 — Foundation and sources.** Repo skeleton, config files, local Postgres (Docker), job tables and data model (25); creator radar (01), stream recorder (02), chat capture (03), platform clips & VOD ingest (04), storage lifecycle (21).
+   - Done when: the radar ranks live GTA creators per language, the recorder keeps a rolling buffer for the top N, chat and platform clips are stored, and disk usage stays flat.
+2. **Phase 2 — Finding moments.** Moment heatmap & scoring (05), audio cleanup & music removal (07), transcription (06), game event detection (08).
+   - Done when: on 3 real recorded streams, the top-ranked windows line up with the moments viewers clipped (doc 05 checks pass).
+3. **Phase 3 — Making clips.** Style study & profiles (13), clip builder (09), reframe & layout (10), captions (11), render engine (12), packaging (14), auto-gate (15).
+   - Done when: `clip run <window>` produces finished 9:16 clips with captions, hooks, titles per platform and language, and at least half of the top 10 are ones you'd post.
+4. **Phase 4 — Dashboard and public site.** Dashboard & kill switch (23), public site & policy pages (29), credential storage (24).
+   - Done when: from your phone you can see the pipeline, pull a clip, and the policy pages are live for the reviews.
+5. **Phase 5 — Publishing.** Publisher framework & scheduler (16), YouTube (17, wrapping the existing uploader), Meta (18), TikTok (19), Snapchat (20).
+   - Done when: one clip reaches every platform in test/fallback mode (private uploads, inbox drafts) until reviews clear.
+6. **Phase 6 — Accounts and languages.** Account provisioning tool (27), language market ranking (28), the 10 language channel configs (24).
+   - Done when: one command creates every alias, password, handle check and worksheet; test codes route to the right slot; the language table shows on the dashboard. Then the owner does the 60 signups and connects them.
+7. **Phase 7 — Analytics and autopilot.** Analytics & feedback loop (22), weekly refits, posting-volume allocation, infrastructure move to the always-on server (25).
+   - Done when: one full week runs with no manual work beyond reading the weekly digest.
 
 ## Costs
 
@@ -305,7 +307,7 @@ Running cost can stay near $0. The only usage-based cost is the LLM that scores 
 | Moment scoring and captions | Free tier of an LLM API, or a small local model | Paid Claude/GPT API (roughly cents per hour of footage, approximate) |
 | Frame understanding | Skipped at first (audio + transcript signals only) | A vision model on sampled frames |
 | Clip storage and public URLs | A free object-storage tier (needed because Instagram and TikTok pull video from a URL) | Larger bucket |
-| Database | SQLite locally, or a free Postgres tier (Supabase) | Paid Postgres |
+| Database | Postgres in Docker locally, then a free Postgres tier (e.g. Supabase) | Paid Postgres |
 | Scheduler and publisher | A free cron (GitHub Actions) or a small free-tier host, so posting doesn't need the MacBook on | Always-on host |
 | Platform APIs | Free | Pre-audited posting service, as a TikTok/YouTube shortcut |
 
@@ -318,7 +320,7 @@ The M1 handles transcription, music removal and rendering for a moderate volume,
 - **Transcription:** run whisper.cpp or mlx-whisper on the M1's GPU. Large-v3 runs at roughly 2–3× real time on an M1 ([PromptQuorum](https://www.promptquorum.com/ko/local-llms/apple-silicon-whisper-metal-benchmark)), so only transcribe candidate windows the heatmap picked, never full streams.
 - **Rendering:** use FFmpeg's hardware encoder on Apple Silicon (VideoToolbox) for fast, low-heat renders.
 - **Recording stays off the laptop:** streams record on a small always-on server; only candidate windows come down to the M1.
-- **Open question:** 8 GB or 16 GB of memory. 8 GB means running one heavy model at a time.
+- **Memory:** the code detects RAM at startup (`sysctl hw.memsize`). On 8 GB it runs one heavy model at a time and uses smaller Whisper models; on 16 GB it can run separation and transcription back to back.
 
 ## Storage lifecycle
 

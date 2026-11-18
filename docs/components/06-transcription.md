@@ -63,4 +63,4 @@ The LLM never sees or returns timestamps. It sees words prefixed with their inde
 
 ## Open questions
 
-- [ ] M1 memory (8 GB or 16 GB) decides model size and whether diarization runs locally.
+- [ ] Model size and local diarization are chosen automatically from detected RAM (8 GB: smaller model, no local diarization; 16 GB: large-v3 + diarization).
