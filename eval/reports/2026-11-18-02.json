@@ -1,0 +1,41 @@
+{
+  "stage": "02",
+  "name": "Stream Recorder",
+  "passed": true,
+  "seconds": 45.23,
+  "dataset_version": "synthetic@v1",
+  "code_version": "698e6cb",
+  "metrics": [
+    {
+      "metric": "extract_exact",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "extract_p95_s",
+      "value": 0.42255449295043945,
+      "baseline": null,
+      "bar": 10.0,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "disk_ratio",
+      "value": 1.05,
+      "baseline": null,
+      "bar": 1.1,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "max_live_segments": 189
+  }
+}

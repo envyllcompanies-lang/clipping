@@ -1,0 +1,12 @@
+# Starting bars (doc 30). Ratchet up after 4 weeks consistently above; never down without the owner.
+# direction: higher = bigger is better.
+"01":
+  spearman: {bar: 0.6, direction: higher}
+"02":
+  extract_exact: {bar: 1.0, direction: higher}
+  extract_p95_s: {bar: 10.0, direction: lower}
+  disk_ratio: {bar: 1.1, direction: lower}
+"21":
+  deleted_promptly: {bar: 1.0, direction: higher}
+  disk_growth_ratio: {bar: 1.5, direction: lower}
+  orphans_left: {bar: 0.0, direction: lower}

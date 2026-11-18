@@ -1,0 +1,45 @@
+# Tunables. Weights here are starting values; analytics (22) writes refits to the weights table.
+radar:
+  weights: {live_audience: 0.20, footage_volume: 0.10, clip_rate: 0.20, clip_reach: 0.15, offplatform_reach: 0.10, growth: 0.10, our_performance: 0.15}
+  sample_interval_min: 10
+  exploit_share: 0.8
+  hysteresis_days: 2
+  viewbot_chat_ratio: 0.2      # chats/viewer below this fraction of the language median -> flagged
+  raw_retention_days: 90
+recorder:
+  segment_s: 60
+  buffer_hours: 3
+  window_pad_s: 30
+  end_grace_h: 1
+  slots: 10
+  quality: "1080p60,1080p,best"
+  restart_delay_s: 10
+chat:
+  bucket_s: 10
+  baseline_s: 300
+  raw_retention_days: 7
+  reaction_lag_s: 4.5
+  silent_alert_min: 10
+  spam_identical_threshold: 5
+heatmap:
+  step_s: 1
+  weights: {chat_velocity: 0.25, viewer_clips: 0.25, audio_energy: 0.15, voice_excitement: 0.10, chat_reaction: 0.10, game_events: 0.10, visual_change: 0.05}
+  smooth_s: 5
+  peak_separation_s: 45
+  peak_percentile: 95
+  abs_floor: 0.35
+  window_before_s: 45
+  window_after_s: 30
+  max_per_hour: 10
+  clip_kernel_s: 10
+  reaction_lag_s: 4.5
+storage:
+  managed: [recordings, windows, work, renders, public]
+  sweep_interval_s: 300
+  max_age_h: {segment: 3, window: 48, work: 6, render: 72, public: 24, thumbnail: 2160, log: 336}
+  guard_m1_gb: {normal: 25, pause: 10, purge: 5}
+  guard_server_pct: {normal: 20, pause: 10, purge: 5}
+ingest:
+  trend_top_share: 0.10
+  max_clips_per_query: 1000
+  view_history_hours: 48

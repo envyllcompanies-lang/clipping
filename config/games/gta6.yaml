@@ -1,0 +1,17 @@
+slug: gta6
+name: Grand Theft Auto VI
+search_names: ["Grand Theft Auto VI", "GTA VI", "GTA 6"]
+twitch_id: null   # resolved by name at startup (doc 01) and cached here
+kick_id: null
+terms: ["gta 6", "gta6", "gta vi", "gtavi", "grand theft auto vi", "vice city", "leonida", "jason", "lucia"]
+initial_prompt: "GTA 6, Grand Theft Auto VI, Vice City, Leonida, Jason, Lucia, wanted level, five stars, cops, heist."
+# HUD profile (doc 08). Starts generic; filled from launch footage. Regions are fractions of the game rect.
+events:
+  death:      {method: banner, region: [0.15, 0.38, 0.85, 0.62], keywords: {en: ["wasted"], es: ["muerto", "wasted"], pt: ["morto", "wasted"], de: ["tot", "wasted"], fr: ["mort", "wasted"]}, desaturate: true, weight: 1.0}
+  arrest:     {method: banner, region: [0.15, 0.38, 0.85, 0.62], keywords: {en: ["busted"], es: ["arrestado", "busted"]}, desaturate: true, weight: 0.9}
+  wanted:     {method: stars, region: [0.70, 0.02, 0.98, 0.10], max_stars: 5, weight: 0.7}
+  mission:    {method: banner, region: [0.10, 0.30, 0.90, 0.55], keywords: {en: ["mission passed", "mission failed"]}, weight: 0.5}
+  crash:      {method: flash, brightness_jump: 60, motion_jump: 3.0, weight: 0.9}
+  menu:       {method: static, negative: true}
+  loading:    {method: static, negative: true, max_motion: 0.5}
+templates_dir: config/games/gta6_templates

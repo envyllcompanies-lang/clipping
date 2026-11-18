@@ -1,0 +1,11 @@
+{
+  "stage": "02",
+  "accepted_at": "2026-11-18T16:54:19+00:00",
+  "dataset_version": "synthetic@v1",
+  "code_version": "698e6cb",
+  "metrics": {
+    "extract_exact": 1.0,
+    "extract_p95_s": 0.42255449295043945,
+    "disk_ratio": 1.05
+  }
+}
