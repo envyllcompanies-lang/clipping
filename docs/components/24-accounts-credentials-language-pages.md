@@ -45,12 +45,13 @@ Automates everything around signups except the signup itself. Social account sig
 
 **What it automates:**
 
-1. **Emails on our own domain.** One domain (e.g. `<brand>.com`) on Cloudflare. For every channel in `config/channels/*.yaml`, the tool creates one address `<lang>@<domain>` (e.g. `en@`, `es@`, `pt@`) through the Cloudflare Email Routing API, forwarding to one owner inbox. That one address is used to sign up the channel on every platform. Adding a new language channel to config creates its address on the next run.
-   - If an address must send mail as well as receive it (rare: some recovery flows), switch that domain to Google Workspace or Zoho Mail and create real mailboxes through their admin APIs instead; config chooses the provider.
+1. **Emails: created automatically through an alias service (no custom domain).** The tool uses the addy.io API (SimpleLogin as the fallback provider; config chooses) to create one address per language channel on the service's own domain, e.g. `<brand>-en@…`, `<brand>-es@…`. Every address forwards to the owner's main inbox. Adding a language to `config/channels/` creates its address on the next run with no input. That one address signs the channel up on all six platforms.
+   - **Fallback per platform:** if a platform rejects alias-service domains at signup, the worksheet marks it and that channel uses a Gmail account for that platform instead (created by hand; Google bans automated Gmail signups).
+   - One-time owner step: create the alias-service account and put its API key in `.env` (`ALIAS_API_KEY`).
 2. **Passwords.** Generates a unique strong password per account and stores it in the encrypted account register (never in the repo or logs).
 3. **Handle check.** For each channel's planned handle, checks availability on each platform where a public profile URL can be queried, and suggests variants (`gta6clips.es`, `gta6_es`, `gta6clipsES`) when taken.
 4. **Signup worksheet.** Prints (and shows in the dashboard) one checklist per channel: the email, the handle, the password reveal button, the platform's signup link, account type to choose (Professional/Creator/Page), 2FA to turn on, and a "connect" button that runs the OAuth flow to link the finished account to the system.
-5. **Verification codes.** Because every address forwards to the owner inbox, signup and login codes land in one place; the dashboard can show the latest code per address when the inbox is connected via IMAP/Gmail API.
+5. **Verification codes.** Every alias forwards to the owner inbox; with that inbox connected (Gmail API/IMAP), the dashboard pulls the latest signup or login code per language automatically and shows it next to the account.
 
 **What the owner does by hand per account:** sign up in the platform's app or site with the generated email/handle/password, add the fallback phone only if the platform requires it, turn on 2FA (authenticator app rather than SMS where offered), then press "connect" in the dashboard.
 
@@ -78,7 +79,7 @@ Monetization payouts require tax and payment details on each platform. Decide wh
 
 - [ ] Every channel defined in config, with each platform account connected and tokens healthy on the dashboard.
 - [ ] Each language channel uses exactly one email across all its platforms; no email is used twice on the same platform.
-- [ ] One run of the provisioning tool creates every channel's email address, passwords and signup worksheets from config.
+- [ ] One run of the provisioning tool creates every channel's email alias, passwords and signup worksheets from config with no owner input.
 - [ ] Secrets never appear in the repo or logs.
 
 ## Open questions

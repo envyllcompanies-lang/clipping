@@ -34,7 +34,7 @@ TikTok rejects internal-only tools, so the dashboard (Component 23) must be buil
 
 - A sign-up/login and "connect your TikTok" flow for any user.
 - A posting screen that shows the creator's nickname, lets the user choose privacy from the allowed options, toggles for comments/duet/stitch, a content-disclosure option, a preview, and explicit consent before posting, matching TikTok's posting UX guidelines.
-- Privacy policy and terms pages on our domain; verified domain for URL pulls.
+- Privacy policy and terms pages at a public URL (free hosting subdomain). Without a verified domain, use FILE_UPLOAD instead of URL pulls.
 - Demo video of the flow for the audit submission.
 
 Alternatives if the audit fails or stalls: inbox-draft mode (each post finished with a tap in the TikTok app), or an already-audited posting service.
@@ -64,4 +64,4 @@ TikTok allows multiple accounts but treats near-duplicate accounts reposting the
 
 ## Open questions
 
-- [ ] Our domain for TikTok verification and policy pages.
+- [ ] Policy page URL on a free hosting subdomain; FILE_UPLOAD since there's no custom domain.

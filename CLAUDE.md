@@ -16,7 +16,7 @@ Start with `docs/00-build-plan.md`, then the component doc for whatever you're b
 - Style is replicated from studying top GTA clipping channels' videos (format, captions, editing), stored as style profiles (13).
 - Topology: an always-on VPS records, scores and schedules; the MacBook Pro M1 renders; Postgres + a short-lived bucket connect them (25).
 - Storage: a clip is held only until every upload finishes, then deleted directly (never to the Trash) (21).
-- Accounts and API credentials are created and linked by the owner after the build; the `accounts` tool provisions emails, passwords, handles and signup worksheets, but platform signups themselves are manual (24).
+- Accounts and API credentials are created and linked by the owner after the build; the `accounts` tool automatically creates one email alias per language (addy.io API, no custom domain), passwords, handle checks and signup worksheets, and pulls verification codes, but platform signups themselves are manual (24).
 
 ## Conventions
 

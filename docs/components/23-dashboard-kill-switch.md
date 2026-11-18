@@ -53,4 +53,4 @@ Sign-up/login for any user, connect-TikTok flow, a posting screen showing the cr
 
 ## Open questions
 
-- [ ] Domain name for the dashboard and policy pages.
+- [ ] Hosting for the dashboard and policy pages (free hosting subdomain by default; custom domain optional).
