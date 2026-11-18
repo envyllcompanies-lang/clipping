@@ -48,6 +48,15 @@ Automates everything around signups except the signup itself. Social account sig
 1. **Emails: created automatically through an alias service (no custom domain).** The tool uses the addy.io API (SimpleLogin as the fallback provider; config chooses) to create one address per language channel on the service's own domain, e.g. `<brand>-en@…`, `<brand>-es@…`. Every address forwards to the owner's main inbox. Adding a language to `config/channels/` creates its address on the next run with no input. That one address signs the channel up on all six platforms.
    - **Fallback per platform:** if a platform rejects alias-service domains at signup, the worksheet marks it and that channel uses a Gmail account for that platform instead (created by hand; Google bans automated Gmail signups).
    - One-time owner step: create the alias-service account and put its API key in `.env` (`ALIAS_API_KEY`).
+   - **No-mix-up rules.** Every account must be identifiable at a glance as belonging to exactly one language channel:
+     - **Alias name:** `<brand>-<code>-<language>` (e.g. `<brand>-es-spanish@…`, `<brand>-ja-japanese@…`). Both the code and the English language name are in the address so it can't be misread.
+     - **Alias description** (set through the API): `GTA6 clips · Spanish (es) · YouTube, TikTok, Instagram, Facebook, Threads, Snapchat`.
+     - **Handles** use the same suffix on every platform: `<brand>.es`, `<brand>_es` or `<brand>es` where dots aren't allowed. Display names end in the language: `<Brand> Español`.
+     - **Inbox labels:** the tool creates a Gmail filter per alias (Gmail API settings scope) that labels incoming mail `Clipping/ES Spanish`, `Clipping/JA Japanese`, etc., so every code sits under its language.
+     - **Codes in the dashboard** are matched by the receiving alias and the sender (TikTok, Google, Meta, Snap), and shown in the row for that exact language + platform.
+     - **One account per slot:** the register has exactly one slot per (language, platform), 60 in total. The tool refuses to create a second email, password or account for a filled slot.
+     - **Connect check:** when an account is connected, the tool reads its email/handle back from the platform API and only saves it if it matches that slot's language. A mismatch (e.g. the Spanish email connected to the Japanese TikTok slot) is rejected with an error naming both.
+     - **Worksheet:** one page per language, headed with the language name, code and flag, listing all 6 platforms with that language's email, handle and password. No page mixes languages.
 2. **Passwords.** Generates a unique strong password per account and stores it in the encrypted account register (never in the repo or logs).
 3. **Handle check.** For each channel's planned handle, checks availability on each platform where a public profile URL can be queried, and suggests variants (`gta6clips.es`, `gta6_es`, `gta6clipsES`) when taken.
 4. **Signup worksheet.** Prints (and shows in the dashboard) one checklist per channel: the email, the handle, the password reveal button, the platform's signup link, account type to choose (Professional/Creator/Page), 2FA to turn on, and a "connect" button that runs the OAuth flow to link the finished account to the system.
@@ -79,6 +88,7 @@ Monetization payouts require tax and payment details on each platform. Decide wh
 
 - [ ] Every channel defined in config, with each platform account connected and tokens healthy on the dashboard.
 - [ ] Each language channel uses exactly one email across all its platforms; no email is used twice on the same platform.
+- [ ] Every alias, handle, inbox label and register slot carries the language code and name; connecting an account to the wrong language slot is rejected.
 - [ ] One run of the provisioning tool creates every channel's email alias, passwords and signup worksheets from config with no owner input.
 - [ ] Secrets never appear in the repo or logs.
 
