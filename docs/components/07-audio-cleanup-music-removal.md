@@ -33,7 +33,7 @@ A song playing in GTA 6 is not a license to publish it; Rockstar's guidance give
 ## Special cases
 
 - **Streamer plays their own music on stream (not game radio):** same treatment; it's still licensed music.
-- **Music is the joke** (character singing along to the radio): if removing music ruins the clip, the gate discards it rather than risking a claim.
+- **Music is the subject** (creator reacting to a real artist's song on the in-game radio, singing along, "Drake is on the radio in GTA 6"): removing the music ruins the clip, and these can perform very well (50K-view example in `docs/research/gta6-clip-examples.md`). Keep the music for these clips (`music_subject=true`, set by doc 31), and route them by platform: post where the platform recognizes and tags licensed music (Snapchat, TikTok, Instagram/Facebook generally attribute it), and on YouTube accept that the clip may be claimed, muted or blocked. Analytics (22) tracks claims and outcomes per platform for these clips, and the scheduler stops sending them to any platform where they keep getting blocked.
 - **Game score/cinematic music:** treated like any other music; removed or ducked.
 - **Voice chat with music bleeding through friends' mics:** separation handles it; residual check catches the rest.
 

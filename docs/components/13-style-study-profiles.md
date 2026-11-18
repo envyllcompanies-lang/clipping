@@ -45,6 +45,7 @@ The Style Study measures how the best clipping channels edit, from their actual 
 
 - Clip Builder (09): target lengths, cold-open use, ending style.
 - Reframe (10): starting layout mix and split ratio, zoom rate. The owner's reference layout (stacked: creator top, captions on the seam, gameplay bottom; `docs/assets/layout-reference.png`) always gets the largest starting share; analytics (22) then reallocates by performance.
+- Seed examples: `docs/research/gta6-clip-examples.md` (owner-captured GTA 6 clips with views) are loaded as the first labelled examples before the automated study has data.
 - Captions (11): starting text-mode mix (hook-only is the starting favorite, matching current GTA 6 clips), words per line, position, case, colors, animation style.
 - Render (12): loudness target, SFX density.
 

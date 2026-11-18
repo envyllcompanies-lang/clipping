@@ -35,11 +35,12 @@ What's working on current GTA 6 clips is **one hook caption, not subtitles of ev
 
 | Property | Default (until the style study sets it) |
 | --- | --- |
-| Font | Heavy sans-serif (e.g. Montserrat ExtraBold, open license) |
+| Text style | Two starting arms seen on current GTA 6 clips: **white rounded box with black text** (native TikTok/Snapchat look) and **white text with black outline + shadow**. Both tested; see `docs/research/gta6-clip-examples.md` |
+| Font | Heavy sans-serif (e.g. Montserrat ExtraBold, open license) for outline style; a clean bold sans (e.g. Inter/Proxima-like, open license) for the white-box style |
 | Size | ~6–7% of frame height |
 | Fill / outline | Starting style: yellow headline (white for spoken captions when shown), 6–8 px black outline, soft shadow (as in the [reference](../assets/layout-reference.png)); colors are A/B tested and the style study can replace them |
 | Emphasis | Emphasis words in an accent color (yellow or green) and 110% scale |
-| Case | All caps |
+| Case | Headline: **sentence case** as the starting favorite (most current GTA 6 hooks), ALL CAPS as a test arm |
 | Position | Middle band, max 2 lines, never covering the face or the bottom 20% platform zone; in stacked layout, centered on the seam between cam and gameplay, with the hook headline there (whole clip in hook-only mode; first, then spoken captions, in the other modes) |
 | Animation | Pop-in per line (scale 90%→100% over 80 ms); optional word-by-word highlight karaoke style |
 | Speaker colors | Different fill per speaker when diarization is on |
