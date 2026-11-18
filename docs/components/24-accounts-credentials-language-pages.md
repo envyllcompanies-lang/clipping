@@ -37,9 +37,9 @@ Automates everything around signups except the signup itself. Social account sig
 4. **Signup worksheet.** Prints (and shows in the dashboard) one checklist per channel: the email, the handle, the password reveal button, the platform's signup link, account type to choose (Professional/Creator/Page), 2FA to turn on, and a "connect" button that runs the OAuth flow to link the finished account to the system.
 5. **Verification codes.** Because every address forwards to the owner inbox, signup and login codes land in one place; the dashboard can show the latest code per address when the inbox is connected via IMAP/Gmail API.
 
-**What the owner does by hand per account:** sign up in the platform's app or site with the generated email/handle/password, verify the phone number, turn on 2FA, then press "connect" in the dashboard.
+**What the owner does by hand per account:** sign up in the platform's app or site with the generated email/handle/password, add the fallback phone only if the platform requires it, turn on 2FA (authenticator app rather than SMS where offered), then press "connect" in the dashboard.
 
-**Phone numbers:** one number per language channel, used across its platforms like the email (never twice on the same platform). Many platforms reject VoIP numbers, so plan on a real SIM or eSIM line per language. This is a cost line to budget, not something the tool can generate.
+**Phone numbers:** avoid adding a phone number wherever a platform lets you skip it. Where one is required, use the owner's fallback number, read from the `OWNER_PHONE` secret (`.env` locally, secret manager in production; never committed, never written to config or logs). The worksheet marks per platform whether a phone is required or skippable. Reusing one number across several language accounts on the same platform can hit per-number account limits or link those accounts; if that happens, add a dedicated SIM/eSIM line for the affected language.
 
 **Global launch rollout:** the tool reads which languages to launch from config (chosen by the radar's per-language data), so the full set of addresses, handles and worksheets for every language can be created in one run before signups start.
 
