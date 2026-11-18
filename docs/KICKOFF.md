@@ -17,6 +17,7 @@ HOW TO WORK
 - Backtest on your own: build ground-truth datasets from real streams (GTA VI categories are already live on Twitch and Kick with big streamers playing early; use their VODs and viewer clips with vod_offset; GTA V fills gaps). Run `make backtest-all` after every meaningful change. Never accept a change that makes any metric worse than the baseline; when a metric misses its bar, study the worst examples in the report, fix, and re-run until it passes.
 - Work autonomously. When something fails, find the root cause, fix it and re-run. Only stop to ask me if a decision in CLAUDE.md would have to change or you need a key/account only I can create (list exactly what and why, then continue with everything that doesn't depend on it, using mocks).
 - Commit after each passing component with a clear message; push to main. Keep a running BUILD_LOG.md (what's done, metrics, what's next, anything blocked on me).
+- Layout: test layouts as A/B arms (doc 10). Start with the stacked layout from docs/assets/layout-reference.png (creator top, captions middle, gameplay bottom) as the favorite; let analytics pick winners per language and platform.
 - Run locally on my MacBook Pro M1 first. Detect RAM at startup and size models accordingly (doc 06). Use VideoToolbox for encoding (doc 12).
 - Secrets only in .env (template: .env.example). Never commit secrets.
 

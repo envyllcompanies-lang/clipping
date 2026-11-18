@@ -40,7 +40,7 @@ Creator and their radar signals; moment signals at the peak (chat velocity, clip
 | Heatmap weights | Viewer clip positions, then our performance | Component 05 signal weights |
 | Creator weights | Performance by source creator | Component 01 signal weights |
 | Score floor | Performance vs moment score | Component 15 minimum score per channel |
-| Format effects | Performance by length, hook, cold open, layout, profile | Components 09, 11, 13 defaults; A/B arm allocation |
+| Format effects | Performance by length, hook, cold open, layout (stacked vs full gameplay vs small cam; split ratio), caption colors, profile | Components 09, 10, 11, 13 defaults; A/B arm allocation per language channel and platform |
 | Posting times | Performance by hour/weekday per account | Component 16 slots |
 | Platform mix | Performance and monetization progress per platform | Volume allocation in 16 |
 
