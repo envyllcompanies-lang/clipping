@@ -21,12 +21,14 @@ Reframe & Layout converts 16:9 stream footage into a 9:16 vertical frame: it fin
 
 | Layout | When | Composition (1080×1920) |
 | --- | --- | --- |
-| Stacked | Facecam exists and the reaction matters (default for streams) | Facecam top ~35–40%, gameplay bottom ~60–65% |
+| **Stacked (house layout, default)** | Facecam exists (almost every stream) | Creator facecam top ~40% (0–768 px), caption band centered on the seam, gameplay bottom ~60% (768–1920 px). See [reference](../assets/layout-reference.png) |
 | Full gameplay | No facecam, or the moment is purely visual | Gameplay crop fills the frame, tracking the action |
 | Gameplay + small cam | Facecam exists but action needs most of the frame | Gameplay fills; facecam in a corner bubble clear of caption zone |
 | Split speakers | Two creators' POVs of the same moment (from two recordings) | Top/bottom halves |
 
-The style profile (13) sets the default layout and split ratio, copied from the reference channels.
+**House layout (owner decision):** creator on top, captions in the middle on the seam, gameplay at the bottom, as in the [reference screenshot](../assets/layout-reference.png). Every clip with a detectable facecam uses it. The other layouts are fallbacks only: full gameplay when there's no facecam or it's hidden, gameplay + small cam never by default. Style profiles (13) may fine-tune the split (35–45% top) and caption styling within this layout, but can't switch the default to another layout.
+
+Facecam panel: crop the facecam box with ~10% padding, scale to fill the 1080-wide top panel (crop sides, never letterbox), keep the face in the upper-middle of the panel. Gameplay panel: center crop of the game rect following the action (Step 3). No border between panels; the caption band covers the seam.
 
 ## Step 3 — Gameplay crop path
 
@@ -63,4 +65,4 @@ Keep key action, faces and captions in the middle band; leave about the bottom 2
 
 ## Open questions
 
-- [ ] Default stacked split ratio, measured from reference channels in the style study (13).
+- [x] Default layout: stacked, creator top ~40% / captions on seam / gameplay bottom ~60% (owner decision; reference in docs/assets/layout-reference.png).

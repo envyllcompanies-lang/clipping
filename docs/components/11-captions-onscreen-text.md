@@ -23,10 +23,10 @@ This component turns word timestamps into animated, readable captions and adds h
 | --- | --- |
 | Font | Heavy sans-serif (e.g. Montserrat ExtraBold, open license) |
 | Size | ~6–7% of frame height |
-| Fill / outline | White fill, 6–8 px black outline, slight shadow |
+| Fill / outline | Yellow fill (#FFE135-ish) for the hook/headline and white for spoken captions, 6–8 px black outline, soft drop shadow (see [reference](../assets/layout-reference.png)) |
 | Emphasis | Emphasis words in an accent color (yellow or green) and 110% scale |
 | Case | All caps |
-| Position | Middle band, above the bottom 20% platform zone; in stacked layout, on the seam between cam and gameplay |
+| Position | Centered on the seam between the creator panel (top) and gameplay (bottom), max 2 lines, never covering the face or the bottom 20% platform zone. The hook headline (e.g. "JASON AND LUCIA REUNITE GTA 6") sits here first, then spoken captions take the same band |
 | Animation | Pop-in per line (scale 90%→100% over 80 ms); optional word-by-word highlight karaoke style |
 | Speaker colors | Different fill per speaker when diarization is on |
 
