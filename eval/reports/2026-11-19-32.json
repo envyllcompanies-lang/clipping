@@ -2,9 +2,9 @@
   "stage": "32",
   "name": "Creator Profile & Reaction (real VODs)",
   "passed": true,
-  "seconds": 15.4,
+  "seconds": 13.13,
   "dataset_version": "viewer_clips@2026-11-18",
-  "code_version": "dea23a7",
+  "code_version": "38478da",
   "metrics": [
     {
       "metric": "reaction_gain_fit_half",

@@ -7,9 +7,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from functools import lru_cache
 
+import emoji
 import numpy as np
-
-EMOJI_RE = re.compile("[\U0001f300-\U0001faff☀-➿]")
 
 
 @dataclass
@@ -33,7 +32,7 @@ def is_emote_heavy(m: Msg) -> bool:
     words = m.text.split()
     if not words:
         return False
-    emo = m.emotes + len(EMOJI_RE.findall(m.text))
+    emo = m.emotes + emoji.emoji_count(m.text)
     return emo / max(len(words), 1) >= 0.5
 
 

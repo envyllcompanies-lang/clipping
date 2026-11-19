@@ -61,6 +61,26 @@ captions, 12 render timing on the M1, 13 style study (reference videos: see Need
 week of posts), 25 end-to-end on a live stream with live accounts, 28 language ranking (weeks of data), 31 type
 precision / per-type IoU, 32 segment exclusion / catchphrases / collab alignment.
 
+## Repo audit (docs/repos.md)
+
+`scripts/repo_audit.py` checks every repo in `docs/repos.md` for license and activity and writes
+[docs/repo-audit.md](docs/repo-audit.md) (82 repos: 61 reuse ok, 9 reuse with care, 3 dependency only, 1 CLI only,
+6 study only, 2 dead links). Licenses GitHub can't classify were checked on PyPI or in the license file and are marked
+"checked:" with the source.
+
+- **Already built on listed repos:** streamlink (recording, VOD ranges), FFmpeg (as a separate process), Demucs
+  (now pinned to the maintained 4.1 release), PANNs, faster-whisper, lingua-py, OpenCV + YuNet, tesseract, libass,
+  imagehash. Nothing AGPL (Postiz, Ultralytics, MinIO, addy.io/SimpleLogin source) is imported; those are study-only.
+- **Swapped in:** the `emoji` package (BSD, active) replaces two hand-written emoji regexes (headline overlay, chat
+  features); one of them had already missed a two-emoji ending.
+- **Removed:** piper-tts, pyopenjtalk-plus, pykakasi, fonttools (left over from the deleted synthetic datasets;
+  piper pulled in GPL espeak-ng).
+- **Kept our own code** where it's small, tested and fits the spec better than a library: the Postgres job queue
+  (procrastinate is the listed alternative if it ever needs more), the bandits (repos.md itself says NumPy is enough).
+- **Next gaps, by repo:** YouTube as a footage source: yt-dlp (Unlicense) to detect and fetch live streams without
+  API quota, plus xenova/chat-downloader (MIT, last release 2025-11) for live chat. Kick clips: KickLib (MIT, C#) as
+  the API reference. Better reaction/voice signals: silero-vad (MIT), MediaPipe face landmarks (Apache-2.0).
+
 ## Research update (docs/research/gta6-clip-examples.md, Nov 18)
 
 - **Text styles** (11): two headline arms, white rounded box + black text (57%) and white text + black outline (43%),

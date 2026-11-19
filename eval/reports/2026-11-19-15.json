@@ -2,9 +2,9 @@
   "stage": "15",
   "name": "Auto-Gate",
   "passed": true,
-  "seconds": 0.22,
+  "seconds": 0.35,
   "dataset_version": "mechanics@v1",
-  "code_version": "dea23a7",
+  "code_version": "38478da",
   "metrics": [
     {
       "metric": "repeat_to_same_account_blocked",

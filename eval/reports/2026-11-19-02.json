@@ -2,13 +2,13 @@
   "stage": "02",
   "name": "Stream Recorder (real live stream)",
   "passed": true,
-  "seconds": 229.2,
-  "dataset_version": "live:ishowspeed",
-  "code_version": "dea23a7",
+  "seconds": 228.6,
+  "dataset_version": "live:squeezie",
+  "code_version": "38478da",
   "metrics": [
     {
       "metric": "recording_started_s",
-      "value": 4.503416538238525,
+      "value": 4.003419399261475,
       "baseline": 3.003000020980835,
       "bar": 60,
       "direction": "lower",
@@ -35,7 +35,7 @@
     },
     {
       "metric": "extract_p95_s",
-      "value": 0.2822105884552002,
+      "value": 0.314467191696167,
       "baseline": 0.28371143341064453,
       "bar": 10.0,
       "direction": "lower",
@@ -54,7 +54,7 @@
   ],
   "worst_examples": [],
   "info": {
-    "channel": "ishowspeed",
-    "viewers": 36301
+    "channel": "squeezie",
+    "viewers": 48166
   }
 }

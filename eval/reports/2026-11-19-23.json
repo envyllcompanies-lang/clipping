@@ -2,9 +2,9 @@
   "stage": "23",
   "name": "Dashboard & Kill Switch",
   "passed": true,
-  "seconds": 4.59,
+  "seconds": 4.18,
   "dataset_version": "simulated@v1",
-  "code_version": "dea23a7",
+  "code_version": "38478da",
   "metrics": [
     {
       "metric": "alerts_fire",

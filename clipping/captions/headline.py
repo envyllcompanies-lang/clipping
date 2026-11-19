@@ -11,14 +11,17 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
+import emoji
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from clipping.captions.ass import font_for
 
 EMOJI_FONT = Path("/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf")
-_EMO = "[\U0001f300-\U0001faff\u2600-\u27bf\u2b50\u2b55\u2934\u2935\u3030\u303d\u3297\u3299]"
-_MOD = "[\ufe0f\U0001f3fb-\U0001f3ff]*"
-EMOJI_RE = re.compile(f"([\U0001f1e6-\U0001f1ff]{{2}}|{_EMO}{_MOD}(?:\u200d{_EMO}{_MOD})*)")
+# Full Unicode emoji list from the `emoji` package (BSD; docs/repo-audit.md): ZWJ sequences, skin tones and flags.
+# Longest first so a sequence wins over its parts.
+EMOJI_RE = re.compile(
+    "(" + "|".join(re.escape(e) for e in sorted(emoji.EMOJI_DATA, key=len, reverse=True)) + ")"
+)
 KEEP = re.compile(r"\b(GTA\s?(6|VI)|NPC|NPCs|AI|FIB|LSPD|VCPD|II|III|IV)\b", re.I)
 NO_CASE = {"ja", "ar"}
 

@@ -2,9 +2,9 @@
   "stage": "04",
   "name": "Platform Clips & VOD Ingest (real)",
   "passed": true,
-  "seconds": 7.34,
-  "dataset_version": "helix-live@2026-11-19T14",
-  "code_version": "dea23a7",
+  "seconds": 11.57,
+  "dataset_version": "helix-live@2026-11-19T19",
+  "code_version": "38478da",
   "metrics": [
     {
       "metric": "mapped_consistent",
@@ -37,8 +37,8 @@
   "worst_examples": [],
   "info": {
     "clips": 1000,
-    "with_vod_offset": 912,
-    "vod_available": 912,
+    "with_vod_offset": 886,
+    "vod_available": 886,
     "median_minutes_moment_to_clip": 0.9
   }
 }
