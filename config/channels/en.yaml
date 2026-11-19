@@ -1,0 +1,38 @@
+code: en
+key: gta6-en
+language: English
+native_name: English
+flag: 🇺🇸
+time_zone: America/New_York
+stream_language: en
+source_platforms: Twitch, YouTube, Kick
+rpm_tier: 1.0
+style_profile: house
+voice: hype
+score_floor: 0.35
+active: true
+platforms:
+- youtube
+- tiktok
+- instagram
+- facebook
+- threads
+- snapchat
+hashtags_core:
+- '#GTA6'
+- '#GTAVI'
+- '#gaming'
+posting_slots:
+- 09:30
+- '12:15'
+- '15:00'
+- '18:30'
+- '21:00'
+warmup_days: 21
+profanity:
+  youtube: mask
+  tiktok: mask
+  instagram: show
+  facebook: mask
+  threads: show
+  snapchat: mask

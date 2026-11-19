@@ -1,0 +1,12 @@
+{
+  "stage": "23",
+  "accepted_at": "2026-11-18T20:38:31+00:00",
+  "dataset_version": "simulated@v1",
+  "code_version": "e238cba",
+  "metrics": {
+    "alerts_fire": 1.0,
+    "kill_switch_removes": 1.0,
+    "undeletable_become_tasks": 1.0,
+    "screens_within_3_taps": 1.0
+  }
+}

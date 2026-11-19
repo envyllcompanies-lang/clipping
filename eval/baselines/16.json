@@ -1,0 +1,15 @@
+{
+  "stage": "16",
+  "accepted_at": "2026-11-18T20:39:40+00:00",
+  "dataset_version": "fakeplatforms@v1",
+  "code_version": "e238cba",
+  "metrics": {
+    "one_clip_every_platform": 1.0,
+    "no_double_posts": 1.0,
+    "fallback_tasks_created": 1.0,
+    "fields_valid": 1.0,
+    "media_deleted_after_upload": 1.0,
+    "rate_limit_respected": 1.0,
+    "spacing_respected": 1.0
+  }
+}

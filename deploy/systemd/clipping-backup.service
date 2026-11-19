@@ -1,0 +1,7 @@
+[Unit]
+Description=Daily Postgres backup
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/clipping
+EnvironmentFile=/opt/clipping/.env
+ExecStart=/opt/clipping/scripts/backup.sh /var/backups/clipping

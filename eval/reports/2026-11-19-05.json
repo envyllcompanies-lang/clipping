@@ -1,0 +1,186 @@
+{
+  "stage": "05",
+  "name": "Moment Heatmap (real VODs)",
+  "passed": true,
+  "seconds": 4.16,
+  "dataset_version": "viewer_clips@2026-11-18",
+  "code_version": "38478da",
+  "metrics": [
+    {
+      "metric": "recall_at_20",
+      "value": 0.2,
+      "baseline": 0.2,
+      "bar": 0.7,
+      "direction": "higher",
+      "passed": true,
+      "reason": "below target 0.7 (target only)"
+    },
+    {
+      "metric": "precision_at_20",
+      "value": 0.4625,
+      "baseline": 0.4625,
+      "bar": 0.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [
+    {
+      "example_id": "evelone2004@10741s",
+      "metric": "missed",
+      "value": 9055.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "alanzoka@9725s",
+      "metric": "missed",
+      "value": 3359.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "alanzoka@12027s",
+      "metric": "missed",
+      "value": 1069.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "olesha@11736s",
+      "metric": "missed",
+      "value": 545.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "montanablack88@12789s",
+      "metric": "missed",
+      "value": 517.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "montanablack88@9904s",
+      "metric": "missed",
+      "value": 498.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "montanablack88@8579s",
+      "metric": "missed",
+      "value": 406.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "dvniel_play@9211s",
+      "metric": "missed",
+      "value": 365.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "olesha@7015s",
+      "metric": "missed",
+      "value": 315.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "montanablack88@8224s",
+      "metric": "missed",
+      "value": 202.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "evelone2004@14266s",
+      "metric": "missed",
+      "value": 154.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "dvniel_play@10119s",
+      "metric": "missed",
+      "value": 143.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "montanablack88@8181s",
+      "metric": "missed",
+      "value": 142.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "dvniel_play@14086s",
+      "metric": "missed",
+      "value": 133.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "evelone2004@8895s",
+      "metric": "missed",
+      "value": 128.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "olesha@8486s",
+      "metric": "missed",
+      "value": 127.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "jefe@2792s",
+      "metric": "missed",
+      "value": 124.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "olesha@9777s",
+      "metric": "missed",
+      "value": 109.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "evelone2004@8082s",
+      "metric": "missed",
+      "value": 92.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "evelone2004@8488s",
+      "metric": "missed",
+      "value": 85.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "evelone2004@8682s",
+      "metric": "missed",
+      "value": 66.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "olesha@9883s",
+      "metric": "missed",
+      "value": 65.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "alanzoka@10173s",
+      "metric": "missed",
+      "value": 49.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "olesha@8387s",
+      "metric": "missed",
+      "value": 48.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    },
+    {
+      "example_id": "montanablack88@14062s",
+      "metric": "missed",
+      "value": 46.0,
+      "notes": "top viewer-clipped moment outside the top windows"
+    }
+  ],
+  "info": {
+    "vods": 8,
+    "extra_signals": {
+      "reaction": 0.5
+    }
+  }
+}

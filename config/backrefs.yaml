@@ -1,0 +1,11 @@
+# Standalone test (doc 09): openings that depend on earlier context, per language.
+en: ["like i said", "as i said", "that guy again", "again", "this guy again", "like before", "remember when", "same as before", "back to"]
+es: ["como dije", "otra vez", "como antes", "ese tipo otra vez", "lo que dije"]
+pt: ["como eu disse", "de novo", "como antes", "esse cara de novo"]
+fr: ["comme j'ai dit", "encore lui", "comme avant", "encore une fois"]
+de: ["wie gesagt", "schon wieder", "wie vorhin", "der typ schon wieder"]
+ru: ["как я говорил", "опять", "снова этот", "как раньше"]
+tr: ["dediğim gibi", "yine", "yine o adam", "daha önce"]
+vi: ["như tôi nói", "lại nữa", "lại thằng đó", "như lúc nãy"]
+ar: ["كما قلت", "مرة أخرى", "نفس الشخص", "زي ما قلت"]
+ja: ["さっき言った", "また", "またこいつ", "前みたいに"]

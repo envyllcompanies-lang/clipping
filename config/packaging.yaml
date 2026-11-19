@@ -1,0 +1,203 @@
+# Native-language fallback copy (used when no LLM key is set). {creator} {event} {n} are filled in code.
+# Patterns: reaction, question, number, creator_first (doc 14). Never translated: each language written natively.
+limits:
+  youtube: {title: 100, title_soft: 60, description: 5000, hashtags: [3, 5]}
+  tiktok: {caption: 2200, caption_soft: 150, hashtags: [3, 5]}
+  instagram: {caption: 2200, hashtags: [3, 5]}
+  facebook: {description: 2200, hashtags: [1, 3]}
+  threads: {text: 500, hashtags: [0, 1]}
+  snapchat: {text: 160, hashtags: [3, 5]}
+  hook_line: 40
+events:
+  en: {death: "wasted", arrest: "busted", crash: "crash", wanted: "police chase", mission: "mission", peak: "moment"}
+  es: {death: "muerte", arrest: "arresto", crash: "choque", wanted: "persecución", mission: "misión", peak: "momento"}
+  pt: {death: "morte", arrest: "prisão", crash: "batida", wanted: "perseguição", mission: "missão", peak: "momento"}
+  fr: {death: "mort", arrest: "arrestation", crash: "crash", wanted: "course-poursuite", mission: "mission", peak: "moment"}
+  de: {death: "Tod", arrest: "Festnahme", crash: "Crash", wanted: "Verfolgungsjagd", mission: "Mission", peak: "Moment"}
+  ru: {death: "смерть", arrest: "арест", crash: "авария", wanted: "погоня", mission: "миссия", peak: "момент"}
+  tr: {death: "ölüm", arrest: "tutuklama", crash: "kaza", wanted: "kovalamaca", mission: "görev", peak: "an"}
+  vi: {death: "chết", arrest: "bị bắt", crash: "tai nạn", wanted: "truy đuổi", mission: "nhiệm vụ", peak: "khoảnh khắc"}
+  ar: {death: "موت", arrest: "اعتقال", crash: "حادث", wanted: "مطاردة", mission: "مهمة", peak: "لحظة"}
+  ja: {death: "死亡", arrest: "逮捕", crash: "大事故", wanted: "カーチェイス", mission: "ミッション", peak: "瞬間"}
+hooks:
+  en:
+    reaction: ["HE DID NOT SEE THAT COMING", "THIS WENT WRONG FAST", "NOBODY EXPECTED THIS", "WAIT FOR THE ENDING", "THAT WAS INSANE"]
+    question: ["How did he survive this?", "Did that really just happen?", "Who saw this coming?", "Can he get away?"]
+    number: ["{n} stars and zero plan", "{n} seconds of pure chaos", "{n} cops vs one car"]
+    creator_first: ["{creator} vs the entire police force", "{creator} did not think this through", "{creator}'s worst idea yet"]
+  es:
+    reaction: ["NO SE LO ESPERABA", "ESTO SALIÓ FATAL", "NADIE VIO ESTO VENIR", "ESPERA AL FINAL", "QUÉ LOCURA"]
+    question: ["¿Cómo sobrevivió a esto?", "¿De verdad acaba de pasar?", "¿Quién se lo esperaba?", "¿Logrará escapar?"]
+    number: ["{n} estrellas y ningún plan", "{n} segundos de puro caos", "{n} policías contra un coche"]
+    creator_first: ["{creator} contra toda la policía", "{creator} no lo pensó bien", "La peor idea de {creator}"]
+  pt:
+    reaction: ["ELE NÃO ESPERAVA ISSO", "DEU MUITO ERRADO", "NINGUÉM ESPERAVA", "ESPERA O FINAL", "QUE LOUCURA"]
+    question: ["Como ele sobreviveu a isso?", "Isso aconteceu mesmo?", "Quem esperava essa?", "Será que ele escapa?"]
+    number: ["{n} estrelas e nenhum plano", "{n} segundos de puro caos", "{n} policiais contra um carro"]
+    creator_first: ["{creator} contra a polícia inteira", "{creator} não pensou direito", "A pior ideia do {creator}"]
+  fr:
+    reaction: ["IL NE L'A PAS VU VENIR", "ÇA A MAL TOURNÉ", "PERSONNE NE S'Y ATTENDAIT", "ATTENDS LA FIN", "C'EST DINGUE"]
+    question: ["Comment il a survécu à ça ?", "C'est vraiment arrivé ?", "Qui l'avait vu venir ?", "Va-t-il s'en sortir ?"]
+    number: ["{n} étoiles et aucun plan", "{n} secondes de pur chaos", "{n} flics contre une voiture"]
+    creator_first: ["{creator} contre toute la police", "{creator} n'a pas réfléchi", "La pire idée de {creator}"]
+  de:
+    reaction: ["DAMIT HAT ER NICHT GERECHNET", "DAS GING SCHNELL SCHIEF", "KEINER HAT DAS ERWARTET", "WARTE AUFS ENDE", "WIE KRANK"]
+    question: ["Wie hat er das überlebt?", "Ist das gerade echt passiert?", "Wer hat das kommen sehen?", "Kommt er davon?"]
+    number: ["{n} Sterne und kein Plan", "{n} Sekunden pures Chaos", "{n} Cops gegen ein Auto"]
+    creator_first: ["{creator} gegen die ganze Polizei", "{creator} hat nicht nachgedacht", "{creator}s schlechteste Idee"]
+  ru:
+    reaction: ["ОН ЭТОГО НЕ ОЖИДАЛ", "ВСЁ ПОШЛО НЕ ТАК", "НИКТО ТАКОГО НЕ ЖДАЛ", "ЖДИ КОНЦОВКУ", "ЭТО БЕЗУМИЕ"]
+    question: ["Как он это пережил?", "Это правда сейчас произошло?", "Кто такое ожидал?", "Сможет ли он уйти?"]
+    number: ["{n} звёзд и никакого плана", "{n} секунд чистого хаоса", "{n} копов против одной машины"]
+    creator_first: ["{creator} против всей полиции", "{creator} не подумал", "Худшая идея {creator}"]
+  tr:
+    reaction: ["BUNU HİÇ BEKLEMİYORDU", "İŞLER HIZLA KARIŞTI", "KİMSE BUNU BEKLEMEDİ", "SONUNU BEKLE", "BU ÇILGINLIK"]
+    question: ["Bundan nasıl kurtuldu?", "Bu gerçekten oldu mu?", "Bunu kim bekliyordu?", "Kaçabilecek mi?"]
+    number: ["{n} yıldız ve sıfır plan", "{n} saniyelik saf kaos", "{n} polis bir arabaya karşı"]
+    creator_first: ["{creator} bütün polise karşı", "{creator} hiç düşünmedi", "{creator}'ın en kötü fikri"]
+  vi:
+    reaction: ["KHÔNG AI NGỜ ĐƯỢC", "MỌI THỨ ĐI SAI QUÁ NHANH", "KHÔNG AI LƯỜNG TRƯỚC", "XEM ĐẾN CUỐI NHÉ", "QUÁ ĐIÊN RỒ"]
+    question: ["Làm sao anh ấy sống sót?", "Chuyện này thật sự vừa xảy ra?", "Ai mà ngờ được?", "Liệu có thoát được không?"]
+    number: ["{n} sao và không có kế hoạch", "{n} giây hỗn loạn", "{n} cảnh sát đấu một chiếc xe"]
+    creator_first: ["{creator} đối đầu cả sở cảnh sát", "{creator} chưa nghĩ kỹ", "Ý tưởng tệ nhất của {creator}"]
+  ar:
+    reaction: ["ما توقع هذا أبداً", "كل شيء خرب بسرعة", "ما أحد توقع هذا", "انتظر النهاية", "هذا جنون"]
+    question: ["كيف نجا من هذا؟", "هل هذا حدث فعلاً؟", "من توقع هذا؟", "هل سيهرب؟"]
+    number: ["{n} نجوم وبدون خطة", "{n} ثواني من الفوضى", "{n} شرطة ضد سيارة واحدة"]
+    creator_first: ["{creator} ضد الشرطة كلها", "{creator} ما فكر صح", "أسوأ فكرة لـ {creator}"]
+  ja:
+    reaction: ["まさかの展開", "一瞬で大惨事", "誰も予想できない", "最後まで見て", "ヤバすぎる"]
+    question: ["どうやって生き延びた？", "今の本当に起きた？", "誰が予想できた？", "逃げ切れるのか？"]
+    number: ["星{n}つで無計画", "{n}秒の大混乱", "警官{n}人対車1台"]
+    creator_first: ["{creator}対警察全員", "{creator}、何も考えてない", "{creator}史上最悪のアイデア"]
+titles:
+  en: ["{creator} {event} in GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  es: ["{creator} y su {event} en GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  pt: ["{creator} e a {event} no GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  fr: ["{creator} et la {event} dans GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6 : {hook}"]
+  de: ["{creator}: {event} in GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  ru: ["{creator}: {event} в GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  tr: ["{creator} GTA 6'da {event} | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  vi: ["{creator} {event} trong GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  ar: ["{creator} {event} في GTA 6 | {hook}", "{hook} 😳 #{creator}", "GTA 6: {hook}"]
+  ja: ["【GTA6】{creator}の{event} | {hook}", "{hook} 😳 #{creator}", "GTA6：{hook}"]
+credit:
+  en: "Clip from @{creator} ({platform})"
+  es: "Clip de @{creator} ({platform})"
+  pt: "Clipe de @{creator} ({platform})"
+  fr: "Clip de @{creator} ({platform})"
+  de: "Clip von @{creator} ({platform})"
+  ru: "Клип с канала @{creator} ({platform})"
+  tr: "@{creator} yayınından klip ({platform})"
+  vi: "Clip từ @{creator} ({platform})"
+  ar: "مقطع من @{creator} ({platform})"
+  ja: "@{creator}（{platform}）の配信より"
+cta:
+  en: ["Follow for daily GTA 6 clips", "More GTA 6 chaos every day", "Which part got you?"]
+  es: ["Síguenos para clips diarios de GTA 6", "Más caos de GTA 6 cada día", "¿Qué parte te mató?"]
+  pt: ["Siga para clipes diários de GTA 6", "Mais caos de GTA 6 todo dia", "Qual parte te pegou?"]
+  fr: ["Abonne-toi pour des clips GTA 6 chaque jour", "Plus de chaos GTA 6 tous les jours", "Quel moment t'a eu ?"]
+  de: ["Folge für tägliche GTA 6 Clips", "Jeden Tag mehr GTA 6 Chaos", "Welcher Moment hat dich?"]
+  ru: ["Подпишись на ежедневные клипы GTA 6", "Больше хаоса GTA 6 каждый день", "Какой момент лучший?"]
+  tr: ["Günlük GTA 6 klipleri için takip et", "Her gün daha fazla GTA 6 kaosu", "En çok hangi an güldürdü?"]
+  vi: ["Theo dõi để xem clip GTA 6 mỗi ngày", "Thêm hỗn loạn GTA 6 mỗi ngày", "Đoạn nào hay nhất?"]
+  ar: ["تابعنا لمقاطع GTA 6 يومياً", "فوضى GTA 6 كل يوم", "أي لحظة أعجبتك؟"]
+  ja: ["毎日GTA6の切り抜きを投稿中", "GTA6の神シーンを毎日", "どこが一番ヤバかった？"]
+dynamic_tags:
+  en: ["#GTA6Clips", "#GTARP", "#GTAVI", "#Rockstar", "#ViceCity", "#gamingclips", "#funnymoments", "#Shorts"]
+  es: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#clipsgaming", "#momentosgraciosos", "#Shorts"]
+  pt: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#clipsgamer", "#momentosengraçados", "#Shorts"]
+  fr: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#clipsgaming", "#momentsdrôles", "#Shorts"]
+  de: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#gamingclips", "#lustigemomente", "#Shorts"]
+  ru: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#игровыеклипы", "#смешныемоменты", "#Shorts"]
+  tr: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#oyunklipleri", "#komikanlar", "#Shorts"]
+  vi: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#clipgame", "#khoảnhkhắchài", "#Shorts"]
+  ar: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#مقاطع_العاب", "#لحظات_مضحكة", "#Shorts"]
+  ja: ["#GTA6Clips", "#GTARP", "#GTAVI", "#ViceCity", "#ゲーム実況", "#切り抜き", "#Shorts"]
+# --- Patterns from current GTA 6 clips (docs/research/gta6-clip-examples.md; doc 14 writing rules) ---
+# Starting shares of hook patterns; analytics (22) reallocates. creator_event = creator + what happened + "in GTA 6"
+# + 1-2 emojis; quote = the creator's own line in quotes + context.
+hook_pattern_arms: {creator_event: 0.4, quote: 0.25, reaction: 0.12, creator_first: 0.1, question: 0.08, number: 0.05}
+# Emoji endings match the reaction: laughter 😭🤣, shock 😳😨, hype 🔥 (6 of 7 examples end with 1-3 emojis)
+reaction_emojis:
+  laugh: ["😭", "🤣", "😭😭", "💀"]
+  shock: ["😳", "😨", "😳🔥", "🤯"]
+  hype: ["🔥", "😳🔥", "🔥🔥"]
+  sad: ["😭💔", "💔🥀", "😭"]
+type_reaction:
+  comedy: laugh
+  death: laugh
+  arrest: laugh
+  crash: shock
+  cutscene_reveal: shock
+  discovery: shock
+  showcase: hype
+  chase: hype
+  firefight: hype
+  stunt: hype
+  heist: hype
+  music_celebrity: shock
+  peak: laugh
+creator_event:   # word order per language; {what} from `what`
+  en: "{creator} {what} in GTA 6"
+  es: "{creator} {what} en GTA 6"
+  pt: "{creator} {what} no GTA 6"
+  fr: "{creator} {what} dans GTA 6"
+  de: "{creator} {what} in GTA 6"
+  ru: "{creator} {what} в GTA 6"
+  tr: "{creator} GTA 6'da {what}"
+  vi: "{creator} {what} trong GTA 6"
+  ar: "{creator} {what} في GTA 6"
+  ja: "{creator}、GTA6で{what}"
+what:
+  en: {comedy: ["is losing it", "found the funniest NPC", "can't stop laughing"], death: ["got wasted", "died in the dumbest way"], arrest: ["got arrested for the first time", "got busted"], crash: ["survived a crash", "crashed hard"], cutscene_reveal: ["reacts to the story", "wasn't ready for this cutscene"], discovery: ["found a hidden detail", "discovers something crazy"], showcase: ["shows off the map", "checks out the details"], chase: ["escaped the cops", "starts a police chase"], firefight: ["took on the whole police force", "started a shootout"], stunt: ["pulled off a crazy stunt", "hit an insane jump"], heist: ["pulled off a heist", "robbed a store"], music_celebrity: ["listens to the radio", "found this song on the radio"], peak: ["lost it", "can't believe this"]}
+  es: {comedy: ["no puede parar de reír", "encontró el NPC más gracioso"], death: ["murió de la forma más tonta", "acabó muerto"], arrest: ["fue arrestado por primera vez", "acabó arrestado"], crash: ["sobrevivió a un choque", "tuvo un choque brutal"], cutscene_reveal: ["reacciona a la historia", "no estaba listo para esta escena"], discovery: ["encontró un detalle oculto", "descubre algo increíble"], showcase: ["enseña el mapa", "mira todos los detalles"], chase: ["escapó de la policía", "empieza una persecución"], firefight: ["se enfrentó a toda la policía", "empezó un tiroteo"], stunt: ["hizo un salto increíble", "logró una acrobacia loca"], heist: ["hizo un atraco", "robó una tienda"], music_celebrity: ["escucha la radio", "encontró esta canción en la radio"], peak: ["no se lo cree", "perdió la cabeza"]}
+  pt: {comedy: ["não para de rir", "achou o NPC mais engraçado"], death: ["morreu do jeito mais bobo", "acabou morto"], arrest: ["foi preso pela primeira vez", "acabou preso"], crash: ["sobreviveu a uma batida", "bateu feio"], cutscene_reveal: ["reage à história", "não estava pronto pra essa cena"], discovery: ["achou um detalhe escondido", "descobre algo insano"], showcase: ["mostra o mapa", "repara nos detalhes"], chase: ["fugiu da polícia", "começa uma perseguição"], firefight: ["enfrentou a polícia inteira", "começou um tiroteio"], stunt: ["fez um salto insano", "mandou uma manobra absurda"], heist: ["fez um assalto", "roubou uma loja"], music_celebrity: ["escuta o rádio", "achou essa música no rádio"], peak: ["não acredita nisso", "surtou"]}
+  fr: {comedy: ["n'arrête pas de rire", "a trouvé le PNJ le plus drôle"], death: ["est mort de la façon la plus bête", "s'est fait tuer"], arrest: ["se fait arrêter pour la première fois", "s'est fait arrêter"], crash: ["survit à un crash", "a fait un énorme crash"], cutscene_reveal: ["réagit à l'histoire", "n'était pas prêt pour cette cinématique"], discovery: ["trouve un détail caché", "découvre un truc fou"], showcase: ["montre la map", "regarde tous les détails"], chase: ["échappe à la police", "lance une course-poursuite"], firefight: ["affronte toute la police", "lance une fusillade"], stunt: ["réussit une cascade folle", "fait un saut incroyable"], heist: ["réussit un braquage", "braque un magasin"], music_celebrity: ["écoute la radio", "tombe sur ce son à la radio"], peak: ["n'en revient pas", "pète un câble"]}
+  de: {comedy: ["kann nicht mehr vor Lachen", "hat den lustigsten NPC gefunden"], death: ["stirbt auf die dümmste Art", "wurde ausgeschaltet"], arrest: ["wird zum ersten Mal verhaftet", "wurde verhaftet"], crash: ["überlebt einen Crash", "baut einen heftigen Crash"], cutscene_reveal: ["reagiert auf die Story", "war nicht bereit für diese Szene"], discovery: ["findet ein verstecktes Detail", "entdeckt etwas Krasses"], showcase: ["zeigt die Map", "checkt die Details"], chase: ["entkommt der Polizei", "startet eine Verfolgungsjagd"], firefight: ["legt sich mit der ganzen Polizei an", "startet eine Schießerei"], stunt: ["schafft einen krassen Stunt", "macht einen irren Sprung"], heist: ["zieht einen Überfall durch", "raubt einen Laden aus"], music_celebrity: ["hört Radio", "findet diesen Song im Radio"], peak: ["kann es nicht glauben", "rastet aus"]}
+  ru: {comedy: ["не может перестать смеяться", "нашёл самого смешного NPC"], death: ["умер самым глупым способом", "погиб"], arrest: ["впервые арестован", "попался полиции"], crash: ["выжил в аварии", "попал в жёсткую аварию"], cutscene_reveal: ["реагирует на сюжет", "не был готов к этой катсцене"], discovery: ["нашёл скрытую деталь", "обнаружил что-то безумное"], showcase: ["показывает карту", "разглядывает детали"], chase: ["ушёл от полиции", "устроил погоню"], firefight: ["пошёл против всей полиции", "устроил перестрелку"], stunt: ["сделал безумный трюк", "совершил невероятный прыжок"], heist: ["провернул ограбление", "ограбил магазин"], music_celebrity: ["слушает радио", "нашёл эту песню на радио"], peak: ["не может поверить", "в шоке"]}
+  tr: {comedy: ["gülmekten duramıyor", "en komik NPC'yi buldu"], death: ["en saçma şekilde öldü", "öldü"], arrest: ["ilk kez tutuklandı", "yakalandı"], crash: ["kazadan sağ çıktı", "fena kaza yaptı"], cutscene_reveal: ["hikayeye tepki veriyor", "bu sahneye hazır değildi"], discovery: ["gizli bir detay buldu", "inanılmaz bir şey keşfetti"], showcase: ["haritayı gösteriyor", "detayları inceliyor"], chase: ["polisten kaçtı", "kovalamaca başlattı"], firefight: ["bütün polise kafa tuttu", "çatışma başlattı"], stunt: ["çılgın bir akrobasi yaptı", "inanılmaz bir atlayış yaptı"], heist: ["soygun yaptı", "dükkan soydu"], music_celebrity: ["radyo dinliyor", "radyoda bu şarkıyı buldu"], peak: ["inanamıyor", "çıldırdı"]}
+  vi: {comedy: ["cười không ngừng", "gặp NPC hài nhất"], death: ["chết theo cách ngớ ngẩn nhất", "bị hạ gục"], arrest: ["bị bắt lần đầu tiên", "bị cảnh sát tóm"], crash: ["sống sót sau tai nạn", "gặp tai nạn kinh hoàng"], cutscene_reveal: ["phản ứng với cốt truyện", "chưa sẵn sàng cho cảnh này"], discovery: ["tìm ra chi tiết ẩn", "phát hiện điều điên rồ"], showcase: ["khoe bản đồ", "soi từng chi tiết"], chase: ["thoát khỏi cảnh sát", "bắt đầu cuộc rượt đuổi"], firefight: ["đối đầu cả sở cảnh sát", "mở màn đấu súng"], stunt: ["làm pha nhào lộn điên rồ", "có cú nhảy không tưởng"], heist: ["thực hiện vụ cướp", "cướp cửa hàng"], music_celebrity: ["nghe radio", "tìm thấy bài hát này trên radio"], peak: ["không tin nổi", "phát điên"]}
+  ar: {comedy: ["ما قدر يوقف ضحك", "لقى أغرب شخصية"], death: ["مات بأغبى طريقة", "انقتل"], arrest: ["انمسك لأول مرة", "اعتقلته الشرطة"], crash: ["نجا من حادث", "سوّى حادث قوي"], cutscene_reveal: ["يتفاعل مع القصة", "ما كان جاهز لهذا المشهد"], discovery: ["اكتشف تفصيل مخفي", "لقى شي مجنون"], showcase: ["يستعرض الخريطة", "يشوف التفاصيل"], chase: ["هرب من الشرطة", "بدأ مطاردة"], firefight: ["واجه الشرطة كلها", "بدأ اشتباك"], stunt: ["سوّى حركة مجنونة", "قفز قفزة خرافية"], heist: ["نفّذ سرقة", "سرق محل"], music_celebrity: ["يسمع الراديو", "لقى هالأغنية في الراديو"], peak: ["مو مصدق", "انصدم"]}
+  ja: {comedy: ["笑いが止まらない", "最高に面白いNPCを発見"], death: ["まさかの死に方", "やられた"], arrest: ["初めて逮捕される", "逮捕された"], crash: ["大事故から生還", "大クラッシュ"], cutscene_reveal: ["ストーリーに反応", "このムービーに衝撃"], discovery: ["隠し要素を発見", "ヤバいものを発見"], showcase: ["マップを紹介", "細部をチェック"], chase: ["警察から逃げ切る", "カーチェイス開始"], firefight: ["警察全員と銃撃戦", "銃撃戦を開始"], stunt: ["神スタント", "とんでもないジャンプ"], heist: ["強盗を成功させる", "店を襲う"], music_celebrity: ["ラジオを聴く", "ラジオでこの曲を発見"], peak: ["信じられない", "大興奮"]}
+quote:   # '"<creator's line>" + context'
+  en: ['"{quote}" {creator} in GTA 6 is something else', '"{quote}" {creator} was not ready for GTA 6', '"{quote}" GTA 6 got {creator} like']
+  es: ['"{quote}" {creator} en GTA 6 es otro nivel', '"{quote}" {creator} no estaba listo para GTA 6']
+  pt: ['"{quote}" {creator} no GTA 6 é outro nível', '"{quote}" {creator} não estava pronto pro GTA 6']
+  fr: ['« {quote} » {creator} sur GTA 6 c’est autre chose', '« {quote} » {creator} n’était pas prêt pour GTA 6']
+  de: ['„{quote}" {creator} in GTA 6 ist einfach anders', '„{quote}" {creator} war nicht bereit für GTA 6']
+  ru: ['«{quote}» {creator} в GTA 6 — это что-то', '«{quote}» {creator} не был готов к GTA 6']
+  tr: ['"{quote}" {creator} GTA 6’da bambaşka', '"{quote}" {creator} GTA 6’ya hazır değildi']
+  vi: ['"{quote}" {creator} chơi GTA 6 là thế này', '"{quote}" {creator} chưa sẵn sàng cho GTA 6']
+  ar: ['"{quote}" {creator} في GTA 6 شي ثاني', '"{quote}" {creator} ما كان جاهز لـ GTA 6']
+  ja: ['「{quote}」GTA6の{creator}がヤバい', '「{quote}」{creator}、GTA6で限界']
+# Post caption: a short reaction line in the channel's language or an ALL-CAPS topic, then platform core tags
+reaction_lines:
+  en: ["Oh hell nah 😭", "Bro was not ready 💀", "Why is this so funny 😭", "Not him doing this 😭", "This can't be real 😳"]
+  es: ["No puede ser 😭", "No estaba listo 💀", "Me muero 😭", "Qué locura 😳"]
+  pt: ["Não acredito 😭", "Ele não tava pronto 💀", "Morri 😭", "Que loucura 😳"]
+  fr: ["Je suis mort 😭", "Il était pas prêt 💀", "C'est pas possible 😳", "Mdrr 😭"]
+  de: ["Ich kann nicht mehr 😭", "Er war nicht bereit 💀", "Das kann nicht sein 😳", "Wie lustig 😭"]
+  ru: ["Я не могу 😭", "Он был не готов 💀", "Это нереально 😳", "Ахаха 😭"]
+  tr: ["Ölüyorum 😭", "Hazır değildi 💀", "Bu gerçek olamaz 😳", "Gülmekten öldüm 😭"]
+  vi: ["Cười xỉu 😭", "Chưa sẵn sàng luôn 💀", "Không thể tin nổi 😳", "Hài thật sự 😭"]
+  ar: ["مستحيل 😭", "ما كان جاهز 💀", "مو معقول 😳", "ميت ضحك 😭"]
+  ja: ["笑いすぎた😭", "心の準備ができてない💀", "ありえない😳", "ヤバすぎ😭"]
+topic:
+  en: "{CREATOR} IN GTA 6"
+  es: "{CREATOR} EN GTA 6"
+  pt: "{CREATOR} NO GTA 6"
+  fr: "{CREATOR} SUR GTA 6"
+  de: "{CREATOR} IN GTA 6"
+  ru: "{CREATOR} В GTA 6"
+  tr: "{CREATOR} GTA 6'DA"
+  vi: "{CREATOR} TRONG GTA 6"
+  ar: "{CREATOR} في GTA 6"
+  ja: "{CREATOR} GTA6"
+core_tags:   # per platform, then the creator's name tag (#fyp #viral #gta #gta6 #<creator>)
+  tiktok: ["#fyp", "#viral", "#gta", "#gta6"]
+  snapchat: ["#fyp", "#viral", "#gta", "#gta6"]
+  instagram: ["#gta6", "#gta", "#fyp", "#viral"]
+  facebook: ["#gta6", "#gta"]
+  youtube: ["#GTA6", "#shorts"]
+  threads: ["#GTA6"]

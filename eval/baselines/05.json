@@ -1,0 +1,10 @@
+{
+  "stage": "05",
+  "accepted_at": "2026-11-19T00:08:35+00:00",
+  "dataset_version": "viewer_clips@2026-11-18",
+  "code_version": "28efdbe",
+  "metrics": {
+    "recall_at_20": 0.2,
+    "precision_at_20": 0.4625
+  }
+}

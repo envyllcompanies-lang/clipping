@@ -1,0 +1,41 @@
+{
+  "stage": "21",
+  "name": "Storage Lifecycle",
+  "passed": true,
+  "seconds": 3.31,
+  "dataset_version": "synthetic@v1",
+  "code_version": "38478da",
+  "metrics": [
+    {
+      "metric": "deleted_promptly",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "disk_growth_ratio",
+      "value": 0.8603603603603603,
+      "baseline": 0.8603603603603603,
+      "bar": 1.5,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "orphans_left",
+      "value": 0.0,
+      "baseline": 0.0,
+      "bar": 0.0,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "released": 508
+  }
+}
