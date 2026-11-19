@@ -240,7 +240,9 @@ def render(
     encoder: str | None = None,
     fonts_dir: str | None = None,
     sfx: bool = True,
+    overlays: list[dict] | None = None,
 ) -> RenderResult:
+    """overlays: [{path, x, y, t0, t1}] PNG images (the hook headline) composited over the captions, in output time."""
     out = Path(out_path)
     info = [s for s in media.probe(window_path)["streams"] if s["codec_type"] == "video"][0]
     sw, sh = int(info["width"]), int(info["height"])
@@ -258,6 +260,14 @@ def render(
         loudnorm_pass(wav, wav_n)
         tmp = out.with_suffix(".part.mp4")
         vf = f"ass={ass_path}" + (f":fontsdir={fonts_dir}" if fonts_dir else "") if ass_path else "null"
+        ov = overlays or []
+        graph = f"[0:v]{vf}[b0]"
+        for i, o in enumerate(ov):
+            graph += (
+                f";[b{i}][{i + 2}:v]overlay=x={int(o['x'])}:y={int(o['y'])}:shortest=1"
+                f":enable='between(t,{o['t0']:.3f},{o['t1']:.3f})'[b{i + 1}]"
+            )
+        graph += f";[b{len(ov)}]format=yuv420p[v]"
         last_err = ""
         for enc in [encoder, "libx264-retry"] if encoder != "libx264-retry" else [encoder]:
             cmd = [
@@ -277,8 +287,12 @@ def render(
                 "-",
                 "-i",
                 str(wav_n),
-                "-vf",
-                f"{vf},format=yuv420p",
+                *[a for o in ov for a in ("-loop", "1", "-i", o["path"])],
+                *(
+                    ["-filter_complex", graph, "-map", "[v]", "-map", "1:a"]
+                    if ov
+                    else ["-vf", f"{vf},format=yuv420p"]
+                ),
                 *encoder_args(enc),
                 "-r",
                 str(fps),

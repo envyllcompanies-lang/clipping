@@ -127,7 +127,7 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
         return {"discarded": f"{seg} segment"}
     f = feat.compute(w["path"], w["path"], int(dur))
     react = creators.reaction_for_stream(c, w["creator_id"], f)
-    ma = moments.analyze_window(f, react, w["peak_s"] - offset, evs)
+    ma = moments.analyze_window(f, react, w["peak_s"] - offset, evs, words=words)
     c.execute(
         """INSERT INTO moment_analysis(window_id,type,type_confidence,gameplay_score,reaction_score,payoff_s,beat_s,start_s,end_s,hook_style,signals)
                  VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (window_id) DO UPDATE SET type=EXCLUDED.type,
@@ -193,7 +193,7 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
     ]
     pk = write.package(
         words,
-        plans["versions"]["short"],
+        {**plans["versions"]["short"], "moment_type": ma.type},
         language=language,
         creator=w["handle"],
         platform=w["platform"],
@@ -206,8 +206,12 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
     full = media.decode_frames(w["path"], fps=5, width=640)
     rng = random.Random(rng_seed if rng_seed is not None else clip_id)
     layout = rl.choose_layout(lay, _layout_arms(c, channel_id, style), rng)
+    arms = {k: profiles.sample(_text_arms(c, channel_id, style, k), rng) for k in profiles.TEXT_ARMS}
     audio = w["audio"] or {}
     clean = audio.get("clean_mix")
+    music_subject = bool(ma.music_subject and audio.get("orig_mix"))
+    if music_subject:  # doc 07/31: the song is the moment; keep it (platform routing happens in the gate)
+        clean = audio["orig_mix"]
     out = {}
     for vname, p in plans["versions"].items():
         cp = rl.plan(
@@ -221,7 +225,7 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
             caption_size_pct=style["captions"]["size_pct"],
         )
         profanity = (ch_cfg.get("profanity") or {}).get("youtube", "mask")
-        doc, _ = ass.build_ass(
+        doc, rep = ass.build_ass(
             p,
             cp,
             words,
@@ -235,17 +239,30 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
             ),
             profanity=profanity,
             emphasis_words=set(p.get("emphasis_words", [])),
+            text_mode=arms["text_mode"],
+            headline_overlay=True,
+            headline_case=arms["headline_case"],
+            keep_case=[w["handle"]],
+            key_hints=[p.get("payoff_t", 0.0)],
         )
         wd = files.work_dir(c, f"r{clip_id}_{vname}")
         (wd / "captions.ass").write_text(doc, encoding="utf-8")
+        overlays = [_headline_overlay(rep, style, arms["text_style"], language, cp, wd)]
         target = files.managed("renders") / f"clip{clip_id}_{vname}.mp4"
-        key = engine.input_hash(w["path"], clean, p, cp, doc)
+        key = engine.input_hash(w["path"], clean, p, cp, doc, arms)
         prev = db.one(c, "SELECT * FROM clip_version WHERE clip_id=%s AND version_type=%s", clip_id, vname)
         if prev and prev["input_hash"] == key and prev["path"] and target.exists():
             out[vname] = {"cached": True, "clip_version_id": prev["id"]}
             continue
         r = engine.render(
-            w["path"], clean, p, cp, str(wd / "captions.ass"), str(target), fonts_dir=str(ass.FONTS_DIR)
+            w["path"],
+            clean,
+            p,
+            cp,
+            str(wd / "captions.ass"),
+            str(target),
+            fonts_dir=str(ass.FONTS_DIR),
+            overlays=overlays,
         )
         files.register(c, target, "render", "clip_version", None)
         cv = db.scalar(
@@ -265,7 +282,10 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
             r.thumbnail_jpg,
         )
         c.execute("UPDATE file SET owner_id=%s WHERE path=%s", (cv, str(target)))
-        c.execute("UPDATE clip SET crop_plan=%s WHERE id=%s", (db.j({"layout": layout, vname: cp}), clip_id))
+        c.execute(
+            "UPDATE clip SET crop_plan=%s, music_subject=%s WHERE id=%s",
+            (db.j({"layout": layout, **arms, "moment_type": ma.type, vname: cp}), music_subject, clip_id),
+        )
         files.delete_path(c, wd)
         d = checks.gate(c, cv)
         out[vname] = {
@@ -290,3 +310,39 @@ def _layout_arms(c: psycopg.Connection, channel_id: int, style: dict) -> dict[st
         f"layout:{channel_id}",
     )
     return r["values"] if r else profiles.layout_arms(style)
+
+
+def _text_arms(c: psycopg.Connection, channel_id: int, style: dict, kind: str) -> dict[str, float]:
+    """Bandit shares for a caption text arm (text_mode/text_style/headline_case) when analytics has refit them."""
+    r = db.one(
+        c,
+        """SELECT "values" FROM weights WHERE component=%s AND active ORDER BY version DESC LIMIT 1""",
+        f"{kind}:{channel_id}",
+    )
+    return r["values"] if r else profiles.text_arms(style, kind)
+
+
+def _headline_overlay(rep: dict, style: dict, text_style: str, language: str, cp: dict, wd) -> dict:
+    """Hook headline PNG (box or outline style) centered on the caption band (seam / letterbox top bar)."""
+    from clipping.captions import headline as hl
+
+    hc = style["captions"].get("headline", {})
+    Hc = cp["canvas"][1]
+    size = int(Hc * hc.get(f"{text_style}_size_pct", style["captions"]["size_pct"]))
+    slot = rep["headline_slot"]
+    img = hl.render(
+        rep["headline"],
+        language,
+        text_style,
+        size,
+        slot["max_w"],
+        wd / "headline.png",
+        cfg=hc,
+        emoji=hc.get("emoji", True),
+    )
+    x = (cp["canvas"][0] - img["w"]) // 2
+    y = max(0, slot["center_y"] - img["h"] // 2)
+    if cp.get("layout") == "letterbox":  # sits inside the top bar, never over the frame
+        frame_top = cp["panels"][0]["dst"][1]
+        y = max(0, min(y, frame_top - img["h"] - 12))
+    return {"path": img["path"], "x": x, "y": y, "t0": slot["t0"], "t1": slot["t1"]}

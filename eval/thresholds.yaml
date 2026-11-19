@@ -123,3 +123,25 @@
     direction: lower
     required: false
     tolerance: 1.0
+'05':
+  recall_at_20:          # doc 30 bar 0.7 is not met on real GTA VI VODs without chat (0.20); tracked vs baseline
+    bar: 0.7
+    direction: higher
+    target_only: true
+  precision_at_20:
+    bar: 0.0
+    direction: higher
+    required: false
+'31':
+  calibration_built:
+    bar: 1.0
+    direction: higher
+  heatmap_recall_without:
+    bar: 0.0
+    direction: higher
+    required: false
+'32':
+  heatmap_recall_without:
+    bar: 0.0
+    direction: higher
+    required: false

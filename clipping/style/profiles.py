@@ -58,3 +58,28 @@ def layout_arms(profile: dict) -> dict[str, float]:
     arms = profile["layout"].get("arms") or {"stacked": 1.0}
     tot = sum(arms.values())
     return {k: v / tot for k, v in arms.items()}
+
+
+TEXT_ARMS = {
+    "text_mode": ("text_mode_arms", {"full": 1.0}),
+    "text_style": ("text_style_arms", {"outline": 1.0}),
+    "headline_case": ("headline_case_arms", {"upper": 1.0}),
+}
+
+
+def text_arms(profile: dict, kind: str) -> dict[str, float]:
+    """Starting shares for a caption text arm (doc 11): text_mode, text_style or headline_case."""
+    key, default = TEXT_ARMS[kind]
+    arms = profile["captions"].get(key) or default
+    tot = sum(arms.values())
+    return {k: v / tot for k, v in arms.items()}
+
+
+def sample(arms: dict[str, float], rng) -> str:
+    names = [a for a in arms if arms[a] > 0]
+    r, acc = rng.random() * sum(arms[a] for a in names), 0.0
+    for a in names:
+        acc += arms[a]
+        if r <= acc:
+            return a
+    return names[-1]

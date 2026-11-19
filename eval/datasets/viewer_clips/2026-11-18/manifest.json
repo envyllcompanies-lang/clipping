@@ -1,0 +1,21 @@
+{
+  "source": "Twitch Helix clips (vod_offset) + VOD audio/160p via streamlink",
+  "game": "Grand Theft Auto VI",
+  "game_id": "1867279146",
+  "vods": 8,
+  "chat": "not available for VODs",
+  "name": "viewer_clips",
+  "version": "2026-11-18",
+  "built_at": "2026-11-18",
+  "files": {
+    "vods.json": "72c518b7f0272fcfc55f668fc3a9f8581c4aa2bb686b23418c758220f1088417",
+    "2930640524.npz": "9ff1a4f11991663de0e71911bcb2e3d1cd884af3f040cdad8104ced66371b5c0",
+    "2928284730.npz": "539e8eac332ca452e70a581052067404a29d2040e21aca75c572580aed5743b8",
+    "2931707851.npz": "91f92fc55726f421f217207ff9e68ba97b2c481a18b092da35833ccb4f1671c1",
+    "2926985789.npz": "68d329824dcad844bbb941f14fa3cf42d3d07bf0670187f85195541a6323cff5",
+    "2930466389.npz": "905c0739edb522694fdcca0875721ff411affae24ae8d89a15d0fcf4e0d162d6",
+    "2932196917.npz": "8c8203b203c563c5a63336aecf6fed82e679d528289178e040e2ef1ca13b48e9",
+    "2932200023.npz": "4b2b4723949b7fc1a960a261500ef0a12832983c3d8f04f4cf6c168357350e08",
+    "2932265097.npz": "a0404c2e85baf7ce56d874aeb3393b2cd9cc5fcc8315a1e31b3c10ea6822044d"
+  }
+}

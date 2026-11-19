@@ -19,7 +19,13 @@ def configured_extra() -> dict[str, float]:
 def run() -> StageResult:
     vods, ver = realeval.load_vods()
     r = realeval.evaluate(vods, configured_extra() or None)
-    ex = [Example(f"{c}@{t:.0f}s", "missed", float(v), "top viewer-clipped moment outside the top windows") for c, t, v in
-          sorted(r["misses"], key=lambda m: -m[2])]
-    return StageResult({"recall_at_20": r["recall_at_20"], "precision_at_20": r["precision_at_20"]}, ex, ver,
-                       {"vods": r["vods"], "extra_signals": configured_extra()})
+    ex = [
+        Example(f"{c}@{t:.0f}s", "missed", float(v), "top viewer-clipped moment outside the top windows")
+        for c, t, v in sorted(r["misses"], key=lambda m: -m[2])
+    ]
+    return StageResult(
+        {"recall_at_20": r["recall_at_20"], "precision_at_20": r["precision_at_20"]},
+        ex,
+        ver,
+        {"vods": r["vods"], "extra_signals": configured_extra()},
+    )

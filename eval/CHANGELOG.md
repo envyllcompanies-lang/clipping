@@ -65,3 +65,9 @@ Accepted baselines with before/after metrics.
 - 2026-11-18 stage 21 (Storage Lifecycle): deleted_promptly 1.000→1.000, disk_growth_ratio 0.860→0.860, orphans_left 0.000→0.000
 
 - 2026-11-18 stage 03 (Chat Capture (real)): missing_share 0.000, clip_moments_with_spike_10s 0.375, align_within_2s_vs_clip_labels 0.125, align_median_s_vs_clip_labels 6.500
+
+- 2026-11-19 stage 31 (Gameplay Moment Analysis (real VODs)): gameplay_gain_fit_half -0.050, gameplay_gain_test_half -0.012, gameplay_weight_kept 0.000, heatmap_recall_with_gameplay 0.188, heatmap_recall_without 0.175, heatmap_gain_from_gameplay 0.013, calibration_built 1.000
+
+- 2026-11-19 stage 32 (Creator Profile & Reaction (real VODs)): reaction_gain_fit_half 0.013, reaction_gain_test_half 0.025, reaction_weight_kept 0.500, reaction_alone_recall_normalized 0.188, reaction_alone_recall_raw 0.212, normalized_minus_raw -0.025, heatmap_recall_with_reaction 0.175, heatmap_recall_without 0.175, heatmap_gain_from_reaction 0.000
+
+- 2026-11-19 stage 05 (Moment Heatmap (real VODs)): recall_at_20 0.200, precision_at_20 0.463

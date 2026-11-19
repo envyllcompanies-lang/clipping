@@ -157,6 +157,10 @@ def features(c: psycopg.Connection, clip_version_id: int) -> dict:
         "title_style": (pk.get("features") or {}).get("title_style"),
         "style_profile": r["style_profile"],
         "layout": (r["crop_plan"] or {}).get("layout"),
+        "text_mode": (r["crop_plan"] or {}).get("text_mode"),
+        "text_style": (r["crop_plan"] or {}).get("text_style"),
+        "headline_case": (r["crop_plan"] or {}).get("headline_case"),
+        "moment_type": (r["crop_plan"] or {}).get("moment_type"),
         "version": r["version_type"],
     }
 
@@ -239,6 +243,9 @@ def update_bandits(c: psycopg.Connection, since: dt.datetime) -> dict:
             continue
         for exp, arm in (
             ("layout", f.get("layout")),
+            ("text_mode", f.get("text_mode")),
+            ("text_style", f.get("text_style")),
+            ("headline_case", f.get("headline_case")),
             ("hook", f.get("hook_pattern")),
             ("style", f.get("style_profile")),
         ):
@@ -278,12 +285,13 @@ def ship(
     return better
 
 
-def refit_layouts(c: psycopg.Connection, default_arms: dict[str, float]) -> dict:
-    """Layout arms per language channel (pooled over platforms for the render-time choice)."""
+def refit_layouts(c: psycopg.Connection, default_arms: dict[str, float], exp: str = "layout") -> dict:
+    """Render-time A/B arms per language channel (pooled over platforms): layout, or a caption text arm
+    (text_mode / text_style / headline_case, doc 11)."""
     out = {}
     for ch in db.all_(c, "SELECT id FROM channel"):
         exps = db.all_(
-            c, "SELECT DISTINCT experiment FROM bandit_arm WHERE experiment LIKE %s", f"layout:{ch['id']}:%"
+            c, "SELECT DISTINCT experiment FROM bandit_arm WHERE experiment LIKE %s", f"{exp}:{ch['id']}:%"
         )
         if not exps:
             continue
@@ -292,26 +300,22 @@ def refit_layouts(c: psycopg.Connection, default_arms: dict[str, float]) -> dict
             for k, v in bandit_shares(c, e["experiment"], default_arms).items():
                 pooled.setdefault(k, []).append(v)
         sh = {k: round(statistics.fmean(v), 4) for k, v in pooled.items()}
-        cur = db.one(
-            c, """SELECT "values" FROM weights WHERE component=%s AND active""", f"layout:{ch['id']}"
-        )
+        cur = db.one(c, """SELECT "values" FROM weights WHERE component=%s AND active""", f"{exp}:{ch['id']}")
         best = max(sh, key=sh.get)
         if not db.get_flag(c, "learning_frozen"):
             ver = (
-                db.scalar(c, "SELECT max(version) FROM weights WHERE component=%s", f"layout:{ch['id']}") or 0
+                db.scalar(c, "SELECT max(version) FROM weights WHERE component=%s", f"{exp}:{ch['id']}") or 0
             ) + 1
             c.execute(
                 """INSERT INTO weights(component,version,"values",active,explanation) VALUES (%s,%s,%s,true,%s)""",
                 (
-                    f"layout:{ch['id']}",
+                    f"{exp}:{ch['id']}",
                     ver,
                     db.j(sh),
                     f"Thompson sampling favours '{best}' ({sh[best]:.0%} of renders)",
                 ),
             )
-            c.execute(
-                "UPDATE weights SET active=(version=%s) WHERE component=%s", (ver, f"layout:{ch['id']}")
-            )
+            c.execute("UPDATE weights SET active=(version=%s) WHERE component=%s", (ver, f"{exp}:{ch['id']}"))
         out[ch["id"]] = {"shares": sh, "previous": cur["values"] if cur else None}
     return out
 
@@ -488,6 +492,8 @@ def weekly(
     upd = update_bandits(c, since)
     arms = default_layout_arms or profiles.layout_arms(profiles.load("house"))
     lay = refit_layouts(c, arms)
+    house = profiles.load("house")
+    text = {k: refit_layouts(c, profiles.text_arms(house, k), k) for k in profiles.TEXT_ARMS}
     floors = refit_score_floor(c)
     slots = refit_posting_times(c)
     cr = refit_creators(c)
@@ -530,6 +536,7 @@ def weekly(
         "risk": [dict(r) for r in risk],
         "monetization": mon,
         "layout": {str(k): v for k, v in lay.items()},
+        "text_arms": {kind: {str(k): v for k, v in r.items()} for kind, r in text.items()},
         "floors": floors,
         "slots": slots,
         "creators": cr,

@@ -32,14 +32,14 @@ def register(sub):
     rn.add_argument("--creator", default="streamer")
     rn.add_argument("--platform", default="twitch")
     rn.add_argument("--style", default="house")
-    rn.add_argument("--layout", choices=["stacked", "full", "small_cam"])
+    rn.add_argument("--layout", choices=["stacked", "full", "small_cam", "letterbox"])
     rn.add_argument("--peak", type=float, help="moment peak (s into the window), if known")
     rn.set_defaults(fn=_run)
 
     st = sub.add_parser("style", help="style study (doc 13)")
-    st.add_argument("action", choices=["study"])
-    st.add_argument("name")
-    st.add_argument("dir", help="folder of sample videos for one reference channel")
+    st.add_argument("action", choices=["study", "seed"])
+    st.add_argument("name", nargs="?")
+    st.add_argument("dir", nargs="?", help="folder of sample videos for one reference channel")
     st.set_defaults(fn=_style)
 
     r = sub.add_parser("radar", help="creator radar")
@@ -49,6 +49,12 @@ def register(sub):
 
 
 def _style(a):
+    if a.action == "seed":  # docs/research/gta6-clip-examples.md -> labelled seed examples + priors
+        from clipping.style import seed
+
+        d = seed.load()
+        print(f"loaded {len(d['examples'])} seed examples -> config/{seed.OUT}")
+        return
     from pathlib import Path
 
     from clipping.core import config

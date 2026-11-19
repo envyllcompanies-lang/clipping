@@ -333,3 +333,6 @@ CREATE TABLE IF NOT EXISTS moment_analysis (
 );
 
 ALTER TABLE segment_feature ADD COLUMN IF NOT EXISTS extra jsonb;
+
+-- doc 07/31 "music is the subject": keep the song, route by platform; claims tracked per platform (22)
+ALTER TABLE clip ADD COLUMN IF NOT EXISTS music_subject boolean NOT NULL DEFAULT false;

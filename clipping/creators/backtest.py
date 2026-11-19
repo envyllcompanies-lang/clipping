@@ -31,8 +31,26 @@ def run() -> StageResult:
     norm, raw = alone(vods, True), alone(vods, False)
     base = realeval.evaluate(vods)["recall_at_20"]
     with_r = realeval.evaluate(vods, {"reaction": W_REACTION})["recall_at_20"]
-    return StageResult({"reaction_alone_recall_normalized": norm, "reaction_alone_recall_raw": raw,
-                        "normalized_minus_raw": norm - raw, "heatmap_recall_with_reaction": with_r, "heatmap_recall_without": base,
-                        "heatmap_gain_from_reaction": with_r - base}, [], ver,
-                       {"pending": ["segment exclusion (needs labelled sponsor/BRB minutes)", "catchphrase precision (needs transcripts of top clips)",
-                                    "collab alignment (needs known collab sessions)"]})
+    hg = realeval.halves_gain(vods, "reaction")
+    return StageResult(
+        {
+            "reaction_gain_fit_half": hg["gain_fit_half"],
+            "reaction_gain_test_half": hg["gain_test_half"],
+            "reaction_weight_kept": hg["weight_kept"],
+            "reaction_alone_recall_normalized": norm,
+            "reaction_alone_recall_raw": raw,
+            "normalized_minus_raw": norm - raw,
+            "heatmap_recall_with_reaction": with_r,
+            "heatmap_recall_without": base,
+            "heatmap_gain_from_reaction": with_r - base,
+        },
+        [],
+        ver,
+        {
+            "pending": [
+                "segment exclusion (needs labelled sponsor/BRB minutes)",
+                "catchphrase precision (needs transcripts of top clips)",
+                "collab alignment (needs known collab sessions)",
+            ]
+        },
+    )

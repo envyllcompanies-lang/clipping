@@ -28,8 +28,12 @@ class Inputs:
     negative_spans: list[tuple[float, float]] = field(default_factory=list)  # loading/menu
     language: str = "en"
     creator: str = ""
-    moment: dict | None = None  # doc 31 typed moment: type, type_confidence, anchor_s, start_s, end_s, hook_style
-    catchphrases: list[str] = field(default_factory=list)  # doc 32 signature lines (kept in the clip when present)
+    moment: dict | None = (
+        None  # doc 31 typed moment: type, type_confidence, anchor_s, start_s, end_s, hook_style
+    )
+    catchphrases: list[str] = field(
+        default_factory=list
+    )  # doc 32 signature lines (kept in the clip when present)
 
 
 @dataclass
@@ -52,7 +56,9 @@ def payoff(inp: Inputs) -> tuple[float, str, int | None]:
     m = inp.moment or {}
     if best:
         t, kind = best[1], best[2]
-    elif m.get("type_confidence", 0) >= 0.5 and m.get("anchor_s") is not None:  # doc 31: typed payoff (impact, beat, laugh)
+    elif (
+        m.get("type_confidence", 0) >= 0.5 and m.get("anchor_s") is not None
+    ):  # doc 31: typed payoff (impact, beat, laugh)
         t, kind = float(m["anchor_s"]), m["type"]
     elif inp.peak_t is not None:
         t, kind = inp.peak_t, "peak"
@@ -125,7 +131,12 @@ def backref(inp: Inputs, start_word: int | None) -> bool:
 
 
 def choose_rule(
-    starts: list[Candidate], ends: list[Candidate], pay: float, target: float, lo: float, hi: float,
+    starts: list[Candidate],
+    ends: list[Candidate],
+    pay: float,
+    target: float,
+    lo: float,
+    hi: float,
     hint: tuple[float, float] | None = None,
 ) -> tuple[Candidate, Candidate] | None:
     """hint: doc 31 type-specific (start, end) recommendation; candidates near it score higher."""
@@ -243,7 +254,11 @@ def build_version(inp: Inputs, style: dict, version: str, c=None) -> dict | None
         if L["min"] <= e.t - s.t <= L["max"] and s.t < pay < e.t:
             pick = (s, e)
     m = inp.moment or {}
-    hint = (m["start_s"], m["end_s"]) if version == "short" and m.get("type_confidence", 0) >= 0.5 and "start_s" in m else None
+    hint = (
+        (m["start_s"], m["end_s"])
+        if version == "short" and m.get("type_confidence", 0) >= 0.5 and "start_s" in m
+        else None
+    )
     pick = pick or choose_rule(starts, ends, pay, L["target"], L["min"], L["max"], hint)
     if pick is None:
         return None

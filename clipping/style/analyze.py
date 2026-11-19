@@ -4,6 +4,7 @@ Works on any local file; how reference samples are obtained is an owner decision
 
 from __future__ import annotations
 
+import re
 import statistics
 from collections import Counter
 
@@ -90,6 +91,7 @@ def captions(frames: np.ndarray, fps: float, ocr=None) -> dict:
 
     step = max(1, int(round(fps)))
     seen, ys, wpl, caps, fills = 0, [], [], [], []
+    texts, boxed = [], []
     n = 0
     for i in range(0, len(frames), step):
         n += 1
@@ -114,6 +116,18 @@ def captions(frames: np.ndarray, fps: float, ocr=None) -> dict:
         if not big:
             continue
         seen += 1
+        texts.append(" ".join(sorted(re.sub(r"\W", "", b[4].lower()) for b in big)))
+        # white rounded box with black text vs white text with outline: the box is bright around the letters
+        ring = []
+        for x, y, w, h, _ in big[:6]:
+            y0, y1, x0, x1 = (
+                max(0, y - h // 3),
+                min(H, y + h + h // 3),
+                max(0, x - h // 3),
+                min(W, x + w + h // 3),
+            )
+            ring.append(float(np.median(f[y0:y1, x0:x1].mean(axis=2))))
+        boxed.append(statistics.median(ring) > 170)
         ys.append(float(np.median([(b[1] + b[3] / 2) / H for b in big])))
         for words in lines.values():
             wpl.append(len(words))
@@ -139,7 +153,15 @@ def captions(frames: np.ndarray, fps: float, ocr=None) -> dict:
             if keep.sum() > 10:
                 fills.append(np.median(patch[keep], axis=0))
     fill = "#{:02X}{:02X}{:02X}".format(*[int(v) for v in np.median(fills, axis=0)]) if fills else None
+    if texts:  # doc 13 text mode: the same text for > 80% of the clip = hook-only headline
+        top_share = Counter(texts).most_common(1)[0][1] / len(texts)
+        distinct = len(set(texts))
+        text_mode = "hook_only" if top_share > 0.8 else ("hook_key_lines" if distinct <= 4 else "full")
+    else:
+        text_mode = None
     return {
+        "text_mode": text_mode,
+        "text_style": ("box" if sum(boxed) > len(boxed) / 2 else "outline") if boxed else None,
         "coverage": seen / max(n, 1),
         "position_y": statistics.median(ys) if ys else None,
         "words_per_line": statistics.median(wpl) if wpl else None,
@@ -273,6 +295,22 @@ def analyze(path: str, fps: float = 10, ocr=None) -> dict:
     }
 
 
+def _arm_shares(analyses: list[dict]) -> dict:
+    """Starting text-arm mix measured from the reference videos (doc 11/13)."""
+    out = {}
+    for key, field in (("text_mode_arms", "text_mode"), ("text_style_arms", "text_style")):
+        vals = [a["captions"].get(field) for a in analyses if a["captions"].get(field)]
+        if vals:
+            out[key] = {k: round(v / len(vals), 3) for k, v in Counter(vals).items()}
+    caps = [
+        a["captions"]["all_caps_share"] for a in analyses if a["captions"].get("all_caps_share") is not None
+    ]
+    if caps:
+        up = sum(c > 0.6 for c in caps) / len(caps)
+        out["headline_case_arms"] = {"sentence": round(1 - up, 3), "upper": round(up, 3)}
+    return out
+
+
 def profile_from(analyses: list[dict], name: str, source: str) -> dict:
     """Aggregate per-video measurements: median targets, min-max ranges, shares for booleans (doc 13)."""
 
@@ -327,6 +365,7 @@ def profile_from(analyses: list[dict], name: str, source: str) -> dict:
             ],
             "all_caps": (stat([a["captions"]["all_caps_share"] for a in analyses]) or {"median": 1})["median"]
             > 0.6,
+            **_arm_shares(analyses),
             "fill": Counter(a["captions"]["fill"] for a in analyses if a["captions"]["fill"]).most_common(1)[
                 0
             ][0]

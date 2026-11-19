@@ -71,6 +71,20 @@ def run() -> StageResult:
             lambda r: httpx.Response(200 if any(t in str(r.url) for t in taken) else 404)
         )
     )
+    import tempfile
+    from pathlib import Path
+
+    saved_ws = provision.WORKSHEETS
+    tmp_ws = tempfile.TemporaryDirectory()
+    provision.WORKSHEETS = Path(tmp_ws.name)  # hermetic: never read or write the real var/worksheets
+    try:
+        return _run(provision, ex, addy, gm, taken, prof)
+    finally:
+        provision.WORKSHEETS = saved_ws
+        tmp_ws.cleanup()
+
+
+def _run(provision, ex, addy, gm, taken, prof) -> StageResult:
     with scratch_db() as c:
         api = provision.Addy("k", "gta6clips.anonaddy.com", httpx.MockTransport(addy.handle))
         gmail = provision.Gmail("t", httpx.MockTransport(gm.handle))

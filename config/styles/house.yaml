@@ -18,10 +18,16 @@ hook:
   hook_text_s: 2.5
   transition: whoosh
 layout:
-  arms: {stacked: 0.6, full: 0.25, small_cam: 0.15}   # starting mix; analytics bandit reallocates per channel+platform
+  arms: {stacked: 0.55, full: 0.22, small_cam: 0.15, letterbox: 0.08}   # starting mix (letterbox = raw 16:9 test arm, low share; docs/research/gta6-clip-examples.md); analytics bandit reallocates per channel+platform
   stacked: {cam_ratio: 0.40}
   small_cam: {bubble_width: 0.34, corner: top_left}
 captions:
+  # Text arms (doc 11, docs/research/gta6-clip-examples.md); starting shares, analytics bandit reallocates
+  text_mode_arms: {hook_only: 0.6, hook_key_lines: 0.25, full: 0.15}   # hook-only = one headline, no subtitles
+  text_style_arms: {box: 0.57, outline: 0.43}     # white rounded box + black text (4/7) | white text + black outline (3/7)
+  headline_case_arms: {sentence: 0.75, upper: 0.25}  # sentence case is the starting favorite
+  headline: {box_size_pct: 0.037, outline_size_pct: 0.045, box_fill: "#FFFFFF", box_text: "#000000",
+             outline_fill: "#FFFFFF", outline_color: "#000000", radius_pct: 0.32, pad_pct: 0.28, emoji: true}
   words_per_line: [2, 4]
   max_lines: 2
   position: seam          # stacked: centered on the cam/gameplay seam; full: middle band

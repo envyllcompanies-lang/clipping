@@ -105,20 +105,71 @@ def _hashtags(
     n: tuple[int, int],
     rng: random.Random,
     recent_blocks: list[str],
+    platform: str | None = None,
 ) -> list[str]:
     if n[1] == 0:
         return []
     dyn = cfg()["dynamic_tags"].get(language, cfg()["dynamic_tags"]["en"])
-    creator_tag = "#" + re.sub(r"\W", "", creator)
+    creator_tag = "#" + re.sub(r"\W", "", creator).lower()
     event_tag = "#" + re.sub(r"\s", "", event)
+    plat_core = (cfg().get("core_tags") or {}).get(platform)
     for _ in range(12):
         k = rng.randint(n[0], n[1])
-        pool = core[:2] + [creator_tag, event_tag] + rng.sample(dyn, min(3, len(dyn)))
+        if (
+            plat_core
+        ):  # research: core platform tags then the creator's name tag, e.g. #fyp #viral #gta #gta6 #lacy
+            pool = (
+                plat_core[: max(1, k - 1)] + [creator_tag] + rng.sample(dyn, min(2, len(dyn))) + [event_tag]
+            )
+        else:
+            pool = core[:2] + [creator_tag, event_tag] + rng.sample(dyn, min(3, len(dyn)))
         tags = list(dict.fromkeys(pool))[:k]
         block = " ".join(tags)
         if block not in recent_blocks:  # rotate: identical tag blocks don't repeat post after post
             return tags
     return tags
+
+
+def pick_quote(words: list[dict], plan: dict, language: str, max_chars: int = 32) -> str | None:
+    """The creator's own line for a "quote + context" hook: the spoken phrase (2-7 words) with the most emphasis
+    words (09 marks punchline/catchphrase), closest to the payoff. None when nothing short and clean was said."""
+    s, e = plan.get("start_t", 0.0), plan.get("end_t", 1e9)
+    emph = set(plan.get("emphasis_words", []))
+    payoff = plan.get("payoff_t", (s + e) / 2)
+    body = [w for w in words if s <= w["start"] <= e]
+    best, best_sc = None, -1.0
+    joiner = "" if language == "ja" else " "
+    for i in range(len(body)):
+        for n in range(2, 8):
+            ph = body[i : i + n]
+            if len(ph) < n or any(ph[k + 1]["start"] - ph[k]["end"] > 0.6 for k in range(n - 1)):
+                break
+            txt = joiner.join(w["word"] for w in ph).strip(" ,.")
+            if len(txt) > max_chars or not safe(txt):
+                continue
+            covers = ph[0]["start"] - 0.3 <= payoff <= ph[-1]["end"] + 0.3
+            near = 3.0 if covers else 3 / (1 + min(abs(ph[0]["start"] - payoff), abs(ph[-1]["end"] - payoff)))
+            hits = [k for k, w in enumerate(ph) if w["index"] in emph]
+            central = -0.5 * abs((n - 1) / 2 - sum(hits) / len(hits)) if hits else 0.0
+            sc = 2 * len(hits) + near + central + (0.3 if 3 <= n <= 6 else 0.0)
+            if sc > best_sc:
+                best, best_sc = txt, sc
+    if best:
+        best = best[0].upper() + best[1:] if language not in ("ja", "ar") else best
+    return best
+
+
+def reaction_emoji(moment_type: str, rng: random.Random) -> str:
+    c = cfg()
+    return rng.choice(c["reaction_emojis"][c["type_reaction"].get(moment_type, "laugh")])
+
+
+def creator_event(language: str, creator: str, moment_type: str, rng: random.Random) -> str:
+    c = cfg()
+    lang = language if language in c["what"] else "en"
+    what = c["what"][lang]
+    phrase = rng.choice(what.get(moment_type) or what["peak"])
+    return c["creator_event"][lang].format(creator=creator, what=phrase)
 
 
 def template_package(
@@ -135,39 +186,74 @@ def template_package(
     c = cfg()
     lang = language if language in c["hooks"] else "en"
     kind = plan.get("payoff_kind", "peak")
+    mtype = plan.get("moment_type") or {
+        "death": "death",
+        "arrest": "arrest",
+        "crash": "crash",
+        "wanted": "chase",
+    }.get(kind, "peak")
     event = c["events"][lang].get(kind, c["events"][lang]["peak"])
-    patterns = c["hooks"][lang]
     stars = re.findall(r"\b([2-5])\b", " ".join(w["word"] for w in words))
     n = stars[0] if stars else str(rng.choice([3, 4, 5]))
-    emojis = ["", " 😳", " 💀", " 🚔", " 🔥", " 😂", " 😭", " 🤯"]
-    # search the whole hook x title x emoji space; keep the option least similar to recent posts (never a repeat)
-    options = [
-        (pat, h, t, e) for pat, hs in patterns.items() for h in hs for t in c["titles"][lang] for e in emojis
+    quote = pick_quote(words, plan, lang)
+    arms = dict(c.get("hook_pattern_arms") or {"reaction": 1.0})
+    if not quote:
+        arms.pop("quote", None)
+    # hook candidates per pattern; the pattern is drawn from its A/B share, then the least-repeated option wins
+    cands: dict[str, list[str]] = {
+        p: [h.format(creator=creator, n=n, event=event) for h in hs] for p, hs in c["hooks"][lang].items()
+    }
+    cands["creator_event"] = [
+        f"{creator_event(lang, creator, mtype, rng)} {reaction_emoji(mtype, rng)}" for _ in range(6)
     ]
+    if quote:
+        cands["quote"] = [
+            f"{t.format(quote=quote, creator=creator)} {reaction_emoji(mtype, rng)}" for t in c["quote"][lang]
+        ]
+    from clipping.style import profiles
+
+    pattern = profiles.sample({k: v for k, v in arms.items() if k in cands}, rng)
+    titles = [("ce", None)] * 3 + [(i, t) for i, t in enumerate(c["titles"][lang])]
+    emojis = ["", " 😳", " 💀", " 🔥", " 😂", " 😭"]
+    options = [(h, t, e) for h in cands[pattern] for t in titles for e in emojis]
     rng.shuffle(options)
+    ce_title = f"{creator_event(lang, creator, mtype, rng)} {reaction_emoji(mtype, rng)}"
     best, best_sim = None, 2.0
-    for pat, h, t, e in options[:400]:
-        hook_ = h.format(creator=creator, n=n, event=event)
-        title_ = t.format(creator=creator, event=event, hook=hook_) + e
-        sim = max((similar(title_, r) for r in recent[-200:]), default=0.0)
+    for h, (ti, t), e in options[:400]:
+        # YouTube/others: creator name first + what happened + "GTA 6" + one emoji (research takeaway 7)
+        title_ = ce_title if t is None else t.format(creator=creator, event=event, hook=h) + e
         if title_ in recent:
             continue
+        sim = max((similar(title_, r) for r in recent[-200:]), default=0.0)
         if sim < best_sim:
-            best, best_sim = (pat, hook_, t, title_), sim
+            best, best_sim = (h, ti, title_), sim
         if sim < 0.6:
             break
-    pattern, hook, title_tpl, title = best
+    if best is None:  # every option was used recently: vary the creator-event line
+        best = (
+            cands[pattern][0],
+            "ce",
+            f"{creator_event(lang, creator, mtype, rng)} {reaction_emoji(mtype, rng)}",
+        )
+    hook, title_style, title = best
     hook = wrap_hook(hook, c["limits"]["hook_line"])
     credit = c["credit"][lang].format(creator=creator, platform=PLATFORM_NAME.get(platform, platform))
     cta = rng.choice(c["cta"][lang])
+    post_line = (
+        rng.choice(c["reaction_lines"][lang])
+        if rng.random() < 0.6
+        else c["topic"][lang].format(CREATOR=creator.upper() if lang not in ("ja", "ar") else creator)
+    )
     return {
         "hook_text": hook,
         "hook_pattern": pattern,
         "title": title,
-        "title_style": c["titles"][lang].index(title_tpl),
+        "title_style": title_style,
         "credit": credit,
         "cta": cta,
         "event": event,
+        "post_line": post_line,
+        "moment_type": mtype,
         "source": "templates",
     }
 
@@ -191,8 +277,12 @@ def llm_package(
         f"Write packaging for a GTA 6 short clip. Language: {language} (write natively, never translate). "
         f"Voice: {channel.get('voice', 'hype')}. Creator: {creator} on {platform}. Payoff: {plan.get('payoff_kind')}.\n"
         f"Transcript: {excerpt}\nRecent titles to avoid repeating: {recent[-10:]}\n"
-        'Return JSON: {"hook_text": str (<=40 chars per line, max 2 lines), "hook_pattern": one of reaction|question|number|creator_first, '
-        '"title": str (<=60 chars, payoff first, name the creator), "caption": str (1-2 sentences, no hashtags), "cta": str}'
+        "Hook patterns that work on current GTA 6 clips: creator + what happened + 'in GTA 6' + 1-2 emojis matching the "
+        "reaction (laughter 😭🤣, shock 😳😨, hype 🔥), e.g. 'N3on survived a plane crash in GTA 6 😭'; or the creator's own "
+        "line in quotes + context. Sentence case, not all caps.\n"
+        'Return JSON: {"hook_text": str (<=40 chars per line, max 2 lines), "hook_pattern": one of creator_event|quote|'
+        'reaction|question|number|creator_first, "title": str (<=60 chars, creator name first + what happened + GTA 6 + '
+        'one emoji), "caption": str (short reaction line, no hashtags), "cta": str}'
     )
     out = llm.call_json(
         prompt,
@@ -261,7 +351,7 @@ def package(
     blocks = recent_tag_blocks or []
     fields = {}
     tags = {
-        p: _hashtags(language, core, creator, base["event"], tuple(lim[p]["hashtags"]), rng, blocks)
+        p: _hashtags(language, core, creator, base["event"], tuple(lim[p]["hashtags"]), rng, blocks, p)
         for p in PLATFORMS
     }
     yt_title = truncate(base["title"], lim["youtube"]["title"])
@@ -272,7 +362,8 @@ def package(
         ),
         "tags": [t.lstrip("#") for t in tags["youtube"]],
     }
-    body = base.get("caption") if base.get("source") == "llm" else base["title"].split(" | ")[-1]
+    # post caption: short reaction line or ALL-CAPS topic, then the tags (doc 14 rule 3)
+    body = base.get("caption") if base.get("source") == "llm" else base["post_line"]
     fields["tiktok"] = {
         "caption": truncate(f"{body} {' '.join(tags['tiktok'])} {base['credit']}", lim["tiktok"]["caption"])
     }
@@ -291,7 +382,7 @@ def package(
         "text": truncate(f"{body} {base['credit']}", lim["threads"]["text"] - 20),
         "topic_tag": (tags["threads"] or [None])[0],
     }
-    fields["snapchat"] = {"text": truncate(body, lim["snapchat"]["text"])}
+    fields["snapchat"] = {"text": truncate(f"{body} {' '.join(tags['snapchat'])}", lim["snapchat"]["text"])}
     ok = safe(" ".join(str(v) for f in fields.values() for v in f.values()))
     return {
         "hook_text": base["hook_text"],
@@ -301,6 +392,7 @@ def package(
         "features": {
             "hook_pattern": base["hook_pattern"],
             "title_style": base.get("title_style"),
+            "moment_type": base.get("moment_type"),
             "source": base["source"],
         },
         "safe": ok,

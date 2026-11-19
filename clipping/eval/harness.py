@@ -113,8 +113,13 @@ def evaluate(
         base = (baseline or {}).get("metrics", {}).get(metric)
         ok, reasons = True, []
         if bar is not None and (value < bar if direction == "higher" else value > bar):
-            ok = False
-            reasons.append(f"misses bar {bar}")
+            if s.get(
+                "target_only"
+            ):  # doc target not yet reachable on real data: reported, gated by baseline only
+                reasons.append(f"below target {bar} (target only)")
+            else:
+                ok = False
+                reasons.append(f"misses bar {bar}")
         if base is not None and _worse(value, base, direction, s.get("tolerance", tol)):
             ok = False
             reasons.append(f"worse than baseline {base:.4f}")

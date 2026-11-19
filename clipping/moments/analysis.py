@@ -105,6 +105,7 @@ def derived(f: dict[str, np.ndarray], prof: dict | None = None) -> dict[str, np.
         "impact": impact,
         "combat": combat,
         "music_swell": music_swell,
+        "music": f["music"].astype(float),
         "novelty": novelty,
         "motion_z": motion_z,
     }
@@ -124,8 +125,12 @@ def type_confidences(
         "crash": sq(d["impact"]) * (np.roll(d["speed"], 2) > 0.8),
         "firefight": sustained(d["combat"], 5) * sq(d["combat"]),
         "discovery": (d["motion_z"] < 0) * sq(d["novelty"]) * r * (1 - d["cutscene"]),
-        "comedy": r * (d["combat"] < 0.5) * (1 - d["cutscene"]) * (d["speed"] < 1.0),
+        # music/celebrity (doc 31): a song carries the stretch (sustained music) and the creator reacts over it
+        "music_celebrity": sustained(d["music"] * 2, 6) * np.clip(d["music"], 0, 1) * r * (1 - d["cutscene"]),
     }
+    song = sustained(d["music"] * 2, 6)
+    # a reaction over a song is a music moment, not NPC comedy: comedy yields where a song carries the stretch
+    conf["comedy"] = r * (d["combat"] < 0.5) * (1 - d["cutscene"]) * (d["speed"] < 1.0) * (1 - 0.6 * song)
     death = np.zeros(T)
     for e in events or []:
         if e["type"] in ("death", "arrest"):
@@ -167,6 +172,7 @@ class MomentResult:
     end_s: float
     hook_style: str
     beat_s: float | None = None
+    music_subject: bool = False  # doc 07 exception: the song is the moment, keep it
 
 
 def analyze_window(
@@ -175,6 +181,7 @@ def analyze_window(
     peak_s: float,
     events: list[dict] | None = None,
     today: dt.date | None = None,
+    words: list[dict] | None = None,
 ) -> MomentResult:
     """Type a candidate window around its heatmap peak and recommend type-specific bounds (doc 31 cut rules)."""
     tax = taxonomy()["types"]
@@ -183,6 +190,10 @@ def analyze_window(
     T = len(reaction)
     lo, hi = max(0, int(peak_s) - 30), min(T, int(peak_s) + 15)
     best_t, best_c, at = "comedy", 0.0, int(peak_s)
+    if words:  # creator names the song/artist/radio: strong evidence the music is the subject
+        said = " ".join(w["word"].lower() for w in words if lo <= w.get("start", 0) < hi)
+        if any(k in said for k in taxonomy().get("music_keywords", [])):
+            conf["music_celebrity"] = np.clip(conf["music_celebrity"] * 1.6, 0, 1)
     for name, c in conf.items():
         seg = c[lo:hi]
         if len(seg) and seg.max() > best_c:
@@ -204,4 +215,5 @@ def analyze_window(
         float(min(T, end)),
         rule["hook"],
         float(at) if best_t == "cutscene_reveal" else None,
+        bool(rule.get("music_subject")) and best_c >= 0.5,
     )

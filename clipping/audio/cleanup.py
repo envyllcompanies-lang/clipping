@@ -152,6 +152,14 @@ def process_window(c, window_id: int, detector: str | None = None) -> dict:
     sf.write(raw, res.clean, sr)
     loudnorm(raw, wd / "clean_mix.wav")
     raw.unlink()
+    orig = None
+    if (
+        res.music_spans
+    ):  # keep the untouched mix too: doc 07 "music is the subject" clips (set by doc 31) use it
+        sf.write(raw, audio, sr)
+        orig = wd / "orig_mix.wav"
+        loudnorm(raw, orig)
+        raw.unlink()
     info = {
         "separated": res.separated,
         "music_spans": res.music_spans,
@@ -159,6 +167,7 @@ def process_window(c, window_id: int, detector: str | None = None) -> dict:
         "music_after": np.round(res.music_after, 3).tolist(),
         "voice": str(wd / "voice.wav"),
         "clean_mix": str(wd / "clean_mix.wav"),
+        "orig_mix": str(orig) if orig else None,
     }
     c.execute(
         'UPDATE "window" SET music_risk=%s, audio=%s, status=%s WHERE id=%s',

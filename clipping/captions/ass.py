@@ -204,8 +204,18 @@ def build_ass(
     credit: str,
     profanity: str = "mask",
     emphasis_words: set[int] | None = None,
+    text_mode: str = "full",
+    headline_overlay: bool = False,
+    headline_case: str | None = None,
+    keep_case: list[str] | None = None,
+    key_hints: list[float] | None = None,
 ) -> tuple[str, dict]:
-    """Returns (ASS document, report) — report has per-line timing and width checks used by tests/backtests."""
+    """Returns (ASS document, report) — report has per-line timing and width checks used by tests/backtests.
+
+    text_mode (doc 11): "hook_only" (one headline for the whole clip, no spoken subtitles), "hook_key_lines" (headline
+    for the hook, then only the 1-3 strongest spoken lines), "full" (headline, then every spoken line).
+    headline_overlay: the headline is drawn as a PNG overlay (captions.headline: box/outline styles, colour emoji)
+    instead of an ASS event; report["headline_slot"] says where and when."""
     Wc, Hc = crop_plan["canvas"]
     cap = style["captions"]
     size = int(Hc * cap["size_pct"])
@@ -238,12 +248,18 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     events = []
     total = sum(s["end"] - s["start"] for s in plan["segments"])
     hook_end = min(style["hook"].get("hook_text_s", 2.5), total)
-    head_txt = hook_text.upper() if cap.get("all_caps") and language not in ("ja", "ar") else hook_text
-    htxt, hsc = fit(_esc(head_txt), language, int(size * 1.05), max_w, 2)
-    events.append(
-        f"Dialogue: 2,{_ts(0)},{_ts(hook_end)},Headline,,0,0,0,,{{\\pos({Wc // 2},{y})\\fad(80,120)"
-        f"\\fscx{int(hsc * 100)}\\fscy{int(hsc * 100)}}}{htxt}"
-    )
+    if text_mode == "hook_only":
+        hook_end = total  # the headline stays for the whole clip
+    from clipping.captions import headline as hl
+
+    case = headline_case or ("upper" if cap.get("all_caps") else "sentence")
+    head_txt = hl.apply_case(hook_text, case, language, keep_case)
+    if not headline_overlay:
+        htxt, hsc = fit(_esc(hl.strip_emoji(head_txt)), language, int(size * 1.05), max_w, 2)
+        events.append(
+            f"Dialogue: 2,{_ts(0)},{_ts(hook_end)},Headline,,0,0,0,,{{\\pos({Wc // 2},{y})\\fad(80,120)"
+            f"\\fscx{int(hsc * 100)}\\fscy{int(hsc * 100)}}}{htxt}"
+        )
     cx, cy = 40, min(band[1] + 30, int(0.78 * Hc) - 40)
     events.append(f"Dialogue: 1,{_ts(0)},{_ts(total)},Credit,,0,0,0,,{{\\pos({cx},{cy})}}{_esc(credit)}")
     body = [
@@ -259,7 +275,18 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             body, tuple(cap["words_per_line"]), cap.get("min_on_screen_s", 0.4), cap.get("bridge_gap_s", 0.3)
         )
     )
-    report = {"lines": [], "max_width_ratio": 0.0, "headline": head_txt, "credit": credit}
+    report = {
+        "lines": [],
+        "max_width_ratio": 0.0,
+        "headline": head_txt,
+        "credit": credit,
+        "text_mode": text_mode,
+        "headline_slot": {"center_y": y, "t0": 0.0, "t1": round(hook_end, 3), "max_w": int(Wc * 0.9)},
+    }
+    if text_mode == "hook_only":
+        lines = []
+    elif text_mode == "hook_key_lines":
+        lines = key_lines(lines, emphasis_words or set(), key_hints or [], plan["segments"])
     emph = emphasis_words or set()
     pop = "{\\fscx90\\fscy90\\t(0,80,\\fscx100\\fscy100)}" if cap.get("animation") == "pop" else ""
     for ln in lines:
@@ -314,6 +341,22 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
         )
     return hdr + "\n".join(events) + "\n", report
+
+
+def key_lines(
+    lines: list[Line], emph: set[int], hints: list[float], segments: list[dict], k: int = 3
+) -> list[Line]:
+    """The 1-3 strongest spoken lines (doc 11 "hook + key lines"): emphasis words (09 marks punchline/catchphrase
+    words), closeness to the payoff/catchphrase hints, and length as a tie-break. Kept in time order."""
+
+    def score(ln: Line) -> float:
+        e = sum(w["index"] in emph for w in ln.words)
+        near = max((1.0 / (1.0 + abs(ln.start - h)) for h in hints), default=0.0)
+        return 2.0 * e + 3.0 * near + 0.05 * len(ln.words)
+
+    ranked = sorted(lines, key=score, reverse=True)
+    keep = [ln for ln in ranked if score(ln) >= 1.0][:k] or ranked[:1]
+    return sorted(keep, key=lambda ln: ln.start)
 
 
 def credit_line(creator: str, platform: str, template: str = "@{creator} on {platform}") -> str:

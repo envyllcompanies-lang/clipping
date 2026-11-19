@@ -4,87 +4,106 @@ Status of the build. Spec: `docs/`. Run `make test` (fast unit tests), `make tes
 
 ## Summary
 
-All 7 phases are built and every component passes its tests and its stage backtest (24 stages, bars in
-`eval/thresholds.yaml`, accepted baselines in `eval/baselines/`, history in `eval/CHANGELOG.md`). What's left needs
-your keys, accounts and a host: see **Needs B**. Until then, backtests run on deterministic synthetic data and the
-platform connectors are tested against faithful fakes of each API.
+All 7 phases are built and covered by unit tests. **Every quality backtest now runs on real data only**: the synthetic
+ground-truth datasets were removed (they made results look far better than real streams do). Stages that grade
+quality but have no real labelled data yet are listed under "Pending real data" instead of showing a made-up score.
+Platform connectors, storage, the gate, the dashboard and provisioning are checked against faithful fakes of each API
+(mechanics, not quality). What's left needs your keys, accounts and a host: see **Needs B**.
 
 ## Phase status
 
 | Phase | Status |
 | --- | --- |
-| 1 Foundation and sources | done |
-| 2 Finding moments | done on synthetic streams + TTS speech; re-check on 3 real recorded streams once Twitch keys exist |
-| 3 Making clips | done; your "would post" review of the top 10 needs real footage |
+| 1 Foundation and sources | done; recorder, chat and ingest graded on real Twitch data; radar needs ~2 weeks of live samples to grade |
+| 2 Finding moments | done incl. docs 31/32; heatmap graded on 8 real GTA VI VODs (8 languages); transcription/audio/events need labelled real sets |
+| 3 Making clips | done; research updates applied (text styles, sentence case, hook patterns, letterbox arm); quality needs real footage + your review |
 | 4 Dashboard and public site | done; needs a host to be live for reviews |
 | 5 Publishing | done in fallback mode against platform fakes; real uploads need the apps/keys |
 | 6 Accounts and languages | done; the 60 signups are yours |
-| 7 Analytics and autopilot | done: weekly refits, bandits, volume shares, digest, end-to-end run, deploy files; a real week needs live accounts |
+| 7 Analytics and autopilot | done: refits, bandits (layouts + text arms), digest, deploy files; a real week needs live accounts |
 
-## Component results
+## Real-data datasets
 
-| # | Component | Backtest result (bar) |
+- `eval/datasets/viewer_clips/2026-11-18`: 8 GTA VI VODs (dvniel_play fr, xolixtwitch en, jefe en, cameliaaa92 fr,
+  olesha ru, evelone2004 ru, alanzoka pt, montanablack88 de), the 4-hour span with the most viewer clips of each,
+  1,331 viewer clips as labels. Built with official Helix (clips, videos) + streamlink VOD ranges (doc 04 route);
+  media is deleted after feature extraction, only per-second feature arrays and clip labels are kept (7.5 MB).
+  Rebuild: `make datasets` (`clip eval build-real viewer_clips`). VODs carry no chat replay.
+- `eval/datasets/live_chat/2026-11-18T2131`: live IRC capture of 3 GTA VI channels (rubius, alanzoka, squeezie) with the
+  clips made during capture. Counts and timings only, no usernames or message text.
+
+## Backtest results (real data)
+
+| # | Component | Result |
 | --- | --- | --- |
-| 30 | Backtest harness | regression gate rejects any metric >2% worse than baseline (timing metrics: 50%); deliberately worse weights rejected |
-| 25 | Infrastructure & data model | one recorded stream end to end through the job queue (server + M1 roles): moment found → extracted → cleaned → transcribed → events → rendered, packaged, gated → live on all 6 platforms (fakes) → stats pulled; no render files left; backups restore cleanly; M1 offline a day loses nothing |
-| 01 | Creator radar | Spearman 0.853 vs next-week hours watched (≥ 0.6) |
-| 02 | Stream recorder | window extraction exact 100%, p95 0.4 s (≤ 10 s); disk 1.05× buffer (≤ 1.1) |
-| 03 | Chat capture | spikes aligned ≤ 2 s: 83% (≥ 80%), median 0.97 s; no false missing time |
-| 04 | Platform clips & VOD ingest | 100% of clips mapped to the right UTC instant within 1 h |
-| 21 | Storage lifecycle | files deleted at last upload 100%; disk flat over a simulated week (0.86×) |
-| 05 | Moment heatmap | recall@20 0.98; live-signals-only recall@20 0.93 (≥ 0.7); precision 0.93; 43 s compute per stream-hour (≤ 120 s) |
-| 07 | Audio cleanup & music removal | detector 100% on held-out audio; separation skipped on all no-music windows; radio fingerprint gone in 7/7 (≥ 95%); voice +12.4 dB |
-| 06 | Transcription | WER en 0%, other 9 languages ≤ 9.1% (bars 15% / 25%); word timing 0.019 s (≤ 0.15 s) |
-| 08 | Game event detection | precision and recall 100% on 7 event types; 2.9 s per window (≤ 10 s) |
-| 13 | Style study & profiles | analyzer recovers cut rate (2% err), caption position, case, fill colour, layout 6/6, split; zoom rate ±0.7/10 s (weakest measure) |
-| 09 | Clip builder | boundary IoU 0.80 (≥ 0.6); payoff included 98% (≥ 95%); plans valid 100%; short + long 100% |
-| 10 | Reframe & layout | facecam found 100% / false 0%; subject in crop 96% (≥ 95%); face in top panel + caption-clear 100%; facecam in gameplay crop 15% |
-| 11 | Captions | timing drift 0 s (≤ 0.1); every line fits in all 10 languages; headline + credit 100%; libass renders Latin, Arabic, Japanese |
-| 12 | Render engine | 6/6 versions valid (1080×1920, H.264/AAC, −14 LUFS, no black/silence); platform fit 100%; 57 s per 40 s clip with Linux libx264 |
-| 14 | Packaging | 600 posts: limits 100%; language = channel 100% (10 languages); no repeated titles; patterns tracked |
-| 15 | Auto-gate | seeded duplicates caught 100%, false duplicates 0%; repeat to same account blocked; every decision has a reason; blocklist pulls everywhere |
-| 16–20 | Publisher + YouTube, Instagram/Facebook/Threads, TikTok, Snapchat | one clip live on all 6 with correct fields; crash mid-upload and injected 5xx never double-post; never above limit − 10% reserve; 15-min spacing; private/inbox fallbacks create one-tap tasks; media deleted after last upload |
-| 23 | Dashboard & kill switch | all 8 alert types fire; "pull everywhere" removes a live clip from YouTube/IG/FB/Threads in one worker cycle; TikTok/Snapchat become manual tasks; every screen one tap from Home |
-| 22 | Analytics & feedback loop | no missed stats pulls; layout bandit moved 91% of volume to the truly best layout in 4 weeks; worse refit refused on held-out week; every change explained; digest produced; clip score vs performance ρ 0.37 |
-| 27 | Account provisioning tool | one run: 10 aliases, 10 inbox labels, 60 passwords, 60 handle checks (+variants), 10 kits, 10 worksheets; 50/50 codes routed to the right row only; wrong-language connect rejected; re-run changes nothing |
-| 28 | Language market ranking | swap recommended only after 4 straight winning weeks, replaces the lowest language, provisioning prepped automatically; shares follow scores (5% floor); frozen 4 weeks after release |
-| 29, 24 | Public site, credentials | policy pages, Meta data-deletion callback, OAuth callbacks; tokens encrypted, refreshed ahead of expiry, reconnect alerts (unit tests) |
+| 02 | Stream recorder | live Twitch recording: started in 3.5 s, window extraction exact 100%, p95 0.28 s (≤ 10 s), disk 1.006× buffer (≤ 1.1) |
+| 03 | Chat capture | no false missing time; 37.5% of clip moments have a chat spike within 10 s; spike-to-clip-label alignment within 2 s only 12.5% (median 6.5 s; the doc's 2 s needs on-screen events from 08) |
+| 04 | Platform clips & VOD ingest | 1,000 real clips, every clip with a VOD offset mapped to a consistent UTC instant (100%); median 0.77 min from moment to clip |
+| 05 | Moment heatmap | **recall@20 0.20** (doc target 0.7, not met), precision 0.46, on the 8 VODs without chat (audio, voice, visual + reaction). The synthetic 0.98 was not real. Chat and viewer clips, which real live streams add, can't be graded on VODs |
+| 31 | Gameplay moment analysis | gameplay score **lowers** heatmap recall on both halves of every VOD (−0.05 fit half, −0.0125 test half) → heatmap weight 0; calibration builds a GTA 6 profile from raw VODs. Used in the clip builder (type-specific bounds, payoff anchor, hook style) |
+| 32 | Creator profile & reaction | reaction at weight 0.5 raises recall on both halves (+0.0125, +0.025: one or two moments of 80, fragile) → kept, **only for streams without chat** (where it was validated); per-creator normalization did not beat a pooled baseline here (−0.025). Never-clip segments and catchphrases are used by the builder |
+| 15 | Auto-gate (mechanics) | repeat to same account blocked; first post allowed; every decision has a reason; blocklist pulls everywhere |
+| 16–20 | Publisher + connectors (mechanics vs API fakes) | one clip live on all 6; crash mid-upload / 5xx never double-post; quota reserve; spacing; fallbacks create one-tap tasks |
+| 21 | Storage lifecycle | files deleted at last upload; disk flat over a simulated week; no orphans |
+| 23 | Dashboard & kill switch (mechanics) | all alert types fire; pull-everywhere works in one worker cycle |
+| 27 | Account provisioning (mechanics) | aliases, labels, passwords, handle checks, worksheets; codes routed only to the right row; re-run changes nothing |
 
-## What's next
+Decision rule for docs 31/32 ("keep only what improves heatmap recall@20"): an extra signal's weight is chosen on the
+first half of each VOD and must also improve the second half, otherwise it's 0 (`realeval.halves_gain`; backtests 31/32
+re-decide on every new dataset). Doc bars that real data can't reach yet are marked `target_only` in
+`eval/thresholds.yaml`: reported, but the gate is "no worse than the accepted baseline".
 
-1. You add the keys below as you get them; nothing else in the code needs to change.
-2. With Twitch keys: the radar and recorder start, the nightly job builds the real viewer-clip dataset, and `make backtest-all` grades the heatmap on real GTA 6 streams too (`recall_at_20_live_real`).
-3. Tune the GTA 6 HUD profile (`config/games/gta6.yaml`) from the first real frames (doc 08 "starts empty").
+## Pending real data (no score until labelled real sets exist)
+
+01 radar (2 weeks of live samples), 06 transcription WER (human transcripts of GTA streams), 07 music removal
+(labelled music minutes), 08 game events (labelled HUD events per type), 09 clip builder boundaries, 10 reframe, 11
+captions, 12 render timing on the M1, 13 style study (reference videos: see Needs B), 14 packaging, 22 analytics (a real
+week of posts), 25 end-to-end on a live stream with live accounts, 28 language ranking (weeks of data), 31 type
+precision / per-type IoU, 32 segment exclusion / catchphrases / collab alignment.
+
+## Research update (docs/research/gta6-clip-examples.md, Nov 18)
+
+- **Text styles** (11): two headline arms, white rounded box + black text (57%) and white text + black outline (43%),
+  drawn as an overlay image so emoji endings keep their colour (libass draws emoji as monochrome outlines).
+- **Text modes** (11): hook-only (60%, starting favorite), hook + key lines (25%), full subtitles (15%).
+- **Headline case**: sentence case 75% / ALL CAPS 25%; creator names, "GTA 6" and acronyms keep their case.
+- **Hook patterns** (14), written natively in all 10 languages: "creator + what happened + in GTA 6 + emoji" (40%) and
+  "quote + context" (25%, the creator's own line picked from the transcript), plus the earlier patterns. Emojis match
+  the reaction (laughter 😭🤣, shock 😳😨, hype 🔥). Post captions: short reaction line or ALL-CAPS topic + `#fyp #viral
+  #gta #gta6 #<creator>`; YouTube titles creator-first with one emoji and a credit line.
+- **Raw letterbox layout arm** (10): original 16:9 frame centered, black bars, original corner cam, hook in the top bar;
+  8% starting share (stacked stays the favorite at 55%).
+- **Music / celebrity moment type** (31) with the `music_subject` exception (07): the original mix is kept, the gate
+  routes the clip to Snapchat/TikTok/Instagram/Facebook/YouTube and drops a platform once 3 of its last 5 such posts
+  were blocked, muted or claimed. Launch weights: discovery now sits below comedy, crash and fail types.
+- **Seed examples** (13): `clip style seed` loads the 7 examples into
+  `config/styles/examples/gta6-clip-examples.yaml` with derived priors (box 57%, sentence case 86%, stacked 38K vs
+  letterbox 15K mean views, discovery weakest). The style study also measures text mode and text style now.
+- Analytics bandits learn text mode, text style and headline case per channel, like layouts.
 
 ## Needs B
 
 Keys and accounts only you can create, each with why:
 
-- **Twitch developer app** (`TWITCH_CLIENT_ID/SECRET`): radar live polling, recording selection, clip discovery, and the real-stream datasets.
+- ~~Twitch developer app~~: done (in `.env` only). Consider rotating the secret since it was pasted in chat.
 - **Kick developer app** (`KICK_CLIENT_ID/SECRET`): Kick live polling (Kick treated the same as Twitch).
 - **YouTube Data API key** (`YOUTUBE_API_KEY`): off-platform creator reach and language saturation scans.
-- **LLM key** (`LLM_PROVIDER`, `LLM_API_KEY`, `LLM_MONTHLY_BUDGET_USD`): better hooks/titles and clip tie-breaks; native-language templates and rules are used until then, with a monthly cost ceiling once set.
-- **Hosting** for the server worker, dashboard and policy pages (doc 25): the policy pages must be live over HTTPS for the platform reviews. `docker-compose.yml`, `deploy/systemd/` and `scripts/backup.sh` are ready.
-- **Storage bucket** (`BUCKET_*`): public URLs Instagram/Threads pull from (local `/public/` route is used until then).
-- **Google Cloud project** (`GOOGLE_OAUTH_CLIENT_ID/SECRET`): YouTube uploads and stats; submit the compliance audit (until then uploads are private + one-tap task).
-- **Your existing YouTube uploader**: copy to `legacy/youtube-uploader/uploader.py` with `upload(path, metadata, credentials) -> video_id`; the connector uses it automatically (built-in uploader until then).
-- **Meta app** (`META_APP_ID/SECRET`): Instagram, Facebook Pages, Threads; app review for publishing.
-- **TikTok developer app** (`TIKTOK_CLIENT_KEY/SECRET`): submit the audit with the dashboard's posting screen (until then: inbox drafts).
-- **Snap Business + Public Profile API allowlist** (`SNAP_CLIENT_ID/SECRET`): Spotlight; endpoint paths get confirmed on approval.
-- **addy.io account** (`ALIAS_API_KEY`, `ALIAS_DOMAIN` = your free `yourname.anonaddy.com`): one run of `clip accounts provision` then makes all aliases, passwords, handle checks and worksheets.
-- **Brand name** (`config/brand.yaml`): handles use the placeholder `gta6clips` until you pick one.
-- **Gmail connection** for your inbox: per-language labels and automatic verification codes on the worksheets.
-- **Owner login**: `clip dashboard create-owner --email you@…`, then add the printed 2FA secret to an authenticator app.
-- **The 60 signups** (10 languages × 6 platforms) from the worksheets at `/setup`, then Connect on each row; `OWNER_PHONE` only where required.
-- **Style samples decision** (doc 13 open question): how reference-channel videos may be obtained (YouTube's terms). Then `clip style study <channel> <folder>`; the house profile (your reference layout) is used until then.
-- **One render timing on the MacBook**: `make backtest STAGE=12` there to record the VideoToolbox time (doc target ≤ 30 s per 40 s clip).
+- **LLM key** (`LLM_PROVIDER`, `LLM_API_KEY`, `LLM_MONTHLY_BUDGET_USD`): better hooks/titles; native templates until then.
+- **Hosting** for the server worker, dashboard and policy pages (doc 25); policy pages must be live over HTTPS for reviews.
+- **Storage bucket** (`BUCKET_*`): public URLs Instagram/Threads pull from.
+- **Google Cloud project** (`GOOGLE_OAUTH_CLIENT_ID/SECRET`): YouTube uploads and stats; compliance audit.
+- **Your existing YouTube uploader**: copy to `legacy/youtube-uploader/uploader.py` with `upload(path, metadata, credentials) -> video_id`.
+- **Meta app** (`META_APP_ID/SECRET`), **TikTok developer app**, **Snap Business + Public Profile API allowlist**.
+- **addy.io account** (`ALIAS_API_KEY`, `ALIAS_DOMAIN`), **Gmail connection**, **brand name** (`config/brand.yaml`).
+- **Owner login** (`clip dashboard create-owner`), **the 60 signups** from the worksheets at `/setup`.
+- **Style samples decision** (doc 13): how reference-channel videos may be obtained; then `clip style study <channel> <folder>`.
+- **Labelled real sets** to grade the pending stages: a few hours of GTA stream transcripts (06), HUD event marks (08),
+  sponsor/BRB minutes and known catchphrases (32), and your "would post" review of the first real clips (09–14).
+- **One render timing on the MacBook**: `make backtest STAGE=12` there (VideoToolbox; target ≤ 30 s per 40 s clip).
 
 ## Notes
 
-- Built and tested in a cloud Linux container: libx264 here, `h264_videotoolbox` automatically on macOS; RAM is detected at startup to size Whisper and parallelism.
-- Synthetic datasets include realistic confounders (missing chat, radio without chat, raids/copypasta, scene cuts) so stages can't pass trivially, but they are easier than real streams. Twitch's internal web API is not used for datasets (unofficial).
-- Music removal uses Demucs (MIT); ELUATE/husher were skipped (no license, "personal use"). PANNs (AudioSet) is used for music detection on the M1 when installed.
-- Whisper started phrases ~0.4 s early; an energy-based word-edge refinement fixed it (0.21 s → 0.02 s).
-- Layouts are A/B arms with your reference (stacked) as the starting favorite at 60%; the analytics bandit reallocates per language channel.
-- Bars I set where doc 30 has none (style study, provisioning, dashboard, publishing, languages, analytics) are recorded in `eval/thresholds.yaml`. The zoom-rate bar for the style analyzer is at its current level and should tighten once real reference samples exist.
-- Changes were pushed to `claude/gta6-clipping-auto-post-afpoki` with draft PR #1 to `main` (the session's branch rules); merge the PR to land them on `main`.
+- Built and tested in a cloud Linux container: libx264 here, `h264_videotoolbox` on macOS; RAM detected at startup.
+- Twitch's internal web API is never used; datasets use official Helix + streamlink only.
+- Box-style headlines use Montserrat ExtraBold (bundled, OFL); a lighter Inter-like font for the box arm can be added later.
+- Changes are on `claude/gta6-clipping-auto-post-afpoki` with draft PR #1 to `main`; merge the PR to land them.

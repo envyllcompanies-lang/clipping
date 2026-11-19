@@ -147,3 +147,38 @@ def evaluate(
         "vods": len(recs),
         "misses": misses,
     }
+
+
+def halves_gain(vods: list[Vod], signal: str, weights=(0.1, 0.2, 0.3, 0.5)) -> dict:
+    """Keep-or-drop rule for an extra heatmap signal ("keep only what improves recall@20"): the weight is picked on the
+    first half of every VOD and must also improve the second half; otherwise the signal's weight is 0."""
+    cfg = config.settings()["heatmap"]["weights"]
+    base_w = {k: cfg.get(k, 0.1) for k in ("audio_energy", "voice_excitement", "visual_change")}
+    pooled = pooled_baseline(vods)
+    sigs = []
+    for v in vods:
+        sig = base_signals(v)
+        react = reaction_series(v, True, pooled, fit_until=v.T / 2)
+        sig["reaction"] = react
+        sig["gameplay"], _ = ma.gameplay_score(v.f, react)
+        sigs.append(sig)
+
+    def mean_recall(w: float, test: bool) -> float:
+        rs = []
+        for v, sig in zip(vods, sigs, strict=True):
+            s_ = {k: sig[k] for k in base_w} | ({signal: sig[signal]} if w else {})
+            r, _, _ = recall(s_, {**base_w, signal: w}, v, *((v.T / 2, v.T) if test else (0, v.T / 2)))
+            if r == r:
+                rs.append(r)
+        return float(np.mean(rs))
+
+    fit0, test0 = mean_recall(0.0, False), mean_recall(0.0, True)
+    best = max(weights, key=lambda w: mean_recall(w, False))
+    fit1, test1 = mean_recall(best, False), mean_recall(best, True)
+    keep = fit1 > fit0 and test1 > test0
+    return {
+        "weight_tried": best,
+        "gain_fit_half": fit1 - fit0,
+        "gain_test_half": test1 - test0,
+        "weight_kept": best if keep else 0.0,
+    }

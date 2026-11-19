@@ -23,7 +23,10 @@ chat:
   spam_identical_threshold: 5
 heatmap:
   step_s: 1
-  weights: {chat_velocity: 0.25, viewer_clips: 0.25, audio_energy: 0.15, voice_excitement: 0.10, chat_reaction: 0.10, game_events: 0.10, visual_change: 0.05}
+  # reaction (doc 32): kept at 0.5 for streams without chat, where it improved recall@20 on both halves of the real VOD
+  # set (+1-2 moments of 80; fragile). Not applied when chat exists: unvalidated there and it can outrank a clear chat spike.
+  # gameplay (doc 31): 0, lowered recall@20 on both halves. Re-decided by backtests 31/32 on every new dataset.
+  weights: {chat_velocity: 0.25, viewer_clips: 0.25, audio_energy: 0.15, voice_excitement: 0.10, chat_reaction: 0.10, game_events: 0.10, visual_change: 0.05, reaction: 0.5, gameplay: 0.0}
   smooth_s: 5
   peak_separation_s: 45
   peak_percentile: 95

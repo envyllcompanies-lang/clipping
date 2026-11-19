@@ -134,9 +134,10 @@ def stream_arrays(c: psycopg.Connection, stream_id: int) -> tuple[int, dict[str,
     if not clips:
         sig["viewer_clips"] = np.full(T, np.nan)  # Kick / unclipped: drop, renormalize
     w = active_weights(c, st["language"])
-    if (
-        w.get("reaction", 0) > 0 or w.get("gameplay", 0) > 0
-    ):  # docs 31/32 signals, only when the backtest kept them
+    # docs 31/32 signals, only when the backtest kept them, and only in the conditions they were validated in:
+    # the real-VOD backtests have no chat, so they're added only for streams without a chat signal.
+    no_chat = not buckets or not np.nanmax(np.nan_to_num(vel)) > 0
+    if no_chat and (w.get("reaction", 0) > 0 or w.get("gameplay", 0) > 0):
         full = {
             "audio_db10": audio_db,
             "voice": np.nan_to_num(voice),

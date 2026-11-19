@@ -304,6 +304,38 @@ def plan(
             if st[i, 4] > 0.003 * lay.overlay_mask.size
         ]
     panels = []
+    if layout == "letterbox":
+        # raw letterbox arm (doc 10): the original 16:9 stream frame centered, black bars, original corner cam kept,
+        # hook text in the top bar. No crops, no zooms: the cheapest format.
+        fh_ = int(round(Wc * lay.height / lay.width / 2) * 2)
+        y0 = (Hc - fh_) // 2
+        panels.append(
+            {
+                "name": "game",
+                "dst": [0, y0, Wc, fh_],
+                "keyframes": [{"t": 0.0, "box": [0, 0, lay.width, lay.height]}],
+            }
+        )
+        s = Wc / lay.width
+        face_dst = None
+        if lay.facecam:
+            fx, fy, fw, fh = lay.facecam
+            face_dst = [int(fx * s), int(y0 + fy * s), int(fw * s), int(fh * s)]
+        band = [max(0, y0 - band_h - 24), y0 - 24]
+        return {
+            "layout": layout,
+            "canvas": [Wc, Hc],
+            "panels": panels,
+            "zooms": [],
+            "caption_band": band,
+            "face_dst": face_dst,
+            "safe_zones": {
+                "bottom_clear": [0, int(0.8 * Hc), Wc, int(0.2 * Hc)],
+                "right_clear": [int(0.85 * Wc), 0, int(0.15 * Wc), Hc],
+            },
+            "fps": fps,
+            "source": lay.to_json(),
+        }
     if layout == "stacked" and lay.facecam:
         cam_h = int(Hc * cam_ratio)
         game_h = Hc - cam_h

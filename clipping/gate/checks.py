@@ -56,7 +56,7 @@ def evaluate(c: psycopg.Connection, clip_version_id: int, candidates: list[dict]
     cv = db.one(
         c,
         """SELECT cv.*, cl.moment_id, cl.channel_id, cl.creator_id, cl.edit_plan, cl.packaging, m.score, m.stream_id,
-                             m.start_s, m.end_s, cr.blocklisted, cr.paused AS creator_paused, ch.score_floor, w.music_risk, w.audio
+                             m.start_s, m.end_s, cr.blocklisted, cr.paused AS creator_paused, ch.score_floor, w.music_risk, w.audio, cl.music_subject
                       FROM clip_version cv JOIN clip cl ON cl.id=cv.clip_id JOIN moment m ON m.id=cl.moment_id
                       LEFT JOIN creator cr ON cr.id=cl.creator_id LEFT JOIN channel ch ON ch.id=cl.channel_id
                       LEFT JOIN "window" w ON w.moment_id=m.id WHERE cv.id=%s LIMIT 1""",
@@ -157,8 +157,24 @@ def evaluate(c: psycopg.Connection, clip_version_id: int, candidates: list[dict]
     if not _record(d, "originality", base <= tr and bool(extra), f"transformations: {sorted(tr)}"):
         d.status = "rebuild"
         return d
-    # 6 music risk: mute <= 2 s of flagged spans, else reject
-    risk_spans = [tuple(s) for s in ((cv["audio"] or {}).get("risk_spans") or [])]
+    # 6 music risk: mute <= 2 s of flagged spans, else reject. Exception (doc 07): the song is the subject
+    if cv.get("music_subject"):
+        allowed = music_subject_platforms(c)
+        d.targets = [t for t in d.targets if t["platform"] in allowed]
+        _record(
+            d,
+            "music_risk",
+            bool(d.targets),
+            f"music is the subject: song kept; routed to {sorted({t['platform'] for t in d.targets})}",
+        )
+        if not d.targets:
+            d.status = "rejected"
+            return d
+        risk_spans = []
+    else:
+        risk_spans = None
+    if risk_spans is None:
+        risk_spans = [tuple(s) for s in ((cv["audio"] or {}).get("risk_spans") or [])]
     in_clip = []
     for a, b in risk_spans:
         for seg in plan.get("segments", []):
@@ -170,7 +186,8 @@ def evaluate(c: psycopg.Connection, clip_version_id: int, candidates: list[dict]
         _record(d, "music_risk", False, f"{total:.1f}s of residual music in clip")
         d.status = "rejected"
         return d
-    _record(d, "music_risk", True, f"{total:.1f}s residual music" + (" (muted)" if total else ""))
+    if not cv.get("music_subject"):
+        _record(d, "music_risk", True, f"{total:.1f}s residual music" + (" (muted)" if total else ""))
     d.mute_spans = in_clip
     # 7 platform fit: drop platforms whose limits this version misses
     fit = []
@@ -197,6 +214,30 @@ def evaluate(c: psycopg.Connection, clip_version_id: int, candidates: list[dict]
         d.status = "rejected"
         return d
     return d
+
+
+MUSIC_SUBJECT_PLATFORMS = ["snapchat", "tiktok", "instagram", "facebook", "youtube"]
+BLOCK_KINDS = ("blocked", "muted", "copyright", "claim", "removed")
+
+
+def music_subject_platforms(c: psycopg.Connection, window: int = 5, max_blocked: int = 3) -> set[str]:
+    """Platforms that take music-subject clips (doc 07): those that tag licensed music, plus YouTube where a claim is
+    accepted; a platform drops out once >= 3 of its last 5 music-subject posts were blocked, muted or claimed."""
+    out = set()
+    for p in MUSIC_SUBJECT_PLATFORMS:
+        rows = db.all_(
+            c,
+            """SELECT EXISTS (SELECT 1 FROM claim k WHERE k.post_id=po.id AND k.kind = ANY(%s)) blocked
+               FROM post po JOIN clip_version cv ON cv.id=po.clip_version_id JOIN clip cl ON cl.id=cv.clip_id
+               WHERE cl.music_subject AND po.platform=%s AND po.status IN ('live','posted','removed','blocked')
+               ORDER BY po.id DESC LIMIT %s""",
+            list(BLOCK_KINDS),
+            p,
+            window,
+        )
+        if sum(r["blocked"] for r in rows) < max_blocked:
+            out.add(p)
+    return out
 
 
 def persist(c: psycopg.Connection, clip_version_id: int, d: Decision) -> None:

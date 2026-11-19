@@ -1,0 +1,99 @@
+{
+  "stage": "32",
+  "name": "Creator Profile & Reaction (real VODs)",
+  "passed": true,
+  "seconds": 15.07,
+  "dataset_version": "viewer_clips@2026-11-18",
+  "code_version": "28efdbe",
+  "metrics": [
+    {
+      "metric": "reaction_gain_fit_half",
+      "value": 0.012500000000000011,
+      "baseline": 0.012500000000000011,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "reaction_gain_test_half",
+      "value": 0.025000000000000022,
+      "baseline": 0.025000000000000022,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "reaction_weight_kept",
+      "value": 0.5,
+      "baseline": 0.5,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "reaction_alone_recall_normalized",
+      "value": 0.1875,
+      "baseline": 0.1875,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "reaction_alone_recall_raw",
+      "value": 0.2125,
+      "baseline": 0.2125,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "normalized_minus_raw",
+      "value": -0.024999999999999994,
+      "baseline": -0.024999999999999994,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "heatmap_recall_with_reaction",
+      "value": 0.175,
+      "baseline": 0.175,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "heatmap_recall_without",
+      "value": 0.175,
+      "baseline": 0.175,
+      "bar": 0.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "heatmap_gain_from_reaction",
+      "value": 0.0,
+      "baseline": 0.0,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "pending": [
+      "segment exclusion (needs labelled sponsor/BRB minutes)",
+      "catchphrase precision (needs transcripts of top clips)",
+      "collab alignment (needs known collab sessions)"
+    ]
+  }
+}

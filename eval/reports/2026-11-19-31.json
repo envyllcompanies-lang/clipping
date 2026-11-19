@@ -1,0 +1,87 @@
+{
+  "stage": "31",
+  "name": "Gameplay Moment Analysis (real VODs)",
+  "passed": true,
+  "seconds": 9.1,
+  "dataset_version": "viewer_clips@2026-11-18",
+  "code_version": "28efdbe",
+  "metrics": [
+    {
+      "metric": "gameplay_gain_fit_half",
+      "value": -0.04999999999999999,
+      "baseline": -0.04999999999999999,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "gameplay_gain_test_half",
+      "value": -0.012499999999999983,
+      "baseline": -0.012499999999999983,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "gameplay_weight_kept",
+      "value": 0.0,
+      "baseline": 0.0,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "heatmap_recall_with_gameplay",
+      "value": 0.1875,
+      "baseline": 0.1875,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "heatmap_recall_without",
+      "value": 0.175,
+      "baseline": 0.175,
+      "bar": 0.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "heatmap_gain_from_gameplay",
+      "value": 0.012500000000000011,
+      "baseline": 0.012500000000000011,
+      "bar": null,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "calibration_built",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "profile": {
+      "letterbox_threshold": 0.3,
+      "cutscene_share": 0.1804,
+      "cutscene_cut_rate": 0.079,
+      "calibrated_on_seconds": 103390,
+      "calibrated_at": "2026-11-19"
+    },
+    "pending": [
+      "type precision (needs labelled types)",
+      "boundary IoU per type"
+    ]
+  }
+}

@@ -17,6 +17,20 @@ def run() -> StageResult:
     prof = ma.calibrate([v.f for v in vods], save=False)
     base = realeval.evaluate(vods)["recall_at_20"]
     with_g = realeval.evaluate(vods, {"gameplay": W_GAMEPLAY})["recall_at_20"]
-    return StageResult({"heatmap_recall_with_gameplay": with_g, "heatmap_recall_without": base, "heatmap_gain_from_gameplay": with_g - base,
-                        "calibration_built": 1.0 if prof["letterbox_threshold"] and prof["calibrated_on_seconds"] > 0 else 0.0},
-                       [], ver, {"profile": prof, "pending": ["type precision (needs labelled types)", "boundary IoU per type"]})
+    hg = realeval.halves_gain(vods, "gameplay")
+    return StageResult(
+        {
+            "gameplay_gain_fit_half": hg["gain_fit_half"],
+            "gameplay_gain_test_half": hg["gain_test_half"],
+            "gameplay_weight_kept": hg["weight_kept"],
+            "heatmap_recall_with_gameplay": with_g,
+            "heatmap_recall_without": base,
+            "heatmap_gain_from_gameplay": with_g - base,
+            "calibration_built": 1.0
+            if prof["letterbox_threshold"] and prof["calibrated_on_seconds"] > 0
+            else 0.0,
+        },
+        [],
+        ver,
+        {"profile": prof, "pending": ["type precision (needs labelled types)", "boundary IoU per type"]},
+    )
