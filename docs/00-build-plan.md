@@ -119,7 +119,7 @@ Clean-room rules (not legal advice):
 
 ## Open-source building blocks
 
-Most stages already have a solid open-source starting point, so the build is mostly wiring and tuning, not invention. Check each license before copying code; reading for ideas is always fine.
+Most stages already have a solid open-source starting point, so the build is mostly wiring and tuning, not invention. The complete list (60+ repos by stage) is in [repos.md](repos.md); the table below is the core set. Check each license before copying code; reading for ideas is always fine.
 
 | Stage | Repo | Why it fits | Notes |
 | --- | --- | --- | --- |
