@@ -2,9 +2,9 @@
   "stage": "03",
   "name": "Chat Capture (real)",
   "passed": true,
-  "seconds": 0.24,
+  "seconds": 0.48,
   "dataset_version": "live_chat@2026-11-18T2131",
-  "code_version": "28efdbe",
+  "code_version": "dea23a7",
   "metrics": [
     {
       "metric": "missing_share",

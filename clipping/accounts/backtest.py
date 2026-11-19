@@ -88,7 +88,7 @@ def _run(provision, ex, addy, gm, taken, prof) -> StageResult:
     with scratch_db() as c:
         api = provision.Addy("k", "gta6clips.anonaddy.com", httpx.MockTransport(addy.handle))
         gmail = provision.Gmail("t", httpx.MockTransport(gm.handle))
-        s1 = provision.provision(c, alias_api=api, gmail=gmail, http=prof)
+        s1 = provision.provision(c, alias_api=api, gmail=gmail, http=prof, include_inactive=True)
         n_ch = len(config.channels())
         slots = db.scalar(c, "SELECT count(*) FROM account_slot")
         full = (
@@ -107,7 +107,7 @@ def _run(provision, ex, addy, gm, taken, prof) -> StageResult:
             else False
         )
         before, nl, nf = addy.creates, len(gm.labels), len(gm.filters)
-        s2 = provision.provision(c, alias_api=api, gmail=gmail, http=prof)
+        s2 = provision.provision(c, alias_api=api, gmail=gmail, http=prof, include_inactive=True)
         idem = (
             addy.creates == before
             and s2["passwords"] == 0

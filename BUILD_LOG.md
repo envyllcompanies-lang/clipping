@@ -19,7 +19,7 @@ Platform connectors, storage, the gate, the dashboard and provisioning are check
 | 3 Making clips | done; research updates applied (text styles, sentence case, hook patterns, letterbox arm); quality needs real footage + your review |
 | 4 Dashboard and public site | done; needs a host to be live for reviews |
 | 5 Publishing | done in fallback mode against platform fakes; real uploads need the apps/keys |
-| 6 Accounts and languages | done; the 60 signups are yours |
+| 6 Accounts and languages | done; **launch is English only** (other 9 languages `active: false`, opened when the doc 28 ranking justifies); the 6 English signups are yours |
 | 7 Analytics and autopilot | done: refits, bandits (layouts + text arms), digest, deploy files; a real week needs live accounts |
 
 ## Real-data datasets
@@ -95,7 +95,7 @@ Keys and accounts only you can create, each with why:
 - **Your existing YouTube uploader**: copy to `legacy/youtube-uploader/uploader.py` with `upload(path, metadata, credentials) -> video_id`.
 - **Meta app** (`META_APP_ID/SECRET`), **TikTok developer app**, **Snap Business + Public Profile API allowlist**.
 - **addy.io account** (`ALIAS_API_KEY`, `ALIAS_DOMAIN`), **Gmail connection**, **brand name** (`config/brand.yaml`).
-- **Owner login** (`clip dashboard create-owner`), **the 60 signups** from the worksheets at `/setup`.
+- **Owner login** (`clip dashboard create-owner`), **the 6 English signups** from the worksheet at `/setup` (more languages later).
 - **Style samples decision** (doc 13): how reference-channel videos may be obtained; then `clip style study <channel> <folder>`.
 - **Labelled real sets** to grade the pending stages: a few hours of GTA stream transcripts (06), HUD event marks (08),
   sponsor/BRB minutes and known catchphrases (32), and your "would post" review of the first real clips (09–14).

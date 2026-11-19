@@ -2,9 +2,9 @@
   "stage": "16",
   "name": "Publishing (framework + connectors 17-20)",
   "passed": true,
-  "seconds": 74.68,
+  "seconds": 84.85,
   "dataset_version": "fakeplatforms@v1",
-  "code_version": "28efdbe",
+  "code_version": "dea23a7",
   "metrics": [
     {
       "metric": "one_clip_every_platform",

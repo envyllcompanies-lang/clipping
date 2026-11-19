@@ -2,9 +2,9 @@
   "stage": "05",
   "name": "Moment Heatmap (real VODs)",
   "passed": true,
-  "seconds": 4.22,
+  "seconds": 5.23,
   "dataset_version": "viewer_clips@2026-11-18",
-  "code_version": "28efdbe",
+  "code_version": "dea23a7",
   "metrics": [
     {
       "metric": "recall_at_20",

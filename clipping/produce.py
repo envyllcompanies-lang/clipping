@@ -92,7 +92,8 @@ def produce(c: psycopg.Connection, window_id: int, rng_seed: int | None = None) 
     )
     chans = sync_channels(c)
     language = w["language"] or w["tlang"] or "en"
-    channel_id = chans.get(language)
+    active = {ch["stream_language"] for ch in config.channels().values() if ch.get("active", True)}
+    channel_id = chans.get(language) if language in active else None  # inactive languages aren't clipped
     if channel_id is None:
         c.execute(
             "UPDATE moment SET status='discarded', reason='no channel for language' WHERE id=%s",

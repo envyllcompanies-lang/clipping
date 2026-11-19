@@ -2,9 +2,9 @@
   "stage": "31",
   "name": "Gameplay Moment Analysis (real VODs)",
   "passed": true,
-  "seconds": 9.1,
+  "seconds": 9.95,
   "dataset_version": "viewer_clips@2026-11-18",
-  "code_version": "28efdbe",
+  "code_version": "dea23a7",
   "metrics": [
     {
       "metric": "gameplay_gain_fit_half",
