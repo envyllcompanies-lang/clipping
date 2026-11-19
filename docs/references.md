@@ -46,7 +46,7 @@ GTA 5 channels are the reference for what works; tracked channels in production 
 - [Cstrp/vml](https://github.com/Cstrp/vml): whisper.cpp, Kokoro TTS, FFmpeg behind a REST API
 - [viddotech/videoalchemy](https://github.com/viddotech/videoalchemy): YAML workflows chaining Whisper output into FFmpeg cuts
 
-More building blocks (whisper.cpp, mlx-whisper, Demucs, streamlink, Postiz, etc.) are listed with licenses in `00-build-plan.md` → Open-source building blocks.
+The full list of useful repos by pipeline stage is in [repos.md](repos.md).
 
 ## Stock footage
 
