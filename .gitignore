@@ -9,3 +9,6 @@ recordings/
 windows/
 work/
 renders/
+client_secret*.json
+token*.json
+*.db
