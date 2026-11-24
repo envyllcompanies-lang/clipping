@@ -1,43 +1,31 @@
 """YouTube Shorts connector (doc 17), behind the standard adapter interface.
 
-The owner's existing uploader (previous project) drops in at legacy/youtube-uploader/: if that folder holds a
-module `uploader.py` with `upload(path, metadata, credentials) -> video_id`, it is used for the upload step and this
-adapter keeps everything else (fields, fallback mode, checks, stats, deletes). Until then the built-in resumable
-uploader below is used."""
+Upload: the built-in resumable videos.insert uploader below. The owner's previous uploader (@EnvyCarsLLC) is kept in
+legacy/youtube-uploader/ as a reference only; it uses the same approach (OAuth refresh + resumable videos.insert),
+which this adapter already implements with retries, quota mapping and per-channel tokens from the credential store.
+It is never imported: the script loads its own .env and needs packages the pipeline doesn't."""
 
 from __future__ import annotations
 
 import datetime as dt
-import importlib.util
 import os
 import zoneinfo
 from collections.abc import Callable
 
 import httpx
 
-from clipping.core.settings import ROOT
 from clipping.publish.base import Payload, PermanentError, QuotaExceeded, Result, TokenError, TransientError
 
 API = "https://www.googleapis.com/youtube/v3"
 UPLOAD = "https://www.googleapis.com/upload/youtube/v3/videos"
 ANALYTICS = "https://youtubeanalytics.googleapis.com/v2/reports"
 CHUNK = 8 * 1024 * 1024
-LEGACY = ROOT / "legacy" / "youtube-uploader" / "uploader.py"
 
 
 def _midnight_pacific() -> dt.datetime:
     pt = zoneinfo.ZoneInfo("America/Los_Angeles")
     now = dt.datetime.now(pt)
     return (now + dt.timedelta(days=1)).replace(hour=0, minute=5, second=0, microsecond=0).astimezone(dt.UTC)
-
-
-def legacy_uploader():
-    if not LEGACY.exists():
-        return None
-    spec = importlib.util.spec_from_file_location("legacy_youtube_uploader", LEGACY)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return getattr(mod, "upload", None)
 
 
 class YouTube:
@@ -91,10 +79,6 @@ class YouTube:
 
     def publish(self, payload: Payload, resume: str | None = None) -> Result:
         acc = payload.account
-        legacy = legacy_uploader()
-        if legacy:
-            vid = legacy(payload.file_path, payload.fields, {"access_token": self.token(acc)})
-            return Result("processing", vid, fallback="publish_private" if payload.meta["private"] else None)
         size = os.path.getsize(payload.file_path)
         session = resume
         offset = 0

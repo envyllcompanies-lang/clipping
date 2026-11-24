@@ -112,7 +112,7 @@ Keys and accounts only you can create, each with why:
 - **Hosting** for the server worker, dashboard and policy pages (doc 25); policy pages must be live over HTTPS for reviews.
 - **Storage bucket** (`BUCKET_*`): public URLs Instagram/Threads pull from.
 - **Google Cloud project** (`GOOGLE_OAUTH_CLIENT_ID/SECRET`): YouTube uploads and stats; compliance audit.
-- **Your existing YouTube uploader**: copy to `legacy/youtube-uploader/uploader.py` with `upload(path, metadata, credentials) -> video_id`.
+- ~~Your existing YouTube uploader~~: reviewed (`legacy/youtube-uploader/`, reference only). It uses the same approach as the built-in connector (OAuth refresh + resumable `videos.insert`), so the built-in one is used.
 - **Meta app** (`META_APP_ID/SECRET`), **TikTok developer app**, **Snap Business + Public Profile API allowlist**.
 - **addy.io account** (`ALIAS_API_KEY`, `ALIAS_DOMAIN`), **Gmail connection**, **brand name** (`config/brand.yaml`).
 - **Owner login** (`clip dashboard create-owner`), **the 6 English signups** from the worksheet at `/setup` (more languages later).
