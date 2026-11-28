@@ -1,0 +1,48 @@
+{
+  "stage": "15",
+  "name": "Auto-Gate",
+  "passed": true,
+  "seconds": 0.35,
+  "dataset_version": "mechanics@v1",
+  "code_version": "38478da",
+  "metrics": [
+    {
+      "metric": "repeat_to_same_account_blocked",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "first_post_allowed",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "decisions_have_reasons",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "blocklist_pulls_everywhere",
+      "value": 1.0,
+      "baseline": null,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {}
+}

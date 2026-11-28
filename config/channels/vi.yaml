@@ -1,0 +1,38 @@
+code: vi
+key: gta6-vi
+language: Vietnamese
+native_name: Tiếng Việt
+flag: 🇻🇳
+time_zone: Asia/Ho_Chi_Minh
+stream_language: vi
+source_platforms: YouTube
+rpm_tier: 0.2
+style_profile: house
+voice: hype
+score_floor: 0.35
+active: false   # English-only launch (owner, 2026-11-19); doc 28 ranking recommends when to open it
+platforms:
+- youtube
+- tiktok
+- instagram
+- facebook
+- threads
+- snapchat
+hashtags_core:
+- '#GTA6'
+- '#GTAVI'
+- '#gaming'
+posting_slots:
+- 09:30
+- '12:15'
+- '15:00'
+- '18:30'
+- '21:00'
+warmup_days: 21
+profanity:
+  youtube: mask
+  tiktok: mask
+  instagram: show
+  facebook: mask
+  threads: show
+  snapchat: mask

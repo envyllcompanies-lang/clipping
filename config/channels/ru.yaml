@@ -1,0 +1,38 @@
+code: ru
+key: gta6-ru
+language: Russian
+native_name: Русский
+flag: 🇷🇺
+time_zone: Europe/Moscow
+stream_language: ru
+source_platforms: Twitch
+rpm_tier: 0.1
+style_profile: house
+voice: hype
+score_floor: 0.35
+active: false   # English-only launch (owner, 2026-11-19); doc 28 ranking recommends when to open it
+platforms:
+- youtube
+- tiktok
+- instagram
+- facebook
+- threads
+- snapchat
+hashtags_core:
+- '#GTA6'
+- '#GTAVI'
+- '#gaming'
+posting_slots:
+- 09:30
+- '12:15'
+- '15:00'
+- '18:30'
+- '21:00'
+warmup_days: 21
+profanity:
+  youtube: mask
+  tiktok: mask
+  instagram: show
+  facebook: mask
+  threads: show
+  snapchat: mask

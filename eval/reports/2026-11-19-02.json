@@ -1,0 +1,60 @@
+{
+  "stage": "02",
+  "name": "Stream Recorder (real live stream)",
+  "passed": true,
+  "seconds": 228.6,
+  "dataset_version": "live:squeezie",
+  "code_version": "38478da",
+  "metrics": [
+    {
+      "metric": "recording_started_s",
+      "value": 4.003419399261475,
+      "baseline": 3.003000020980835,
+      "bar": 60,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "segments_recorded",
+      "value": 8.0,
+      "baseline": 8.0,
+      "bar": 3,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "extract_exact",
+      "value": 1.0,
+      "baseline": 1.0,
+      "bar": 1.0,
+      "direction": "higher",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "extract_p95_s",
+      "value": 0.314467191696167,
+      "baseline": 0.28371143341064453,
+      "bar": 10.0,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "metric": "disk_ratio",
+      "value": 1.0055555555555555,
+      "baseline": 1.0055555555555555,
+      "bar": 1.1,
+      "direction": "lower",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "worst_examples": [],
+  "info": {
+    "channel": "squeezie",
+    "viewers": 48166
+  }
+}

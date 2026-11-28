@@ -1,0 +1,15 @@
+{
+  "stage": "31",
+  "accepted_at": "2026-11-19T00:07:59+00:00",
+  "dataset_version": "viewer_clips@2026-11-18",
+  "code_version": "28efdbe",
+  "metrics": {
+    "gameplay_gain_fit_half": -0.04999999999999999,
+    "gameplay_gain_test_half": -0.012499999999999983,
+    "gameplay_weight_kept": 0.0,
+    "heatmap_recall_with_gameplay": 0.1875,
+    "heatmap_recall_without": 0.175,
+    "heatmap_gain_from_gameplay": 0.012500000000000011,
+    "calibration_built": 1.0
+  }
+}

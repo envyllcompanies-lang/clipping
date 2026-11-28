@@ -1,0 +1,12 @@
+{
+  "stage": "03",
+  "accepted_at": "2026-11-18T21:38:00+00:00",
+  "dataset_version": "live_chat@2026-11-18T2131",
+  "code_version": "58fb575",
+  "metrics": {
+    "missing_share": 0.0,
+    "clip_moments_with_spike_10s": 0.375,
+    "align_within_2s_vs_clip_labels": 0.125,
+    "align_median_s_vs_clip_labels": 6.5
+  }
+}

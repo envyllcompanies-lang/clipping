@@ -1,0 +1,11 @@
+{
+  "source": "Twitch IRC (anonymous read) + Helix clips",
+  "minutes": 12,
+  "note": "no usernames or message text stored",
+  "name": "live_chat",
+  "version": "2026-11-18T2131",
+  "built_at": "2026-11-18",
+  "files": {
+    "channels.json": "70f25991353521626db982a20cd0d53799d40722e1ff3cb32ea77bbfcbdcec74"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "stage": "27",
+  "accepted_at": "2026-11-18T20:43:25+00:00",
+  "dataset_version": "fake-services@v1",
+  "code_version": "ce71542",
+  "metrics": {
+    "one_run_creates_everything": 1.0,
+    "naming_carries_language": 1.0,
+    "taken_handle_gets_variant": 1.0,
+    "codes_route_to_right_slot": 1.0,
+    "no_cross_language_codes": 1.0,
+    "wrong_account_rejected": 1.0,
+    "rerun_changes_nothing": 1.0
+  }
+}

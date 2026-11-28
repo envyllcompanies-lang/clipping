@@ -1,0 +1,118 @@
+source: docs/research/gta6-clip-examples.md
+note: owner-captured seed examples; small sample, starting priors only (doc 13)
+examples:
+- id: 1
+  platform: snapchat
+  screenshot: ../assets/examples/snap-gta6daily-3.png
+  creator: IShowSpeed
+  moment_type: comedy
+  moment_note: NPC/world comedy (taking grandma's mobility scooter)
+  layout: stacked
+  text_style: box
+  headline_case: sentence
+  quote_hook: true
+  emojis: 1
+  headline: '"I can''t do it anymore" we taking grandmas out the wheelchair now?'
+  views: 56000
+- id: 2
+  platform: snapchat
+  screenshot: ../assets/examples/snap-gta6daily-7.png
+  creator: Lacy
+  moment_type: music_celebrity
+  moment_note: Music/discovery (in-game Drake radio)
+  layout: stacked
+  text_style: outline
+  headline_case: sentence
+  quote_hook: false
+  emojis: 2
+  headline: Lacy listens to the Drake Radio on GTA VI 😳🔥
+  views: 50000
+- id: 3
+  platform: snapchat
+  screenshot: ../assets/examples/snap-gta6daily-4.png
+  creator: N3on
+  moment_type: crash
+  moment_note: Crash/physics (survived a plane crash)
+  layout: stacked
+  text_style: box
+  headline_case: sentence
+  quote_hook: false
+  emojis: 1
+  headline: N3on survived a plane crash in GTA 6 😭
+  views: 45000
+- id: 4
+  platform: snapchat
+  screenshot: ../assets/examples/snap-gta6daily-6.png
+  creator: Lacy
+  moment_type: death
+  moment_note: Fail / sports mechanic ("better than 2K")
+  layout: letterbox
+  text_style: outline
+  headline_case: sentence
+  quote_hook: true
+  emojis: 3
+  headline: '"Better mechanics than 2k.." 😭💔🥀'
+  views: 36000
+- id: 5
+  platform: snapchat
+  screenshot: ../assets/examples/snap-gta6daily-5.png
+  creator: IShowSpeed
+  moment_type: death
+  moment_note: Arrest (first time arrested)
+  layout: letterbox
+  text_style: box
+  headline_case: upper
+  quote_hook: false
+  emojis: 1
+  headline: SPEED GOT ARRESTED FOR THE FIRST TIME WHILE PLAYING GTA 6
+  views: 8600
+- id: 6
+  platform: snapchat
+  screenshot: ../assets/examples/snap-gta6daily-2.png
+  creator: Adin Ross
+  moment_type: discovery
+  moment_note: Discovery/limitation (can't enter airports)
+  layout: letterbox
+  text_style: outline
+  headline_case: sentence
+  quote_hook: false
+  emojis: 0
+  headline: Adin Ross reveals you can't go inside airports in GTA 6
+  views: 1500
+- id: 7
+  platform: snapchat
+  screenshot: ../assets/examples/snap-gta6daily-1.png
+  creator: IShowSpeed
+  moment_type: discovery
+  moment_note: Discovery (in-game phone apps)
+  layout: stacked
+  text_style: box
+  headline_case: sentence
+  quote_hook: false
+  emojis: 2
+  headline: You can actually check Social media whether news and fitness app in GTA
+    6 😍😨
+  views: 693
+priors:
+  n: 7
+  text_style:
+    box: 0.571
+    outline: 0.429
+  headline_case:
+    sentence: 0.857
+    upper: 0.143
+  layout:
+    stacked: 0.571
+    letterbox: 0.429
+  mean_views_by_layout:
+    stacked: 37923
+    letterbox: 15366
+  mean_views_by_moment_type:
+    comedy: 56000
+    music_celebrity: 50000
+    crash: 45000
+    death: 22300
+    discovery: 1096
+  emoji_ending_share: 0.857
+  quote_hook_share: 0.286
+  creator_named_share: 0.714
