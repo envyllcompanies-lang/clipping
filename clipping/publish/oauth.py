@@ -35,7 +35,7 @@ PROVIDERS = {
     "threads": {
         "auth": "https://threads.net/oauth/authorize",
         "token": "https://graph.threads.net/oauth/access_token",
-        "client": ("META_APP_ID", "META_APP_SECRET"),
+        "client": ("THREADS_APP_ID", "THREADS_APP_SECRET"),  # Meta issues Threads its own app id/secret
         "scope": "threads_basic,threads_content_publish,threads_manage_insights",
         "extra": {},
     },
@@ -89,9 +89,18 @@ def redirect_uri(base: str, platform: str) -> str:
     return f"{settings.env('PUBLIC_BASE', base)}/api/oauth/{platform}/callback"
 
 
+def client_creds(platform: str) -> tuple[str | None, str | None]:
+    """(client id, secret) for a platform; Threads falls back to the main Meta app keys when its own aren't set."""
+    p = PROVIDERS[platform]
+    cid, sec = settings.env(p["client"][0]), settings.env(p["client"][1])
+    if platform == "threads" and not cid:
+        cid, sec = settings.env("META_APP_ID"), settings.env("META_APP_SECRET")
+    return cid, sec
+
+
 def authorize_url(c, platform: str, account_id: int | None, base: str, user_id: int) -> str:
     p = PROVIDERS[platform]
-    cid = settings.env(p["client"][0])
+    cid = client_creds(platform)[0]
     if not cid:
         return f"/accounts?missing={p['client'][0]}"
     q = {
@@ -107,9 +116,10 @@ def authorize_url(c, platform: str, account_id: int | None, base: str, user_id: 
 
 def exchange(platform: str, code: str, base: str, transport=None) -> dict:
     p = PROVIDERS[platform]
+    cid, sec = client_creds(platform)
     data = {
-        p.get("client_param", "client_id"): settings.env(p["client"][0]),
-        "client_secret": settings.env(p["client"][1]),
+        p.get("client_param", "client_id"): cid,
+        "client_secret": sec,
         "code": code,
         "grant_type": "authorization_code",
         "redirect_uri": redirect_uri(base, platform),
